@@ -20,4 +20,8 @@ public class RobotMap {
         public static int leftSlave = 1;
         public static int rightSlave = 0;
     }
+
+    public static class Turret {
+        public static final int TURRET_TALON = 3;
+    }
 }

@@ -116,4 +116,14 @@ public class Constants {
         public static final double carryHeight = 7.25; //10
         public static final double intakeHeight = 0; //5.75
     }
+
+    public static final class Turret {
+        public static final int PID_SLOT = 0;
+        public static final double[] turretFPID = {
+            0.0, //kF
+            0.0, //kP
+            0.0, //kI
+            0.0, //kD
+        };
+    }
 }
