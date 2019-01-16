@@ -7,7 +7,10 @@
 
 package org.frc5587.deepspace;
 
+import org.frc5587.deepspace.commands.ArcadeDrive;
+import org.frc5587.deepspace.commands.ControlTurret;
 import org.frc5587.deepspace.subsystems.Drive;
+import org.frc5587.deepspace.subsystems.Turret;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -21,6 +24,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
  */
 public class Robot extends TimedRobot {
     public static final Drive DRIVETRAIN = new Drive();
+    public static final Turret TURRET = new Turret();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -41,6 +45,8 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         // new SerialTest().start();
+        new ControlTurret().start();
+        new ArcadeDrive().start();        
     }
 
     @Override
