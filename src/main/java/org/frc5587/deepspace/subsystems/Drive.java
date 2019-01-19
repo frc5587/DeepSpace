@@ -32,9 +32,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  */
 public class Drive extends Subsystem {
 
-	TalonSRX leftMaster, rightMaster;
-	VictorSP leftSlave, rightSlave;
-	ADXRS450_Gyro gyro;
+	private TalonSRX leftMaster, rightMaster;
+	private VictorSP leftSlave, rightSlave;
+	private ADXRS450_Gyro gyro;
 	MotionProfileStatus[] statuses = { new MotionProfileStatus(), new MotionProfileStatus() };
 
 	public Drive() {

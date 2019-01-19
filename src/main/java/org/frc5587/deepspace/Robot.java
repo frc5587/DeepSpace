@@ -7,6 +7,8 @@
 
 package org.frc5587.deepspace;
 
+import java.io.IOException;
+
 import org.frc5587.deepspace.commands.ArcadeDrive;
 import org.frc5587.deepspace.commands.ControlTurret;
 import org.frc5587.deepspace.subsystems.Drive;
@@ -46,7 +48,13 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         // new SerialTest().start();
         new ControlTurret().start();
-        new ArcadeDrive().start();        
+        // new ArcadeDrive().start();   
+        try {
+            Thread t = new TCPTestServer(Constants.TCP_PORT);
+            t.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }     
     }
 
     @Override

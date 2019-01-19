@@ -1,9 +1,12 @@
 package org.frc5587.deepspace.commands;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Turret;
 
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -12,7 +15,7 @@ public class ControlTurret extends Command {
 
     public ControlTurret() {
         // Use requires() here to declare subsystem dependencies
-        // requires(Robot.exampleSubsystem);
+        requires(Robot.TURRET);
         turret = Robot.TURRET;
     }
 
