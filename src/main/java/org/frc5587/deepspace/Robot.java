@@ -10,10 +10,13 @@ package org.frc5587.deepspace;
 import java.io.IOException;
 
 import org.frc5587.deepspace.commands.ArcadeDrive;
+import org.frc5587.deepspace.commands.ControlHatch;
 import org.frc5587.deepspace.commands.ControlTurret;
 import org.frc5587.deepspace.subsystems.Drive;
+import org.frc5587.deepspace.subsystems.Hatch;
 import org.frc5587.deepspace.subsystems.Turret;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -27,6 +30,8 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 public class Robot extends TimedRobot {
     public static final Drive DRIVETRAIN = new Drive();
     public static final Turret TURRET = new Turret();
+    public static final Hatch HATCH = new Hatch();
+    public static final Compressor c = new Compressor();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -34,6 +39,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        c.start();
     }
 
     @Override
@@ -55,6 +61,7 @@ public class Robot extends TimedRobot {
         } catch (IOException e) {
             e.printStackTrace();
         }     
+        new ControlHatch().start();
     }
 
     @Override
