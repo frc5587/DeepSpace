@@ -1,42 +1,50 @@
 package org.frc5587.deepspace;
 
-// File Name GreetingServer.java
 import java.net.*;
 import java.io.*;
 
 public class TCPTestServer extends Thread {
+    public static final int IN_BYTE_COUNT = 4;
     private ServerSocket serverSocket;
-    private DataInputStream inStream;
+    private Socket currentServer;
+    private InputStream inStream;
+    private BufferedReader inReader;
 
     public TCPTestServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
-        serverSocket.setSoTimeout(10000);
+        // serverSocket.setSoTimeout(10000);
     }
 
     public void run() {
         try {
             System.out.println("Waiting for client on port " + serverSocket.getLocalPort() + "...");
-            Socket server = serverSocket.accept();
-            System.out.println("Just connected to " + server.getRemoteSocketAddress());
-
-            inStream = new DataInputStream(new BufferedInputStream(server.getInputStream()));
+            currentServer = serverSocket.accept();
+            System.out.println("Just connected to " + currentServer.getRemoteSocketAddress());
+            inStream = currentServer.getInputStream();
+            inReader = new BufferedReader(new InputStreamReader(inStream));
 
             while (true) {
-                var line = inStream.readDouble();
-                System.out.println(line);
+                if (currentServer.getInputStream().available() > 1) {
+                    var message = inReader.readLine().split(":");
+
+                    // var time = message[0]; // Commented out b/c not used
+                    var angleFromCenterDeg = Double.parseDouble(message[1]);
+                    System.out.println(angleFromCenterDeg);
+
+                    Robot.TURRET.setPositionDeg(Robot.DRIVETRAIN.getHeading() - angleFromCenterDeg);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // public static void main(String[] args) {
-    //     int port = Integer.parseInt(args[0]);
-    //     try {
-    //         Thread t = new TCPTestServer(port);
-    //         t.start();
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+    public void close() {
+        try {
+            currentServer.close();
+        } catch (IOException e) {
+            System.out.println("Server already closed");
+            return;
+        }
+    }
 }

@@ -1,22 +1,14 @@
 package org.frc5587.deepspace.commands;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
-import org.frc5587.deepspace.subsystems.Turret;
 
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ControlTurret extends Command {
-    private Turret turret;
-
-    public ControlTurret() {
+public class PostDebugData extends Command {
+    public PostDebugData() {
+        setRunWhenDisabled(true);
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.TURRET);
-        turret = Robot.TURRET;
+        // requires(Robot.exampleSubsystem);
     }
 
     // Called just before this Command runs the first time
@@ -27,8 +19,7 @@ public class ControlTurret extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        var throttle = OI.xb.getY(Hand.kRight);
-        turret.setThrottle(throttle);
+        Robot.TURRET.postDebugData();
     }
 
     // Make this return true when this Command no longer needs to run execute()

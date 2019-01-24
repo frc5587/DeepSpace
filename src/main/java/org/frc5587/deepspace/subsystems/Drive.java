@@ -8,6 +8,7 @@
 package org.frc5587.deepspace.subsystems;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -26,6 +27,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import edu.wpi.first.wpilibj.VictorSP;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 /**
  * An example subsystem. You can replace me with your own Subsystem.
@@ -35,14 +37,28 @@ public class Drive extends Subsystem {
 	private TalonSRX leftMaster, rightMaster;
 	private VictorSP leftSlave, rightSlave;
 	private ADXRS450_Gyro gyro;
+	private AHRS ahrs;
 	MotionProfileStatus[] statuses = { new MotionProfileStatus(), new MotionProfileStatus() };
 
 	public Drive() {
+		// gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
+
 		try {
-			gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
-		} catch (Exception e) {
-			e.printStackTrace();
+			/***********************************************************************
+			 * navX-MXP: - Communication via RoboRIO MXP (SPI, I2C, TTL UART) and USB. - See
+			 * http://navx-mxp.kauailabs.com/guidance/selecting-an-interface.
+			 * 
+			 * navX-Micro: - Communication via I2C (RoboRIO MXP or Onboard) and USB. - See
+			 * http://navx-micro.kauailabs.com/guidance/selecting-an-interface.
+			 * 
+			 * Multiple navX-model devices on a single robot are supported.
+			 ************************************************************************/
+			ahrs = new AHRS(Port.kMXP);
+		} catch (RuntimeException ex) {
+			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 		}
+
+		gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
 
 		// initialize Talons
 		leftMaster = new TalonSRX(RobotMap.Drive.leftMaster);
@@ -61,9 +77,9 @@ public class Drive extends Subsystem {
 		// Set the slaves to mimic the masters
 
 		// Enable Voltage Compensation
-		rightMaster.configVoltageCompSaturation(Constants.Drive.kVCompSaturation, Constants.Drive.kTimeoutMs);
+		rightMaster.configVoltageCompSaturation(Constants.kVCompSaturation, Constants.Drive.kTimeoutMs);
 		rightMaster.enableVoltageCompensation(true);
-		leftMaster.configVoltageCompSaturation(Constants.Drive.kVCompSaturation, Constants.Drive.kTimeoutMs);
+		leftMaster.configVoltageCompSaturation(Constants.kVCompSaturation, Constants.Drive.kTimeoutMs);
 		leftMaster.enableVoltageCompensation(true);
 
 		leftMaster.configPeakOutputForward(Constants.Drive.maxPercentFw, Constants.Drive.kTimeoutMs);
@@ -241,7 +257,8 @@ public class Drive extends Subsystem {
 	}
 
 	public double getHeading() {
-		return gyro.getAngle();
+		// return gyro.getAngle();
+		return ahrs.getAngle();
 	}
 
 	public void resetEncoders() {

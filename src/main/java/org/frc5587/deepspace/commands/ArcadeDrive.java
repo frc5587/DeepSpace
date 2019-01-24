@@ -8,9 +8,7 @@
 package org.frc5587.deepspace.commands;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Drive;
@@ -19,14 +17,12 @@ import org.frc5587.deepspace.subsystems.Drive;
  * An example command.  You can replace me with your own command.
  */
 public class ArcadeDrive extends Command {
-	private XboxController xb;
 	private Drive kDrive;
 
 	public ArcadeDrive() {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.DRIVETRAIN);
 		this.kDrive = Robot.DRIVETRAIN;
-		xb = OI.xb;
 	}
 
 	// Called just before this Command runs the first time
