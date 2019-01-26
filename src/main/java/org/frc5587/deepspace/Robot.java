@@ -16,10 +16,15 @@ import java.io.IOException;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.subsystems.*;
+import org.frc5587.deepspace.subsystems.Hatch;
+import edu.wpi.first.wpilibj.CameraServer;
+
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.cscore.UsbCamera;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,6 +37,8 @@ public class Robot extends TimedRobot {
     public static final Drive DRIVETRAIN = new Drive();
     public static final Hatch HATCH = new Hatch();
     public static final Compressor c = new Compressor();
+    public static CameraServer cameraServer;
+    public static UsbCamera driverCamera;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -40,6 +47,9 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         c.start();
+        cameraServer = CameraServer.getInstance();
+	    driverCamera = cameraServer.startAutomaticCapture(0);
+	    cameraServer.startAutomaticCapture(driverCamera);
     }
 
     @Override
