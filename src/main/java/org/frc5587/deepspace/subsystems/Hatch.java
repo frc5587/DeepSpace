@@ -7,18 +7,18 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Hatch extends Subsystem {
-    private static DoubleSolenoid bob;
+    private static DoubleSolenoid hatchPiston;
 
     public Hatch() {
-        bob = new DoubleSolenoid(RobotMap.Hatch.HATCH_PISTON[0], RobotMap.Hatch.HATCH_PISTON[1]);
+        hatchPiston = new DoubleSolenoid(RobotMap.Hatch.HATCH_PISTON[0], RobotMap.Hatch.HATCH_PISTON[1]);
     }
 
     public void hatchOpen() {
-        bob.set(Value.kForward);
+        hatchPiston.set(Value.kForward);
     }
 
     public void hatchClosed() {
-        bob.set(Value.kReverse);
+        hatchPiston.set(Value.kReverse);
     }
 
    

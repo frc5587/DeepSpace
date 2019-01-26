@@ -14,18 +14,25 @@ package org.frc5587.deepspace;
  * floating around.
  */
 public class RobotMap {
-    public static class Drive {
-        public static int leftMaster = 2;
-        public static int rightMaster = 1;
-        public static int leftSlave = 1;
-        public static int rightSlave = 0;
-    }
+	// For example to map the left and right motors, you could define the
+	// following variables to use with your drivetrain subsystem.
+	// public static int leftMotor = 1;
+	// public static int rightMotor = 2;
 
-    public static class Turret {
-        public static final int TURRET_TALON = 3;
-    }
+	// If you are using multiple modules, make sure to define both the port
+	// number and the module. For example you with a rangefinder:
+	// public static int rangefinderPort = 1;
+	// public static int rangefinderModule = 1;
+	public static final int COMPRESSOR = 0;
 
-    public static class Hatch {
-        public static final int[] HATCH_PISTON = {0, 1};
-    }
+	public static class Hatch {
+		public static final int[] HATCH_PISTON = { 0, 1 };
+	}
+	public static class Drive {
+		public static int leftMaster = 2;
+		public static int rightMaster = 3;
+		public static int leftSlave = 4;
+		public static int rightSlave = 5;
+	}
 }
+

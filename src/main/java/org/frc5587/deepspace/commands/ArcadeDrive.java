@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Drive;
+import org.frc5587.deepspace.Constants;
 
 /**
  * An example command.  You can replace me with your own command.
@@ -39,13 +40,15 @@ public class ArcadeDrive extends Command {
 	@Override
 	protected void execute() {
 		// Xbox configuration
-		double throttle = -OI.xb.getY(Hand.kLeft);
-		double curve = OI.xb.getX(Hand.kLeft);
+		// double throttle = -OI.xb.getY(Hand.kLeft);
+		// double curve = OI.xb.getX(Hand.kLeft);
 
 		// Joystick configuration
-		// double throttle = -OI.joystick.getY(Hand.kLeft);
-		// double curve = OI.joystick.getX(Hand.kLeft);
+		double throttle = -OI.joy.getY(Hand.kLeft);
+		double curve = OI.joy.getX(Hand.kLeft);
 
+
+		curve *= Constants.Drive.turnSensitivity;
 		kDrive.vbusArcade(throttle, curve);
 		kDrive.sendDebugInfo();
 	}

@@ -7,14 +7,15 @@
 
 package org.frc5587.deepspace;
 
-import java.io.IOException;
+
 
 import org.frc5587.deepspace.commands.ArcadeDrive;
-import org.frc5587.deepspace.commands.ControlHatch;
-import org.frc5587.deepspace.commands.ControlTurret;
 import org.frc5587.deepspace.subsystems.Drive;
-import org.frc5587.deepspace.subsystems.Hatch;
-import org.frc5587.deepspace.subsystems.Turret;
+
+import java.io.IOException;
+
+import org.frc5587.deepspace.commands.*;
+import org.frc5587.deepspace.subsystems.*;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -29,7 +30,6 @@ import edu.wpi.first.wpilibj.command.Scheduler;
  */
 public class Robot extends TimedRobot {
     public static final Drive DRIVETRAIN = new Drive();
-    public static final Turret TURRET = new Turret();
     public static final Hatch HATCH = new Hatch();
     public static final Compressor c = new Compressor();
 
@@ -52,15 +52,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        // new SerialTest().start();
-        new ControlTurret().start();
-        // new ArcadeDrive().start();   
-        try {
-            Thread t = new TCPTestServer(Constants.TCP_PORT);
-            t.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }     
+        new ArcadeDrive().start();
         new ControlHatch().start();
     }
 

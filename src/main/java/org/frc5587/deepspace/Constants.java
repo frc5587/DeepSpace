@@ -1,65 +1,68 @@
 package org.frc5587.deepspace;
 
+/**
+ * Constants is a central place in which to store all of the constants having to
+ * do with the robot and its subsystems. Where applicable, the constants are
+ * stored within subclasses that describe the subsystem with which the constant
+ * is associated and/or used.
+ */
 public class Constants {
 
-    public static boolean compressorEnabled = false;
-    public static final int TCP_PORT = 3456;
-
-    //set to zero to skip waiting for confirmation, set to nonzero to wait and report to DS if action fails
-    public static final int kTimeoutMs = 10;
+    public static boolean compressorEnabled = true;
 
     public static final class Drive {
+        // set to zero to skip waiting for confirmation, set to nonzero to wait and
+        // report to DS if action fails
         public static final int kTimeoutMs = 10;
 
-        public static final int minBufferCount = 10;
-
-        public static final double kMaxVelocity = 900;
+        public static final double kMaxVelocity = 2500; // measured in STU
 
         public static final double kVCompSaturation = 12.0;
 
-        public static final int stuPerInch = 77;
+        public static final int minBufferCount = 10;
 
-        public static final int stuPerRev = 1389;
+        public static final int stuPerInch = 215;
+
+        public static final int stuPerRev = 4050;
 
         public static final int wheelDiameter = 6;
 
-        //Safety limits
+        // Safety limits
         public static final double minPercentOut = 0,
-            maxPercentBw = 1,
-            maxPercentFw = 1; 
+            maxPercentBw = 0.75,
+            maxPercentFw = 0.75;
 
-        //PIDF Constants
+        public static final double turnSensitivity = 0.8;
+
+        // PIDF Constants
         public static final double[] leftPIDs = {
-            0.04,	//kP
-            0.0,	//kI
-            0.0,	//kD
-            0.000975 * 1023 	//kF
+            0.01, // kP
+            0.0, // kI
+            0.01, // kD
+            0.000327 * 1023 // kF
         };
         public static final double[] rightPIDs = {
-            0.04,	//kP
-            0.0,	//kI
-            0.0,	//kD
-            0.000975 * 1023    //kF
+            0.01, // kP
+            0.0, // kI
+            0.01, // kD
+            0.000317 * 1023 // kF
         };
 
-        public static final double[] pathfinderPIDVA = {
-            0.003,    //kP
-            0.0,    //kI
-            0.0,    //kD
-            0.000975 * stuPerInch / 10f,    //kV
-            0.0005 * stuPerInch / 10f     //kA
+        public static final double[] pathfinderPIDVALeft = {
+            0.04, // kP
+            0.0, // kI/**/
+            0.0, // kD
+            0.000327 * stuPerInch / 10f, // kV
+            0.0001 * stuPerInch / 10f // kA
+        };
+        public static final double[] pathfinderPIDVARight = {
+            0.04, // kP
+            0.0, // kI
+            0.0, // kD
+            0.000317 * stuPerInch / 10f, // kV
+            0.0001 * stuPerInch / 10f // kA
         };
 
-		public static double gyrokP = 0.0;
-    }
-
-    public static final class Turret {
-        public static final int PID_SLOT = 0;
-        public static final double[] turretFPID = {
-            0.0, //kF
-            0.0, //kP
-            0.0, //kI
-            0.0, //kD
-        };
+		public static double gyrokP = 0.00;
     }
 }

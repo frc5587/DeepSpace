@@ -13,10 +13,10 @@ public class ControlHatch extends Command {
 
     }
 
-@Override
-protected void initialize() {
-    Robot.HATCH.hatchClosed();
-}
+    @Override
+    protected void initialize() {
+        Robot.HATCH.hatchClosed();
+    }
 
     @Override
     protected void execute() {

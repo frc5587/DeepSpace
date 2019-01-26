@@ -24,7 +24,7 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import edu.wpi.first.wpilibj.VictorSP;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
@@ -33,7 +33,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class Drive extends Subsystem {
 
 	private TalonSRX leftMaster, rightMaster;
-	private VictorSP leftSlave, rightSlave;
+	private VictorSPX leftSlave, rightSlave;
 	private ADXRS450_Gyro gyro;
 	MotionProfileStatus[] statuses = { new MotionProfileStatus(), new MotionProfileStatus() };
 
@@ -48,8 +48,8 @@ public class Drive extends Subsystem {
 		leftMaster = new TalonSRX(RobotMap.Drive.leftMaster);
 		rightMaster = new TalonSRX(RobotMap.Drive.rightMaster);
 
-		leftSlave = new VictorSP(RobotMap.Drive.leftSlave);
-		rightSlave = new VictorSP(RobotMap.Drive.rightSlave);
+		leftSlave = new VictorSPX(RobotMap.Drive.leftSlave);
+		rightSlave = new VictorSPX(RobotMap.Drive.rightSlave);
 
 		// invert right side
 		rightMaster.setInverted(true);
@@ -59,6 +59,8 @@ public class Drive extends Subsystem {
 		rightMaster.setSensorPhase(true);
 
 		// Set the slaves to mimic the masters
+		leftSlave.follow(leftMaster);
+		rightSlave.follow(rightMaster);
 
 		// Enable Voltage Compensation
 		rightMaster.configVoltageCompSaturation(Constants.Drive.kVCompSaturation, Constants.Drive.kTimeoutMs);
@@ -168,9 +170,6 @@ public class Drive extends Subsystem {
 
 		leftMaster.set(ControlMode.PercentOutput, d.left);
 		rightMaster.set(ControlMode.PercentOutput, d.right);
-
-		leftSlave.set(d.left);
-		rightSlave.set(d.right);
 	}
 
 	public void vbusArcade(double throttle, double turn) {
@@ -178,17 +177,11 @@ public class Drive extends Subsystem {
 
 		leftMaster.set(ControlMode.PercentOutput, d.left);
 		rightMaster.set(ControlMode.PercentOutput, d.right);
-
-		leftSlave.set(d.left);
-		rightSlave.set(d.right);
 	}
 
 	public void vbusLR(double left, double right) {
 		leftMaster.set(ControlMode.PercentOutput, left);
 		rightMaster.set(ControlMode.PercentOutput, right);
-
-		leftSlave.set(left);
-		rightSlave.set(right);
 	}
 
 	public void velocityCurve(double throttle, double curve, boolean isQuickTurn) {
@@ -196,9 +189,6 @@ public class Drive extends Subsystem {
 
 		leftMaster.set(ControlMode.Velocity, d.left * Constants.Drive.kMaxVelocity);
 		rightMaster.set(ControlMode.Velocity, d.right * Constants.Drive.kMaxVelocity);
-
-		rightSlave.set(rightMaster.getMotorOutputPercent());
-		leftSlave.set(leftMaster.getMotorOutputPercent());
 	}
 
 	public void velocityArcade(double throttle, double turn) {
@@ -206,9 +196,6 @@ public class Drive extends Subsystem {
 
 		leftMaster.set(ControlMode.Velocity, d.left * Constants.Drive.kMaxVelocity);
 		rightMaster.set(ControlMode.Velocity, d.right * Constants.Drive.kMaxVelocity);
-
-		rightSlave.set(rightMaster.getMotorOutputPercent());
-		leftSlave.set(leftMaster.getMotorOutputPercent());
 	}
 
 	public void stop() {
