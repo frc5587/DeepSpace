@@ -10,6 +10,8 @@ public class Constants {
 
     public static boolean compressorEnabled = true;
 
+    public static final double holdVoltage = .15;
+
     public static final class Drive {
         // set to zero to skip waiting for confirmation, set to nonzero to wait and
         // report to DS if action fails
@@ -26,6 +28,7 @@ public class Constants {
         public static final int stuPerRev = 4050;
 
         public static final int wheelDiameter = 6;
+
 
         // Safety limits
         public static final double minPercentOut = 0,

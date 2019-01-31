@@ -34,5 +34,12 @@ public class RobotMap {
 		public static int leftSlave = 4;
 		public static int rightSlave = 5;
 	}
+
+	public static class Elevator {
+		public static final int ELEVATOR_MASTER = 0;
+		public static final int ELEVATOR_SLAVE = 1;
+		public static final int[] ELEVATOR_ENCODER = {0, 1};
+	}
+
 }
 
