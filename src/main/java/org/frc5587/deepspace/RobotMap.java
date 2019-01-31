@@ -34,5 +34,8 @@ public class RobotMap {
 		public static int leftSlave = 4;
 		public static int rightSlave = 5;
 	}
+	public static class Lift {
+		public static int LIFT_MOTOR = 6;
+	}
 }
 

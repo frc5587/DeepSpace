@@ -9,7 +9,6 @@ package org.frc5587.deepspace;
 
 
 
-import org.frc5587.deepspace.commands.ArcadeDrive;
 import org.frc5587.deepspace.subsystems.Drive;
 
 import java.io.IOException;
@@ -39,6 +38,7 @@ public class Robot extends TimedRobot {
     public static final Compressor c = new Compressor();
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
+    public static final Lift LIFT = new Lift();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -64,6 +64,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         new ArcadeDrive().start();
         new ControlHatch().start();
+        new ControlLift().start();
     }
 
     @Override
