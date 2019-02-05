@@ -1,5 +1,7 @@
 package org.frc5587.deepspace.subsystems;
 
+import java.util.HashMap;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -12,29 +14,28 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Elevator extends Subsystem {
     private static TalonSRX elevatorTalon;
     private static VictorSPX elevatorVictor;
+    private static HashMap<ElevatorHeights, Double> elevatorHeights;
 
     public Elevator() {
         elevatorTalon = new TalonSRX(RobotMap.Elevator.ELEVATOR_MASTER);
         elevatorVictor = new VictorSPX(RobotMap.Elevator.ELEVATOR_SLAVE);
+        elevatorHeights = new HashMap<>();
+
+        elevatorHeights.put(ElevatorHeights.BOTTOM_LEVEL, 0.0);
+        elevatorHeights.put(ElevatorHeights.MIDDLE_LEVEL, 1.0);
+        elevatorHeights.put(ElevatorHeights.TOP_LEVEL, 2.0);
+
         elevatorVictor.follow(elevatorTalon);
     }
 
+
     public static enum ElevatorHeights {
-        BOTTOM_LEVEL(0), MIDDLE_LEVEL(1), TOP_LEVEL(2);
+        BOTTOM_LEVEL, MIDDLE_LEVEL, TOP_LEVEL;
 
-        private double height;
-
-        ElevatorHeights(double height) {
-            this.height = height;
-        }
-
-        public double getHeight() {
-            return height;
-        }
     }
 
     public void setElevator(ElevatorHeights setpoint) {
-        elevatorTalon.set(ControlMode.Position, setpoint.getHeight());
+        elevatorTalon.set(ControlMode.Position, elevatorHeights.get(setpoint));
     }
 
     public void elevatorHold() {
