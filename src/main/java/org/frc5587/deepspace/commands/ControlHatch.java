@@ -28,7 +28,6 @@ public class ControlHatch extends Command {
                 Robot.HATCH.hatchClosed();
                 closed = true;
             }
-            
         }
     }
 

@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         new ArcadeDrive().start();
         new ControlHatch().start();
+        new ControlElevator().start();
     }
 
     @Override

@@ -41,6 +41,25 @@ public class Elevator extends Subsystem {
         elevatorTalon.set(ControlMode.PercentOutput, Constants.holdVoltage);
     }
 
+    public void elevatorMove(double yInput) {
+        elevatorTalon.set(ControlMode.PercentOutput, yInput);
+    }
+   /* public void elevatorUp() {
+        elevatorTalon.set(ControlMode.PercentOutput, 1);
+        /*if(OI.joy.getThrottle() > 0) {
+            elevatorTalon.set(ControlMode.PercentOutput, 1);
+        }
+        else if(OI.joy.getThrottle() < 0) {
+            elevatorTalon.set(ControlMode.PercentOutput, -1);
+        }
+        else if(OI.joy.getThrottle() == 0) {
+            elevatorHold();
+        }
+
+    public void elevatorDown() {
+        elevatorTalon.set(ControlMode.PercentOutput, -1);
+    } */
+
     @Override
     protected void initDefaultCommand() {
         
