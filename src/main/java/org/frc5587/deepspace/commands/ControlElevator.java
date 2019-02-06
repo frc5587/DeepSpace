@@ -23,14 +23,14 @@ public class ControlElevator extends Command {
             Robot.e.elevatorHold();
         }
         
-       /*  // pick a button (setpoints??)
-        if (OI.xb.getAButton()) {
-            Robot.e.setElevator(ElevatorHeights.BOTTOM_LEVEL);
-        } else if (OI.xb.getBButton()) {
-            Robot.e.setElevator(ElevatorHeights.MIDDLE_LEVEL);
-        } else if (OI.xb.getYButton()) {
-            Robot.e.setElevator(ElevatorHeights.TOP_LEVEL);
-        } */
+    //    // pick a button (setpoints??)
+    //     if (OI.xb.getAButton()) {
+    //         Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.BOTTOM_LEVEL));
+    //     } else if (OI.xb.getBButton()) {
+    //         Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.MIDDLE_LEVEL));
+    //     } else if (OI.xb.getYButton()) {
+    //         Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.TOP_LEVEL));
+    //     } 
     }
 
     @Override

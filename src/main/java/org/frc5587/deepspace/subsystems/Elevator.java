@@ -21,9 +21,9 @@ public class Elevator extends Subsystem {
         elevatorVictor = new VictorSPX(RobotMap.Elevator.ELEVATOR_SLAVE);
         elevatorHeights = new HashMap<>();
 
-        elevatorHeights.put(ElevatorHeights.BOTTOM_LEVEL, 0.0);
-        elevatorHeights.put(ElevatorHeights.MIDDLE_LEVEL, 1.0);
-        elevatorHeights.put(ElevatorHeights.TOP_LEVEL, 2.0);
+        elevatorHeights.put(ElevatorHeights.BOTTOM_LEVEL, Constants.Elevator.bottomTicks);
+        elevatorHeights.put(ElevatorHeights.MIDDLE_LEVEL, Constants.Elevator.middleTicks);
+        elevatorHeights.put(ElevatorHeights.TOP_LEVEL, Constants.Elevator.topTicks);
 
         elevatorVictor.follow(elevatorTalon);
     }
@@ -34,8 +34,12 @@ public class Elevator extends Subsystem {
 
     }
 
-    public void setElevator(ElevatorHeights setpoint) {
-        elevatorTalon.set(ControlMode.Position, elevatorHeights.get(setpoint));
+    public double getTicks(ElevatorHeights e) {
+        return elevatorHeights.get(e);
+    }
+
+    public void setElevator(double d) {
+        elevatorTalon.set(ControlMode.Position, d);
     }
 
     public void elevatorHold() {

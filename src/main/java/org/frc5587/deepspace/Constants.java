@@ -12,6 +12,18 @@ public class Constants {
 
     public static final double holdVoltage = .15;
 
+    public static final class Elevator {
+        public static final double spoolDiameter = 2.0;
+
+        public static final double bottomTicks = 0;
+
+        public static final double middleTicks = -1;
+
+        public static final double topTicks = -2;
+
+
+    }
+
     public static final class Drive {
         // set to zero to skip waiting for confirmation, set to nonzero to wait and
         // report to DS if action fails

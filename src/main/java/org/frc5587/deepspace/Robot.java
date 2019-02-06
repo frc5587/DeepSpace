@@ -16,7 +16,6 @@ import java.io.IOException;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.subsystems.*;
-import org.frc5587.deepspace.subsystems.Hatch;
 import edu.wpi.first.wpilibj.CameraServer;
 
 
