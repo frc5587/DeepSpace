@@ -21,7 +21,25 @@ public class Constants {
 
         public static final double topTicks = -2;
 
+        public static final int kSlotIdx = 0;
 
+        public static final int kPIDLoopIdx =0;
+
+        public static final int kTimeoutMs= 10;
+
+        public static final double vCompSaturation = 12.0;
+
+        public static final double[] PIDs = {
+            0.03, //kP
+            0.0, //kI
+            0.05, //kD
+            0.58, // kF
+        };
+        
+
+        public static final double minPercentOut = 0.0, maxPercentBw = .6, maxPercentFw = 1;
+
+        public static final int maxVelocity = 2500, maxAcceleration = 2500;
     }
 
     public static final class Drive {
