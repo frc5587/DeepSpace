@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.RobotMap;
@@ -43,10 +42,11 @@ public class Elevator extends Subsystem {
         elevatorTalon.setSensorPhase(true);
         elevatorTalon.setInverted(false);
         elevatorTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.Elevator.kTimeoutMs);
-        
+        elevatorTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10,
+                Constants.Elevator.kTimeoutMs);
+
         elevatorTalon.configNominalOutputForward(Constants.Elevator.minPercentOut, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.configNominalOutputReverse(-Constants.Elevator.minPercentOut,Constants.Elevator.kTimeoutMs);
+        elevatorTalon.configNominalOutputReverse(-Constants.Elevator.minPercentOut, Constants.Elevator.kTimeoutMs);
         elevatorTalon.configPeakOutputForward(Constants.Elevator.maxPercentFw, Constants.Elevator.kTimeoutMs);
         elevatorTalon.configPeakOutputReverse(-Constants.Elevator.maxPercentBw, Constants.Elevator.kTimeoutMs);
 
@@ -66,7 +66,7 @@ public class Elevator extends Subsystem {
         elevatorTalon.configVoltageCompSaturation(Constants.Elevator.vCompSaturation, Constants.Elevator.kTimeoutMs);
     }
 
-    public double getTicks(ElevatorHeights e) {
+   public double getTicks(ElevatorHeights e) {
         return elevatorHeights.get(e);
     }
 
@@ -80,17 +80,11 @@ public class Elevator extends Subsystem {
 
     public void elevatorMove(double yInput) {
         elevatorTalon.set(ControlMode.PercentOutput, yInput);
+    }   
+
+    public void elevatorDown() {
+        elevatorTalon.set(ControlMode.PercentOutput, -1);
     }
-    /*
-     * public void elevatorUp() { elevatorTalon.set(ControlMode.PercentOutput, 1);
-     * /*if(OI.joy.getThrottle() > 0) { elevatorTalon.set(ControlMode.PercentOutput,
-     * 1); } else if(OI.joy.getThrottle() < 0) {
-     * elevatorTalon.set(ControlMode.PercentOutput, -1); } else
-     * if(OI.joy.getThrottle() == 0) { elevatorHold(); }
-     * 
-     * public void elevatorDown() { elevatorTalon.set(ControlMode.PercentOutput,
-     * -1); }
-     */
 
     @Override
     protected void initDefaultCommand() {

@@ -16,12 +16,7 @@ public class ControlElevator extends Command {
     @Override
     protected void execute() {
 
-        if(OI.xb.getY(Hand.kRight) != 0) {
-            Robot.e.elevatorMove(OI.xb.getY());
-        }
-        else if(OI.xb.getY(Hand.kRight) == 0) {
-            Robot.e.elevatorHold();
-        }
+            Robot.e.elevatorMove(OI.xb.getY(Hand.kRight));
         
     //    // pick a button (setpoints??)
     //     if (OI.xb.getAButton()) {

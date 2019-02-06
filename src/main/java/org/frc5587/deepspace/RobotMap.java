@@ -36,9 +36,8 @@ public class RobotMap {
 	}
 
 	public static class Elevator {
-		public static final int ELEVATOR_MASTER = 0;
-		public static final int ELEVATOR_SLAVE = 1;
-		public static final int[] ELEVATOR_ENCODER = {0, 1};
+		public static final int ELEVATOR_MASTER = 7;
+		public static final int ELEVATOR_SLAVE = 6;
 	}
 
 }
