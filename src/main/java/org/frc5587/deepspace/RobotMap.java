@@ -26,7 +26,8 @@ public class RobotMap {
 	public static final int COMPRESSOR = 0;
 
 	public static class Hatch {
-		public static final int[] HATCH_PISTON = { 0, 1 };
+		public static final int[] HATCH_PISTONS = { 0, 1 };
+		public static final int[] SLICER_PISTONS = { 2, 3};
 	}
 	public static class Drive {
 		public static int leftMaster = 2;

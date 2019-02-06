@@ -16,6 +16,7 @@ public class ControlHatch extends Command {
     @Override
     protected void initialize() {
         Robot.HATCH.hatchClosed();
+        Robot.HATCH.hatchIn();
     }
 
     @Override
@@ -28,7 +29,15 @@ public class ControlHatch extends Command {
                 Robot.HATCH.hatchClosed();
                 closed = true;
             }
-            
+        }
+        if (OI.xb.getBumperPressed(Hand.kLeft)) {
+            if(closed) {
+                Robot.HATCH.hatchOut();
+                closed = false;
+            } else {
+                Robot.HATCH.hatchIn();
+                closed = true;
+            }
         }
     }
 
