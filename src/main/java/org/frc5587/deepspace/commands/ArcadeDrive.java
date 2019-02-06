@@ -35,12 +35,12 @@ public class ArcadeDrive extends Command {
 	@Override
 	protected void execute() {
 		// Xbox configuration
-		double throttle = -OI.xb.getY(Hand.kLeft);
-		double curve = OI.xb.getX(Hand.kLeft);
+		// double throttle = -OI.xb.getY(Hand.kLeft);
+		// double curve = OI.xb.getX(Hand.kLeft);
 
 		// Joystick configuration
-		// double throttle = -OI.joystick.getY(Hand.kLeft);
-		// double curve = OI.joystick.getX(Hand.kLeft);
+		var throttle = OI.joy.getY(Hand.kLeft);
+		var curve = OI.joy.getX(Hand.kLeft);
 
 		kDrive.vbusArcade(throttle, curve);
 		kDrive.sendDebugInfo();
