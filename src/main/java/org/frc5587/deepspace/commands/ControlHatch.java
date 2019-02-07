@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ControlHatch extends Command {
-    private boolean closed = true;
+    private boolean closed = false;
 
     public ControlHatch() {
 
