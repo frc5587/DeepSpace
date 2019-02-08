@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     public static final Drive DRIVETRAIN = new Drive();
     public static final Turret TURRET = new Turret();
 
-    private static TCPTestServer tcpServer;
+    private static TCPServer tcpServer;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -52,18 +52,19 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        System.out.println("Running Teleop");
         SmartDashboard.putData("Reset Encoders", new ResetEncoders());
 
         // new SerialTest().start();
         // new ControlTurret().start();
-        // new ArcadeDrive().start();
+        new ArcadeDrive().start();
         
-        try {
-            tcpServer = new TCPTestServer(Constants.TCP_PORT);
-            tcpServer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     tcpServer = new TCPTestServer(Constants.TCP_PORT);
+        //     tcpServer.start();
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
     }
 
     @Override

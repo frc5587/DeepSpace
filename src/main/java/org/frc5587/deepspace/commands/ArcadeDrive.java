@@ -7,7 +7,7 @@
 
 package org.frc5587.deepspace.commands;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
+// import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
@@ -39,8 +39,8 @@ public class ArcadeDrive extends Command {
 		// double curve = OI.xb.getX(Hand.kLeft);
 
 		// Joystick configuration
-		var throttle = OI.joy.getY(Hand.kLeft);
-		var curve = OI.joy.getX(Hand.kLeft);
+		var throttle = OI.joy.getY();
+		var curve = OI.joy.getX();
 
 		kDrive.vbusArcade(throttle, curve);
 		kDrive.sendDebugInfo();

@@ -16,9 +16,9 @@ package org.frc5587.deepspace;
 public class RobotMap {
     public static class Drive {
         public static int leftMaster = 2;
-        public static int rightMaster = 1;
-        public static int leftSlave = 1;
-        public static int rightSlave = 0;
+        public static int rightMaster = 3;
+        public static int leftSlave = 4;
+        public static int rightSlave = 5;
     }
 
     public static class Turret {

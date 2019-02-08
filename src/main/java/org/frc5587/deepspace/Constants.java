@@ -1,5 +1,8 @@
 package org.frc5587.deepspace;
 
+import org.frc5587.lib.pid.FPID;
+import org.frc5587.lib.pid.PIDVA;
+
 public class Constants {
 
     public static boolean compressorEnabled = false;
@@ -23,31 +26,28 @@ public class Constants {
 
         public static final int stuPerRev = 1389;
 
-        public static final int wheelDiameter = 6;
-
         // Safety limits
         public static final double minPercentOut = 0, maxPercentBw = 1, maxPercentFw = 1;
 
         // PIDF Constants
-        public static final double[] leftPIDs = { 0.04, // kP
+        public static final FPID leftPIDs = new FPID(0.000975 * 1023, // kF
+                0.04, // kP
                 0.0, // kI
-                0.0, // kD
-                0.000975 * 1023 // kF
-        };
-        public static final double[] rightPIDs = { 0.04, // kP
+                0.0 // kD
+        );
+        public static final FPID rightPIDs = new FPID(0.000975 * 1023, // kF
+                0.04, // kP
                 0.0, // kI
-                0.0, // kD
-                0.000975 * 1023 // kF
-        };
+                0.0 // kD
+        );
 
-        public static final double[] pathfinderPIDVA = { 0.003, // kP
-                0.0, // kI
-                0.0, // kD
-                0.000975 * stuPerInch / 10f, // kV
-                0.0005 * stuPerInch / 10f // kA
-        };
+        public static final int wheelDiameter = 6;
+        public static double gyrokP = 0.00;
 
-        public static double gyrokP = 0.0;
+        public static final PIDVA pathfinderPIDVALeft = new PIDVA(0.04, 0.0, 0.0, 0.000327 * stuPerInch / 10f,
+                0.0001 * stuPerInch / 10f);
+        public static final PIDVA pathfinderPIDVARight = new PIDVA(0.04, 0.0, 0.0, 0.000317 * stuPerInch / 10f,
+                0.0001 * stuPerInch / 10f);
     }
 
     public static final class Turret {

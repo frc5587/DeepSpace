@@ -7,76 +7,54 @@
 
 package org.frc5587.deepspace.subsystems;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.frc5587.lib.TitanDrive;
-import org.frc5587.lib.TitanDrive.DriveSignal;
+import org.frc5587.lib.pathfinder.AbstractDrive;
+import org.frc5587.lib.pathfinder.GyroCompMPRunner;
+import org.frc5587.lib.pathfinder.Pathgen;
 import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.RobotMap;
 
-import com.ctre.phoenix.motion.MotionProfileStatus;
-import com.ctre.phoenix.motion.SetValueMotionProfile;
-import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import edu.wpi.first.wpilibj.VictorSP;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 /**
  * An example subsystem. You can replace me with your own Subsystem.
  */
-public class Drive extends Subsystem {
+public class Drive extends AbstractDrive {
+	public static final Pathgen SLOW_PATHGEN = new Pathgen(30, 0.010, 36, 60, 120);
+	public static final Pathgen MED_PATHGEN = new Pathgen(30, 0.010, 60, 80, 160);
+	public static final Pathgen FAST_PATHGEN = new Pathgen(30, 0.010, 84, 80, 160);
 
-	private TalonSRX leftMaster, rightMaster;
-	private VictorSP leftSlave, rightSlave;
-	private ADXRS450_Gyro gyro;
-	private AHRS ahrs;
-	MotionProfileStatus[] statuses = { new MotionProfileStatus(), new MotionProfileStatus() };
+	public GyroCompMPRunner currentMpRunner;
 
 	public Drive() {
-		// gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
+		super(new TalonSRX(RobotMap.Drive.leftMaster), new TalonSRX(RobotMap.Drive.rightMaster),
+				new VictorSPX(RobotMap.Drive.leftSlave), new VictorSPX(RobotMap.Drive.rightSlave));
 
-		try {
-			/***********************************************************************
-			 * navX-MXP: - Communication via RoboRIO MXP (SPI, I2C, TTL UART) and USB. - See
-			 * http://navx-mxp.kauailabs.com/guidance/selecting-an-interface.
-			 * 
-			 * navX-Micro: - Communication via I2C (RoboRIO MXP or Onboard) and USB. - See
-			 * http://navx-micro.kauailabs.com/guidance/selecting-an-interface.
-			 * 
-			 * Multiple navX-model devices on a single robot are supported.
-			 ************************************************************************/
-			ahrs = new AHRS(Port.kMXP);
-		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-		}
+		setAHRS(new AHRS(Port.kMXP));
+		setConstants(Constants.Drive.kMaxVelocity, Constants.Drive.kTimeoutMs, Constants.Drive.stuPerRev,
+				Constants.Drive.stuPerInch, Constants.Drive.wheelDiameter, Constants.Drive.minBufferCount);
 
-		gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
+		currentMpRunner = null;
+	}
 
-		// initialize Talons
-		leftMaster = new TalonSRX(RobotMap.Drive.leftMaster);
-		rightMaster = new TalonSRX(RobotMap.Drive.rightMaster);
+	@Override
+	public void configPID(int slot) {
+		leftMaster.config_kF(slot, Constants.Drive.leftPIDs.kF, 0);
+		leftMaster.config_kP(slot, Constants.Drive.leftPIDs.kP, 0);
+		leftMaster.config_kI(slot, Constants.Drive.leftPIDs.kI, 0);
+		leftMaster.config_kD(slot, Constants.Drive.leftPIDs.kD, 0);
 
-		leftSlave = new VictorSP(RobotMap.Drive.leftSlave);
-		rightSlave = new VictorSP(RobotMap.Drive.rightSlave);
+		rightMaster.config_kF(slot, Constants.Drive.rightPIDs.kF, 0);
+		rightMaster.config_kP(slot, Constants.Drive.rightPIDs.kP, 0);
+		rightMaster.config_kI(slot, Constants.Drive.rightPIDs.kI, 0);
+		rightMaster.config_kD(slot, Constants.Drive.rightPIDs.kD, 0);
+	}
 
-		// invert right side
-		rightMaster.setInverted(true);
-		rightSlave.setInverted(true);
-
-		leftMaster.setSensorPhase(true);
-		rightMaster.setSensorPhase(true);
-
-		// Set the slaves to mimic the masters
-
-		// Enable Voltage Compensation
+	@Override
+	public void configSettings() {
 		rightMaster.configVoltageCompSaturation(Constants.kVCompSaturation, Constants.Drive.kTimeoutMs);
 		rightMaster.enableVoltageCompensation(true);
 		leftMaster.configVoltageCompSaturation(Constants.kVCompSaturation, Constants.Drive.kTimeoutMs);
@@ -86,206 +64,8 @@ public class Drive extends Subsystem {
 		leftMaster.configPeakOutputReverse(-Constants.Drive.maxPercentBw, Constants.Drive.kTimeoutMs);
 		rightMaster.configPeakOutputForward(Constants.Drive.maxPercentFw, Constants.Drive.kTimeoutMs);
 		rightMaster.configPeakOutputReverse(-Constants.Drive.maxPercentBw, Constants.Drive.kTimeoutMs);
-
-		fillPIDFSlot(0);
-
-		enableBrakeMode(true);
-	}
-
-	public class ProcessProfileRunnable implements java.lang.Runnable {
-		public void run() {
-			leftMaster.processMotionProfileBuffer();
-			rightMaster.processMotionProfileBuffer();
-		}
-	}
-
-	public Notifier profileNotifer = new Notifier(new ProcessProfileRunnable());
-
-	public void resetMP() {
-		leftMaster.clearMotionProfileHasUnderrun(Constants.Drive.kTimeoutMs);
-		leftMaster.clearMotionProfileTrajectories();
-		leftMaster.changeMotionControlFramePeriod(10);
-		leftMaster.configMotionProfileTrajectoryPeriod(10, Constants.Drive.kTimeoutMs);
-		leftMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.Drive.kTimeoutMs);
-		leftMaster.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
-
-		rightMaster.clearMotionProfileHasUnderrun(Constants.Drive.kTimeoutMs);
-		rightMaster.clearMotionProfileTrajectories();
-		rightMaster.changeMotionControlFramePeriod(10);
-		rightMaster.configMotionProfileTrajectoryPeriod(10, Constants.Drive.kTimeoutMs);
-		rightMaster.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.Drive.kTimeoutMs);
-		rightMaster.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
-	}
-
-	public void updateStatus() {
-		leftMaster.getMotionProfileStatus(statuses[0]);
-		rightMaster.getMotionProfileStatus(statuses[1]);
-	}
-
-	public MotionProfileStatus[] getStatuses() {
-		return statuses;
-	}
-
-	public boolean isMPReady() {
-		boolean leftReady = getStatuses()[0].btmBufferCnt > Constants.Drive.minBufferCount;
-		boolean rightReady = getStatuses()[0].btmBufferCnt > Constants.Drive.minBufferCount;
-		return leftReady && rightReady;
-	}
-
-	public boolean isMPDone() {
-		boolean leftDone = getStatuses()[0].isLast;
-		boolean rightDone = getStatuses()[0].isLast;
-		return leftDone && rightDone;
-	}
-
-	public void queuePoints(TrajectoryPoint[][] trajectories) {
-		for (TrajectoryPoint point : trajectories[0]) {
-			leftMaster.pushMotionProfileTrajectory(point);
-		}
-		for (TrajectoryPoint point : trajectories[1]) {
-			rightMaster.pushMotionProfileTrajectory(point);
-		}
-	}
-
-	public void setProfileMode(SetValueMotionProfile mpMode) {
-		leftMaster.set(ControlMode.MotionProfile, mpMode.value);
-		rightMaster.set(ControlMode.MotionProfile, mpMode.value);
-	}
-
-	/**
-	 * Send PIDF constants to master talons
-	 * 
-	 * @param slotIdx Which slot to push values to
-	 */
-	private void fillPIDFSlot(int slotIdx) {
-		leftMaster.config_kP(slotIdx, Constants.Drive.leftPIDs[0], 0);
-		leftMaster.config_kI(slotIdx, Constants.Drive.leftPIDs[1], 0);
-		leftMaster.config_kD(slotIdx, Constants.Drive.leftPIDs[2], 0);
-		leftMaster.config_kF(slotIdx, Constants.Drive.leftPIDs[3], 0);
-
-		rightMaster.config_kP(slotIdx, Constants.Drive.rightPIDs[0], 0);
-		rightMaster.config_kI(slotIdx, Constants.Drive.rightPIDs[1], 0);
-		rightMaster.config_kD(slotIdx, Constants.Drive.rightPIDs[2], 0);
-		rightMaster.config_kF(slotIdx, Constants.Drive.rightPIDs[3], 0);
-	}
-
-	public void enableBrakeMode(boolean enabled) {
-		if (enabled) {
-			leftMaster.setNeutralMode(NeutralMode.Brake);
-			rightMaster.setNeutralMode(NeutralMode.Brake);
-		} else {
-			leftMaster.setNeutralMode(NeutralMode.Coast);
-			rightMaster.setNeutralMode(NeutralMode.Coast);
-		}
-	}
-
-	public void vbusCurve(double throttle, double curve, boolean isQuickTurn) {
-		DriveSignal d = TitanDrive.curvatureDrive(throttle, curve, isQuickTurn);
-
-		leftMaster.set(ControlMode.PercentOutput, d.left);
-		rightMaster.set(ControlMode.PercentOutput, d.right);
-
-		leftSlave.set(d.left);
-		rightSlave.set(d.right);
-	}
-
-	public void vbusArcade(double throttle, double turn) {
-		DriveSignal d = TitanDrive.arcadeDrive(throttle, turn);
-
-		leftMaster.set(ControlMode.PercentOutput, d.left);
-		rightMaster.set(ControlMode.PercentOutput, d.right);
-
-		leftSlave.set(d.left);
-		rightSlave.set(d.right);
-	}
-
-	public void vbusLR(double left, double right) {
-		leftMaster.set(ControlMode.PercentOutput, left);
-		rightMaster.set(ControlMode.PercentOutput, right);
-
-		leftSlave.set(left);
-		rightSlave.set(right);
-	}
-
-	public void velocityCurve(double throttle, double curve, boolean isQuickTurn) {
-		DriveSignal d = TitanDrive.curvatureDrive(throttle, curve, isQuickTurn);
-
-		leftMaster.set(ControlMode.Velocity, d.left * Constants.Drive.kMaxVelocity);
-		rightMaster.set(ControlMode.Velocity, d.right * Constants.Drive.kMaxVelocity);
-
-		rightSlave.set(rightMaster.getMotorOutputPercent());
-		leftSlave.set(leftMaster.getMotorOutputPercent());
-	}
-
-	public void velocityArcade(double throttle, double turn) {
-		DriveSignal d = TitanDrive.arcadeDrive(throttle, turn);
-
-		leftMaster.set(ControlMode.Velocity, d.left * Constants.Drive.kMaxVelocity);
-		rightMaster.set(ControlMode.Velocity, d.right * Constants.Drive.kMaxVelocity);
-
-		rightSlave.set(rightMaster.getMotorOutputPercent());
-		leftSlave.set(leftMaster.getMotorOutputPercent());
-	}
-
-	public void stop() {
-		leftMaster.neutralOutput();
-		rightMaster.neutralOutput();
-	}
-
-	public int getLeftPosition() {
-		return leftMaster.getSelectedSensorPosition(0);
-	}
-
-	public int getRightPosition() {
-		return rightMaster.getSelectedSensorPosition(0);
-	}
-
-	public int getLeftVelocity() {
-		return leftMaster.getSelectedSensorVelocity(0);
-	}
-
-	public int getRightVelocity() {
-		return rightMaster.getSelectedSensorVelocity(0);
-	}
-
-	public double getLeftVoltage() {
-		return leftMaster.getMotorOutputVoltage();
-	}
-
-	public double getRightVoltage() {
-		return rightMaster.getMotorOutputVoltage();
-	}
-
-	public double getHeading() {
-		// return gyro.getAngle();
-		return ahrs.getAngle();
-	}
-
-	public void resetEncoders() {
-		leftMaster.setSelectedSensorPosition(0, 0, Constants.Drive.kTimeoutMs);
-		rightMaster.setSelectedSensorPosition(0, 0, Constants.Drive.kTimeoutMs);
-	}
-
-	public void sendDebugInfo() {
-		SmartDashboard.putNumber("Left Distance", getLeftPosition());
-		SmartDashboard.putNumber("Right Distance", getRightPosition());
-		SmartDashboard.putNumber("Left Velocity", getLeftVelocity());
-		SmartDashboard.putNumber("Right Velocity", getRightVelocity());
-		SmartDashboard.putNumber("Heading", getHeading());
-		SmartDashboard.putNumber("Left Amperage", leftMaster.getOutputCurrent());
-		SmartDashboard.putNumber("Right Amperage", rightMaster.getOutputCurrent());
-	}
-
-	public void sendMPDebugInfo() {
-		SmartDashboard.putNumber("Left Expected Pos", leftMaster.getActiveTrajectoryPosition());
-		SmartDashboard.putNumber("Right Expected Pos", rightMaster.getActiveTrajectoryPosition());
-		SmartDashboard.putNumber("Left Expected Vel", leftMaster.getActiveTrajectoryVelocity());
-		SmartDashboard.putNumber("Right Expected Vel", rightMaster.getActiveTrajectoryVelocity());
 	}
 
 	public void initDefaultCommand() {
-		// Set the default command for a subsystem here.
-		// setDefaultCommand(new MySpecialCommand());
-		// setDefaultCommand(new CurveDrive());
 	}
 }
