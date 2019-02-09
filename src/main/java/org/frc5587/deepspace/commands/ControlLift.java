@@ -17,23 +17,27 @@ public class ControlLift extends Command {
     //TODO: change to acurate values
     @Override
     protected void execute() {
-        height = Robot.LIFT.sensorPosition();
-        if(OI.xb.getStickButtonPressed(Hand.kRight)) {
-            if(height < upperValue) {
-                Robot.LIFT.liftDown();
-            }
-            else if(upperValue - allowance <= height && height <= upperValue + allowance) {
-                Robot.LIFT.liftStop();
-            }
-        }
-        if(OI.xb.getStickButtonPressed(Hand.kLeft)) {
-            if(height <= upperValue) {
-                Robot.LIFT.liftUp();
-            }
-            else if(0 - allowance <= height && height <= 0 + allowance) {
-                Robot.LIFT.liftStop();
-            }
-        }
+        // height = Robot.LIFT.sensorPosition();
+        // if(OI.xb.getStickButtonPressed(Hand.kRight)) {
+        //     if(height < upperValue) {
+        //         Robot.LIFT.liftDown();
+        //     }
+        //     else if(upperValue - allowance <= height && height <= upperValue + allowance) {
+        //         Robot.LIFT.liftStop();
+        //     }
+        // }
+        // if(OI.xb.getStickButtonPressed(Hand.kLeft)) {
+        //     if(height <= upperValue) {
+        //         Robot.LIFT.liftUp();
+        //     }
+        //     else if(0 - allowance <= height && height <= 0 + allowance) {
+        //         Robot.LIFT.liftStop();
+        //     }
+        // }
+
+        var value = OI.xb.getY(Hand.kRight);
+        // System.out.println(value);
+        Robot.LIFT.setLift(value);
     }
     @Override
     protected boolean isFinished() {

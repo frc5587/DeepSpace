@@ -26,6 +26,10 @@ public class Lift extends Subsystem {
         liftMotor.set(ControlMode.PercentOutput, 0);
     }
 
+    public void setLift(double value) {
+        liftMotor.set(ControlMode.PercentOutput, value);
+    }
+
     public int sensorPosition() {
         return liftMotor.getSelectedSensorPosition();
     }

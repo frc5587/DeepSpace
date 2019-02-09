@@ -8,18 +8,12 @@
 package org.frc5587.deepspace;
 
 
-
-import org.frc5587.deepspace.subsystems.Drive;
-
 import java.io.IOException;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.subsystems.*;
-import org.frc5587.deepspace.subsystems.Hatch;
-import edu.wpi.first.wpilibj.CameraServer;
 
-
-import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.cscore.UsbCamera;
@@ -33,9 +27,6 @@ import edu.wpi.cscore.UsbCamera;
  * project.
  */
 public class Robot extends TimedRobot {
-    public static final Drive DRIVETRAIN = new Drive();
-    public static final Hatch HATCH = new Hatch();
-    public static final Compressor c = new Compressor();
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
     public static final Lift LIFT = new Lift();
@@ -46,7 +37,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        c.start();
         cameraServer = CameraServer.getInstance();
 	    driverCamera = cameraServer.startAutomaticCapture(0);
 	    cameraServer.startAutomaticCapture(driverCamera);
@@ -62,8 +52,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        new ArcadeDrive().start();
-        new ControlHatch().start();
         new ControlLift().start();
     }
 
