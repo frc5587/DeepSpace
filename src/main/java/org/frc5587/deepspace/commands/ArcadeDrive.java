@@ -7,7 +7,7 @@
 
 package org.frc5587.deepspace.commands;
 
-// import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
@@ -18,6 +18,8 @@ import org.frc5587.deepspace.subsystems.Drive;
  */
 public class ArcadeDrive extends Command {
 	private Drive kDrive;
+
+	private int maxVelocity = Integer.MIN_VALUE;
 
 	public ArcadeDrive() {
 		// Use requires() here to declare subsystem dependencies
@@ -35,14 +37,23 @@ public class ArcadeDrive extends Command {
 	@Override
 	protected void execute() {
 		// Xbox configuration
-		// double throttle = -OI.xb.getY(Hand.kLeft);
-		// double curve = OI.xb.getX(Hand.kLeft);
+		double throttle = -OI.xb.getY(Hand.kLeft);
+		double curve = OI.xb.getX(Hand.kLeft);
+
+		// Code for finding max velocity of side
+		// var currentVal = Robot.DRIVETRAIN.getLeftPosition();
+		// var currentVal = Robot.DRIVETRAIN.getRightVelocity();
+		// if (currentVal > maxVelocity) {
+		// 	maxVelocity = currentVal;
+		//  System.out.println(maxVelocity);
+		// }
 
 		// Joystick configuration
-		var throttle = OI.joy.getY();
-		var curve = OI.joy.getX();
+		// var throttle = OI.joy.getY();
+		// var curve = OI.joy.getX();
 
 		kDrive.vbusArcade(throttle, curve);
+
 		kDrive.sendDebugInfo();
 	}
 

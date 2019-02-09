@@ -22,6 +22,6 @@ public class RobotMap {
     }
 
     public static class Turret {
-        public static final int TURRET_TALON = 3;
+        public static final int TURRET_TALON = 7;
     }
 }

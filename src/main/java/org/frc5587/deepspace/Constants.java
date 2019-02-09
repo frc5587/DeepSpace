@@ -35,10 +35,11 @@ public class Constants {
                 0.0, // kI
                 0.0 // kD
         );
-        public static final FPID rightPIDs = new FPID(0.000975 * 1023, // kF
-                0.04, // kP
-                0.0, // kI
-                0.0 // kD
+        public static final FPID rightPIDs = new FPID(
+                (1 / 4060) * 1023, // kF
+                0.8056, // kP
+                0.001, // kI
+                17.7232 // kD
         );
 
         public static final int wheelDiameter = 6;
