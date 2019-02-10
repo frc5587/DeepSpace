@@ -3,6 +3,7 @@ package org.frc5587.deepspace.commands;
 import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.TCPServer;
+import org.frc5587.deepspace.subsystems.Elevator;
 import org.frc5587.lib.pathfinder.GyroCompMPRunner;
 import org.frc5587.lib.pathfinder.Pathgen;
 
@@ -15,9 +16,12 @@ public class Routines {
             var perpGoalTraj = trajPathgen.createTrajectory(new Waypoint(0, 0, 0),
                     new Waypoint(infoMessage.distanceX, infoMessage.distanceY, infoMessage.angleToCenterRad));
 
+            addParallel(new ControlElevator());
+
             addSequential(new GyroCompMPRunner(Robot.DRIVETRAIN, perpGoalTraj, trajPathgen,
                     Constants.Drive.pathfinderPIDVALeft, Constants.Drive.pathfinderPIDVARight, Constants.Drive.gyrokP));
             // TODO: Use elevator to go to setpoint and release hatch
+
         }
     }
 
