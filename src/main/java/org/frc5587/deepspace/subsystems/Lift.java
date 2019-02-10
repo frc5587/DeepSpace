@@ -8,31 +8,36 @@ import org.frc5587.deepspace.RobotMap;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Lift extends Subsystem {
-    private TalonSRX liftMotor;
+    private TalonSRX liftLeader,liftFollower;
 
     public Lift() {
-        liftMotor = new TalonSRX(RobotMap.Lift.LIFT_MOTOR);
+        liftLeader = new TalonSRX(RobotMap.Drive.leftMaster);
+        liftFollower = new TalonSRX(RobotMap.Drive.rightMaster);
     }
 
     public void liftDown() {
-        liftMotor.set(ControlMode.PercentOutput, 1);
-    }
+        liftLeader.set(ControlMode.PercentOutput, 1);
+        liftFollower.set(ControlMode.PercentOutput, 1);
+        }
 
     public void liftUp() {
-        liftMotor.set(ControlMode.PercentOutput, -1);
+        liftLeader.set(ControlMode.PercentOutput, -1);
+        liftFollower.set(ControlMode.PercentOutput, -1);
     }
 
     public void liftStop() {
-        liftMotor.set(ControlMode.PercentOutput, 0);
+        liftLeader.set(ControlMode.PercentOutput, 0);
+        liftFollower.set(ControlMode.PercentOutput, 0);
     }
 
     public void setLift(double value) {
-        liftMotor.set(ControlMode.PercentOutput, value);
+        liftLeader.set(ControlMode.PercentOutput, value);
+        liftFollower.set(ControlMode.PercentOutput, value);
     }
 
-    public int sensorPosition() {
-        return liftMotor.getSelectedSensorPosition();
-    }
+    // public int sensorPosition() {
+    //     return liftMotor.getSelectedSensorPosition();
+    // }
 
     @Override
     protected void initDefaultCommand() {
