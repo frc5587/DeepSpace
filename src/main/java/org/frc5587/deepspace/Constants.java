@@ -11,11 +11,15 @@ public class Constants {
     public static boolean compressorEnabled = true;
 
     public static final class Elevator {
+        public static final double STU_PER_INCH = 628.704;
+
         public static final double spoolDiameter = 2.0;
 
         public static final double bottomTicks = 0;
-        public static final double middleTicks = -1;
-        public static final double topTicks = -2;
+
+        public static final double middleTicks = 47 * STU_PER_INCH;
+
+        public static final double topTicks = 75 * STU_PER_INCH;
 
         public static final int kSlotIdx = 0;
         public static final int kPIDLoopIdx = 0;

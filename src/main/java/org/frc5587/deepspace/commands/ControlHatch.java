@@ -13,23 +13,23 @@ public class ControlHatch extends Command {
 
     }
 
-    @Override
-    protected void initialize() {
-        Robot.HATCH.hatchClosed();
-    }
+    // @Override
+    // protected void initialize() {
+    //     Robot.HATCH.hatchClosed();
+    // }
 
-    @Override
-    protected void execute() {
-        if (OI.xb.getBumperPressed(Hand.kRight)) {
-            if (closed) {
-                Robot.HATCH.hatchOpen();
-                closed = false;
-            } else {
-                Robot.HATCH.hatchClosed();
-                closed = true;
-            }
-        }
-    }
+    // @Override
+    // protected void execute() {
+    //     if (OI.xb.getBumperPressed(Hand.kRight)) {
+    //         if (closed) {
+    //             Robot.HATCH.hatchOpen();
+    //             closed = false;
+    //         } else {
+    //             Robot.HATCH.hatchClosed();
+    //             closed = true;
+    //         }
+    //     }
+    // }
 
     @Override
     protected boolean isFinished() {

@@ -35,7 +35,7 @@ import edu.wpi.cscore.UsbCamera;
  */
 public class Robot extends TimedRobot {
     public static final Drive DRIVETRAIN = new Drive();
-    public static final Hatch HATCH = new Hatch();
+    // public static final Hatch HATCH = new Hatch();
     public static final Compressor c = new Compressor(RobotMap.COMPRESSOR);
     public static final Elevator e = new Elevator();
     public static CameraServer cameraServer;
@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(new ResetElevator());
 
         // new ArcadeDrive().start();
-        // new ControlHatch().start();
+        new ControlHatch().start();
         new ControlElevator().start();
     }
 

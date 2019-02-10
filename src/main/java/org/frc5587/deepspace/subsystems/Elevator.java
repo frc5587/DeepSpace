@@ -97,6 +97,14 @@ public class Elevator extends Subsystem {
         return elevatorTalon.getSelectedSensorVelocity();
     }
 
+    public double inchesToTicks(double inches) {
+        return inches * Constants.Elevator.STU_PER_INCH;
+    }
+
+    public double ticksToInches(double ticks) {
+        return ticks / Constants.Elevator.STU_PER_INCH;
+    }
+
     @Override
     protected void initDefaultCommand() {
 

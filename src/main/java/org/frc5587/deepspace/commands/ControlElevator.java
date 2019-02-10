@@ -26,14 +26,13 @@ public class ControlElevator extends Command {
 
         SmartDashboard.putNumber("Elevator Pos", Robot.e.getPosition());
 
-    //    // pick a button (setpoints??)
-    //     if (OI.xb.getAButton()) {
-    //         Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.BOTTOM_LEVEL));
-    //     } else if (OI.xb.getBButton()) {
-    //         Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.MIDDLE_LEVEL));
-    //     } else if (OI.xb.getYButton()) {
-    //         Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.TOP_LEVEL));
-    //     } 
+        if (OI.xb.getAButtonPressed()) {
+            Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.BOTTOM_LEVEL));
+        } else if (OI.xb.getBButtonPressed()) {
+            Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.MIDDLE_LEVEL));
+        } else if (OI.xb.getYButtonPressed()) {
+            Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.TOP_LEVEL));
+        } 
     }
 
     @Override
