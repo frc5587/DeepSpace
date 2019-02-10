@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.frc5587.robot;
+package org.frc5587.deepspace;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
