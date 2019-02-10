@@ -58,4 +58,8 @@ public class Constants {
         public static final PIDVA pathfinderPIDVARight = new PIDVA(0.04, 0.0, 0.0, 0.000317 * stuPerInch / 10f,
                 0.0001 * stuPerInch / 10f);
     }
+
+    public static final class Hatch {
+        public static final boolean REQUIRE_BOTH = true;
+    }
 }

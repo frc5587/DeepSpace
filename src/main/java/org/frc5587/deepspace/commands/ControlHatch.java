@@ -2,6 +2,7 @@ package org.frc5587.deepspace.commands;
 
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
+import org.frc5587.deepspace.subsystems.Hatch;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
@@ -21,7 +22,8 @@ public class ControlHatch extends Command {
 
     @Override
     protected void execute() {
-        if (OI.xb.getBumperPressed(Hand.kRight)) {
+
+        if (OI.xb.getBumperPressed(Hand.kRight) || Robot.HATCH.limitControl()) {
             if (closed) {
                 Robot.HATCH.hatchOpen();
                 closed = false;
