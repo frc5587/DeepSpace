@@ -8,7 +8,8 @@
 package org.frc5587.deepspace.commands;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
+
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Drive;
@@ -16,7 +17,7 @@ import org.frc5587.deepspace.subsystems.Drive;
 /**
  * An example command.  You can replace me with your own command.
  */
-public class ArcadeDrive extends Command {
+public class ArcadeDrive extends InstantCommand {
 	private Drive kDrive;
 
 	public ArcadeDrive() {
@@ -45,12 +46,6 @@ public class ArcadeDrive extends Command {
 		kDrive.vbusArcade(throttle, curve);
 
 		kDrive.sendDebugInfo();
-	}
-
-	// Make this return true when this Command no longer needs to run execute()
-	@Override
-	protected boolean isFinished() {
-		return false;
 	}
 
 	// Called once after isFinished returns true

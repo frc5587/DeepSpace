@@ -67,12 +67,12 @@ public class Elevator extends Subsystem {
         elevatorTalon.configVoltageCompSaturation(Constants.Elevator.vCompSaturation, Constants.Elevator.kTimeoutMs);
     }
 
-    public double getTicks(ElevatorHeights e) {
-        return elevatorHeights.get(e);
+    public double getTicks(ElevatorHeights height) {
+        return elevatorHeights.get(height);
     }
 
-    public void setElevator(double d) {
-        elevatorTalon.set(ControlMode.MotionMagic, d);
+    public void setElevator(double height) {
+        elevatorTalon.set(ControlMode.MotionMagic, height);
     }
 
     public void elevatorHold() {

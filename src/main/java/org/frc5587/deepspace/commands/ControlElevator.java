@@ -1,16 +1,14 @@
 package org.frc5587.deepspace.commands;
 
-
-import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Elevator.ElevatorHeights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ControlElevator extends Command {
+public class ControlElevator extends InstantCommand {
     public ControlElevator() {
 
     }
@@ -31,10 +29,5 @@ public class ControlElevator extends Command {
         }
 
         SmartDashboard.putNumber("Elevator Pos", Robot.ELEVATOR.getPosition());
-    }
-
-    @Override
-    protected boolean isFinished() {
-        return false;
     }
 }
