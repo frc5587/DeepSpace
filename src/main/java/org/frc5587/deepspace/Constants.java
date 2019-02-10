@@ -3,6 +3,12 @@ package org.frc5587.deepspace;
 import org.frc5587.lib.pid.FPID;
 import org.frc5587.lib.pid.PIDVA;
 
+/**
+ * Constants is a central place in which to store all of the constants having to
+ * do with the robot and its subsystems. Where applicable, the constants are
+ * stored within subclasses that describe the subsystem with which the constant
+ * is associated and/or used.
+ */
 public class Constants {
 
     public static boolean compressorEnabled = false;
@@ -14,17 +20,19 @@ public class Constants {
     public static final double kVCompSaturation = 12.0;
 
     public static final class Drive {
+        // set to zero to skip waiting for confirmation, set to nonzero to wait and
+        // report to DS if action fails
         public static final int kTimeoutMs = 10;
 
-        public static final int minBufferCount = 10;
-
-        public static final double kMaxVelocity = 900;
+        public static final double kMaxVelocity = 2500; // measured in STU
 
         public static final double kVCompSaturation = 12.0;
 
-        public static final int stuPerInch = 77;
+        public static final int minBufferCount = 10;
 
-        public static final int stuPerRev = 1389;
+        public static final int stuPerInch = 215;
+
+        public static final int stuPerRev = 4050;
 
         // Safety limits
         public static final double minPercentOut = 0, maxPercentBw = 1, maxPercentFw = 1;
@@ -49,19 +57,5 @@ public class Constants {
                 0.0001 * stuPerInch / 10f);
         public static final PIDVA pathfinderPIDVARight = new PIDVA(0.04, 0.0, 0.0, 0.000317 * stuPerInch / 10f,
                 0.0001 * stuPerInch / 10f);
-    }
-
-    public static final class Turret {
-        public static final int MAX_CRUISE_VELOCITY = 1321; // In native units / 100ms
-
-        public static final double NU_PER_DEGREE = 4096 / 360; // Native units / degree - in CTRE Mag Encoder Docs
-
-        public static final int PID_SLOT = 0;
-        public static final double[] TURRET_FPID = {
-                // 0.3874, //kF not needed because just using position PID
-                0.0, 5.15, // 5.15
-                0, // kI
-                35.25, // 31.25
-        };
     }
 }

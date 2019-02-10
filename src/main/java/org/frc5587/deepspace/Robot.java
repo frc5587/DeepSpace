@@ -7,18 +7,15 @@
 
 package org.frc5587.deepspace;
 
-import java.io.IOException;
-
 import org.frc5587.deepspace.commands.ArcadeDrive;
-import org.frc5587.deepspace.commands.ControlTurret;
-import org.frc5587.deepspace.commands.PostDebugData;
-import org.frc5587.deepspace.commands.ResetEncoders;
 import org.frc5587.deepspace.subsystems.Drive;
-import org.frc5587.deepspace.subsystems.Turret;
+import org.frc5587.deepspace.subsystems.Hatch;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,7 +26,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
     public static final Drive DRIVETRAIN = new Drive();
-    public static final Turret TURRET = new Turret();
+    public static final Hatch HATCH = new Hatch();
+    public static final Compressor c = new Compressor();
+    public static CameraServer cameraServer;
+    public static UsbCamera driverCamera;
 
     private static TCPServer tcpServer;
 
@@ -39,7 +39,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        new PostDebugData().start();
+        c.start();
+        cameraServer = CameraServer.getInstance();
+	    driverCamera = cameraServer.startAutomaticCapture(0);
+	    cameraServer.startAutomaticCapture(driverCamera);
     }
 
     @Override
@@ -52,11 +55,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        System.out.println("Running Teleop");
-        SmartDashboard.putData("Reset Encoders", new ResetEncoders());
-
-        // new SerialTest().start();
-        // new ControlTurret().start();
         new ArcadeDrive().start();
         
         // try {

@@ -30,8 +30,8 @@ public class Drive extends AbstractDrive {
 	public static final Pathgen FAST_PATHGEN = new Pathgen(30, 0.010, 84, 80, 160);
 
 	public Drive() {
-		super(new TalonSRX(RobotMap.Drive.leftMaster), new TalonSRX(RobotMap.Drive.rightMaster),
-				new VictorSPX(RobotMap.Drive.leftSlave), new VictorSPX(RobotMap.Drive.rightSlave), true);
+		super(new TalonSRX(RobotMap.Drive.LEFT_MASTER), new TalonSRX(RobotMap.Drive.RIGHT_MASTER),
+				new VictorSPX(RobotMap.Drive.LEFT_SLAVE), new VictorSPX(RobotMap.Drive.RIGHT_SLAVE), true);
 
 		setAHRS(new AHRS(Port.kMXP));
 		setConstants(Constants.Drive.kMaxVelocity, Constants.Drive.kTimeoutMs, Constants.Drive.stuPerRev,
