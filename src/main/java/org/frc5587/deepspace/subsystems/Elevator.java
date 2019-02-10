@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.RobotMap;
+import org.frc5587.lib.MathHelper;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -39,7 +40,7 @@ public class Elevator extends Subsystem {
     private static void configureTalon() {
         elevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
                 Constants.Elevator.kPIDLoopIdx, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.setSensorPhase(true);
+        elevatorTalon.setSensorPhase(false);
         elevatorTalon.setInverted(false);
         elevatorTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.Elevator.kTimeoutMs);
         elevatorTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10,
@@ -66,7 +67,7 @@ public class Elevator extends Subsystem {
         elevatorTalon.configVoltageCompSaturation(Constants.Elevator.vCompSaturation, Constants.Elevator.kTimeoutMs);
     }
 
-   public double getTicks(ElevatorHeights e) {
+    public double getTicks(ElevatorHeights e) {
         return elevatorHeights.get(e);
     }
 
@@ -75,15 +76,25 @@ public class Elevator extends Subsystem {
     }
 
     public void elevatorHold() {
-        elevatorTalon.set(ControlMode.PercentOutput, Constants.holdVoltage);
+        elevatorTalon.set(ControlMode.PercentOutput, Constants.Elevator.HOLD_VOLAGE);
     }
 
     public void elevatorMove(double yInput) {
-        elevatorTalon.set(ControlMode.PercentOutput, yInput);
-    }   
+        yInput = yInput > 0 ? yInput : 0.5 * yInput;    
+        var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLAGE, -1, 1);
+        elevatorTalon.set(ControlMode.PercentOutput, scaledValue);
+    }
 
-    public void elevatorDown() {
-        elevatorTalon.set(ControlMode.PercentOutput, -1);
+    public void resetEncoder() {
+        elevatorTalon.setSelectedSensorPosition(0);
+    }
+
+    public int getPosition() {
+        return elevatorTalon.getSelectedSensorPosition();
+    }
+
+    public int getVelocity() {
+        return elevatorTalon.getSelectedSensorVelocity();
     }
 
     @Override

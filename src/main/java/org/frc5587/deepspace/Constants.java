@@ -10,36 +10,31 @@ public class Constants {
 
     public static boolean compressorEnabled = true;
 
-    public static final double holdVoltage = .15;
-
     public static final class Elevator {
         public static final double spoolDiameter = 2.0;
 
         public static final double bottomTicks = 0;
-
         public static final double middleTicks = -1;
-
         public static final double topTicks = -2;
 
         public static final int kSlotIdx = 0;
+        public static final int kPIDLoopIdx = 0;
 
-        public static final int kPIDLoopIdx =0;
-
-        public static final int kTimeoutMs= 10;
+        public static final int kTimeoutMs = 10;
 
         public static final double vCompSaturation = 12.0;
 
         public static final double[] PIDs = {
-            0.03, //kP
+            2.9568, //kP
             0.0, //kI
-            0.05, //kD
-            0.58, // kF
+            10.9136, //kD
+            (1 / 5246) * 1023 // kF
         };
-        
 
         public static final double minPercentOut = 0.0, maxPercentBw = .6, maxPercentFw = 1;
+        public static final double HOLD_VOLAGE = 0.05;
 
-        public static final int maxVelocity = 2500, maxAcceleration = 2500;
+        public static final int maxVelocity = 5246, maxAcceleration = 5246;
     }
 
     public static final class Drive {
