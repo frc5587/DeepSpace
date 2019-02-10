@@ -12,15 +12,12 @@ import java.io.IOException;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.subsystems.*;
-import edu.wpi.first.wpilibj.CameraServer;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.cscore.UsbCamera;
 
 
@@ -33,7 +30,7 @@ import edu.wpi.cscore.UsbCamera;
  */
 public class Robot extends TimedRobot {
     public static final Drive DRIVETRAIN = new Drive();
-    // public static final Hatch HATCH = new Hatch();
+    public static final Hatch HATCH = new Hatch();
     public static final Compressor c = new Compressor(RobotMap.COMPRESSOR);
     public static final Elevator e = new Elevator();
     public static CameraServer cameraServer;

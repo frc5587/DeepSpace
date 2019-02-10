@@ -65,10 +65,6 @@ public class Constants {
 
         public static final int stuPerRev = 4050;
 
-
-        public static final int wheelDiameter = 6;
-
-
         // Safety limits
         public static final double minPercentOut = 0, maxPercentBw = 1, maxPercentFw = 1;
 
