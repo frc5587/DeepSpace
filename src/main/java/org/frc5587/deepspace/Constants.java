@@ -19,6 +19,37 @@ public class Constants {
     public static final int kTimeoutMs = 10;
     public static final double kVCompSaturation = 12.0;
 
+    public static final class Elevator {
+        public static final double STU_PER_INCH = 628.704;
+
+        public static final double spoolDiameter = 2.0;
+
+        public static final double bottomTicks = 0;
+
+        public static final double middleTicks = 47 * STU_PER_INCH;
+
+        public static final double topTicks = 75 * STU_PER_INCH;
+
+        public static final int kSlotIdx = 0;
+        public static final int kPIDLoopIdx = 0;
+
+        public static final int kTimeoutMs = 10;
+
+        public static final double vCompSaturation = 12.0;
+
+        public static final double[] PIDs = {
+            2.9568, //kP
+            0.0, //kI
+            10.9136, //kD
+            (1 / 5246) * 1023 // kF
+        };
+
+        public static final double minPercentOut = 0.0, maxPercentBw = .6, maxPercentFw = 1;
+        public static final double HOLD_VOLAGE = 0.05;
+
+        public static final int maxVelocity = 5246, maxAcceleration = 5246;
+    }
+
     public static final class Drive {
         // set to zero to skip waiting for confirmation, set to nonzero to wait and
         // report to DS if action fails

@@ -14,7 +14,7 @@ package org.frc5587.deepspace;
  * floating around.
  */
 public class RobotMap {
-	public static final int COMPRESSOR = 0;
+	public static final int COMPRESSOR = 10;
 
 	public static class Hatch {
 		public static final int[] HATCH_PISTONS = { 0, 1 };
@@ -27,4 +27,10 @@ public class RobotMap {
 		public static int LEFT_SLAVE = 4;
 		public static int RIGHT_SLAVE = 5;
 	}
+
+	public static class Elevator {
+		public static final int ELEVATOR_MASTER = 7;
+		public static final int ELEVATOR_SLAVE = 6;
+	}
+
 }
