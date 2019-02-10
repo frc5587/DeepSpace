@@ -8,20 +8,18 @@
 package org.frc5587.deepspace;
 
 
-
-import org.frc5587.deepspace.commands.ArcadeDrive;
-import org.frc5587.deepspace.subsystems.Drive;
-
 import java.io.IOException;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.subsystems.*;
 import edu.wpi.first.wpilibj.CameraServer;
 
-
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.cscore.UsbCamera;
 
@@ -40,6 +38,8 @@ public class Robot extends TimedRobot {
     public static final Elevator e = new Elevator();
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
+
+    private static TCPServer tcpServer;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -68,10 +68,30 @@ public class Robot extends TimedRobot {
         // new ArcadeDrive().start();
         new ControlHatch().start();
         new ControlElevator().start();
+        new ArcadeDrive().start();
+        
+        // try {
+        //     tcpServer = new TCPTestServer(Constants.TCP_PORT);
+        //     tcpServer.start();
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
     }
 
     @Override
     public void teleopPeriodic() {
+        Scheduler.getInstance().run();
+    }
+
+    @Override
+    public void disabledInit() {
+        if (tcpServer != null) {
+            tcpServer.close();
+        }
+    }
+
+    @Override
+    public void disabledPeriodic() {
         Scheduler.getInstance().run();
     }
 
