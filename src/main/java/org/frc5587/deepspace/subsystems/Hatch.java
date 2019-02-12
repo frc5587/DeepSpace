@@ -46,6 +46,10 @@ public class Hatch extends Subsystem {
         } 
     }
 
+    public DoubleSolenoid returnHatchPistons() {
+        return hatchPistons;
+    }
+
     @Override
     protected void initDefaultCommand() {
 
