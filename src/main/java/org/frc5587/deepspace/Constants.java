@@ -11,7 +11,7 @@ import org.frc5587.lib.pid.PIDVA;
  */
 public class Constants {
 
-    public static boolean compressorEnabled = false;
+    public static boolean COMPRESSOR_ENABLED = true;
     public static final int TCP_PORT = 3456;
 
     // set to zero to skip waiting for confirmation, set to nonzero to wait and
@@ -69,10 +69,11 @@ public class Constants {
         public static final double minPercentOut = 0, maxPercentBw = 1, maxPercentFw = 1;
 
         // PIDF Constants
-        public static final FPID leftPIDs = new FPID(0.000975 * 1023, // kF
-                0.04, // kP
-                0.0, // kI
-                0.0 // kD
+        public static final FPID leftPIDs = new FPID(
+                (1 / 3933) * 1023, // kF
+                0.8056, // kP
+                0.001, // kI
+                17.7232 // kD
         );
         public static final FPID rightPIDs = new FPID(
                 (1 / 4060) * 1023, // kF

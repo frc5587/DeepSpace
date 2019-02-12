@@ -78,10 +78,9 @@ public class Drive extends AbstractDrive {
 	}
 
 	public void refreshPID() {
-		leftMaster.config_kP(0, SmartDashboard.getNumber("Right P", 0.0), 20);
-		leftMaster.config_kI(0, SmartDashboard.getNumber("Right I", 0.0), 20);
-		leftMaster.config_kD(0, SmartDashboard.getNumber("Right D", 0.0), 20);
-
+		leftMaster.config_kP(0, SmartDashboard.getNumber("Left P", 0.0), 20);
+		leftMaster.config_kI(0, SmartDashboard.getNumber("Left I", 0.0), 20);
+		leftMaster.config_kD(0, SmartDashboard.getNumber("Left D", 0.0), 20);
 		rightMaster.config_kP(0, SmartDashboard.getNumber("Right P", 0.0), 20);
 		rightMaster.config_kI(0, SmartDashboard.getNumber("Right I", 0.0), 20);
 		rightMaster.config_kD(0, SmartDashboard.getNumber("Right D", 0.0), 20);

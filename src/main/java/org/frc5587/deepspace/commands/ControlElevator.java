@@ -18,21 +18,19 @@ public class ControlElevator extends Command {
     @Override
     protected void execute() {
         var throttle = OI.xb.getY(Hand.kRight);    
-        if (OI.xb.getTrigger(Hand.kLeft)) {
-            Robot.e.setElevator(SmartDashboard.getNumber("Elevator Set", 0.0));
+        if (!OI.xb.getTrigger(Hand.kLeft)) {
+            if (OI.xb.getAButtonPressed()) {
+                Robot.ELEVATOR.setElevator(Robot.ELEVATOR.getTicks(ElevatorHeights.BOTTOM_LEVEL));
+            } else if (OI.xb.getBButtonPressed()) {
+                Robot.ELEVATOR.setElevator(Robot.ELEVATOR.getTicks(ElevatorHeights.MIDDLE_LEVEL));
+            } else if (OI.xb.getYButtonPressed()) {
+                Robot.ELEVATOR.setElevator(Robot.ELEVATOR.getTicks(ElevatorHeights.TOP_LEVEL));
+            }
         } else {
-            Robot.e.elevatorMove(throttle);
+            Robot.ELEVATOR.elevatorMove(throttle);
         }
 
-        SmartDashboard.putNumber("Elevator Pos", Robot.e.getPosition());
-
-        if (OI.xb.getAButtonPressed()) {
-            Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.BOTTOM_LEVEL));
-        } else if (OI.xb.getBButtonPressed()) {
-            Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.MIDDLE_LEVEL));
-        } else if (OI.xb.getYButtonPressed()) {
-            Robot.e.setElevator(Robot.e.getTicks(ElevatorHeights.TOP_LEVEL));
-        } 
+        SmartDashboard.putNumber("Elevator Pos", Robot.ELEVATOR.getPosition());
     }
 
     @Override

@@ -19,8 +19,6 @@ import org.frc5587.deepspace.subsystems.Drive;
 public class ArcadeDrive extends Command {
 	private Drive kDrive;
 
-	private int maxVelocity = Integer.MIN_VALUE;
-
 	public ArcadeDrive() {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.DRIVETRAIN);
@@ -37,20 +35,12 @@ public class ArcadeDrive extends Command {
 	@Override
 	protected void execute() {
 		// Xbox configuration
-		double throttle = -OI.xb.getY(Hand.kLeft);
-		double curve = OI.xb.getX(Hand.kLeft);
-
-		// Code for finding max velocity of side
-		// var currentVal = Robot.DRIVETRAIN.getLeftPosition();
-		// var currentVal = Robot.DRIVETRAIN.getRightVelocity();
-		// if (currentVal > maxVelocity) {
-		// 	maxVelocity = currentVal;
-		//  System.out.println(maxVelocity);
-		// }
+		// double throttle = -OI.xb.getY(Hand.kLeft);
+		// double curve = OI.xb.getX(Hand.kLeft);
 
 		// Joystick configuration
-		// var throttle = OI.joy.getY();
-		// var curve = OI.joy.getX();
+		var throttle = -OI.joy.getY();
+		var curve = OI.joy.getX();
 
 		kDrive.vbusArcade(throttle, curve);
 
