@@ -4,7 +4,7 @@ import org.frc5587.deepspace.Robot;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class ResetElevator extends InstantCommand {
+    public class ResetElevator extends InstantCommand {
         public ResetElevator() {
 
     }
