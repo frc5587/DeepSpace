@@ -95,4 +95,8 @@ public class Constants {
                 0  // kD
         );
     }
+
+    public static final class Hatch {
+        public static final boolean REQUIRE_BOTH = true;
+    }
 }

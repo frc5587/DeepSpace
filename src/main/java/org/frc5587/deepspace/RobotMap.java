@@ -19,6 +19,8 @@ public class RobotMap {
 	public static class Hatch {
 		public static final int[] HATCH_PISTONS = { 0, 1 };
 		public static final int[] SLICER_PISTONS = { 2, 3 };
+		public static final int LIMIT_SWITCH_ONE = 0;
+		public static final int LIMIT_SWITCH_TWO = 1;
 	}
 
 	public static class Drive {

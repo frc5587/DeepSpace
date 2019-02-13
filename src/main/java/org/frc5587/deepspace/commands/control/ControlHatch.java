@@ -23,7 +23,8 @@ public class ControlHatch extends InstantCommand {
 
     @Override
     protected void execute() {
-        if (OI.xb.getBumperPressed(Hand.kRight)) {
+
+        if (OI.xb.getBumperPressed(Hand.kRight) || Robot.HATCH.limitControl()) {
             if (closed) {
                 Robot.HATCH.hatchOpen();
                 closed = false;
