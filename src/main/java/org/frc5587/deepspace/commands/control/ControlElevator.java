@@ -1,4 +1,4 @@
-package org.frc5587.deepspace.commands;
+package org.frc5587.deepspace.commands.control;
 
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
@@ -15,7 +15,7 @@ public class ControlElevator extends InstantCommand {
 
     @Override
     protected void execute() {
-        var throttle = OI.xb.getY(Hand.kRight);    
+        var throttle = -OI.xb.getY(Hand.kRight);    
         if (!OI.xb.getTrigger(Hand.kLeft)) {
             if (OI.xb.getAButtonPressed()) {
                 Robot.ELEVATOR.setElevator(Robot.ELEVATOR.getTicks(ElevatorHeights.BOTTOM_LEVEL));

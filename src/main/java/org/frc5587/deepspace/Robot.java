@@ -9,7 +9,6 @@ package org.frc5587.deepspace;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.subsystems.*;
@@ -17,7 +16,6 @@ import org.frc5587.deepspace.subsystems.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.cscore.UsbCamera;
@@ -38,15 +36,7 @@ public class Robot extends TimedRobot {
     
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
-    private static TCPServer tcpServer;
-
-    private ArrayList<Command> controlCommands = new ArrayList<>();
-
-    public Robot() {
-        controlCommands.add(new ControlHatch());
-        controlCommands.add(new ControlElevator());
-        controlCommands.add(new ArcadeDrive());
-    }
+    public static TCPServer tcpServer;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -72,18 +62,19 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         SmartDashboard.putData(new ResetElevator());
 
-        controlCommands.forEach((c) -> c.start());
-        
-        // try {
-        //     tcpServer = new TCPTestServer(Constants.TCP_PORT);
-        //     tcpServer.start();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+        new Manager().start();
+
+        try {
+            tcpServer = new TCPServer(Constants.TCP_PORT);
+            tcpServer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void teleopPeriodic() {
+        SmartDashboard.putNumber("Heading", DRIVETRAIN.getHeading());
         Scheduler.getInstance().run();
     }
 

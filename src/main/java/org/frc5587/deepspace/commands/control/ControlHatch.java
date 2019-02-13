@@ -1,13 +1,14 @@
-package org.frc5587.deepspace.commands;
+package org.frc5587.deepspace.commands.control;
 
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class ControlHatch extends Command {
-    private boolean closed = false;
+public class ControlHatch extends InstantCommand {
+    private static boolean down = false;
+    private static boolean closed = false;
 
     public ControlHatch() {
 
@@ -15,8 +16,9 @@ public class ControlHatch extends Command {
 
     @Override
     protected void initialize() {
-        Robot.HATCH.hatchClosed();
-        Robot.HATCH.hatchOut();
+        // Moved to Manager.java - uncomment if shift back to reg. Command
+        // Robot.HATCH.hatchClosed();
+        // Robot.HATCH.hatchOut();
     }
 
     @Override
@@ -29,21 +31,17 @@ public class ControlHatch extends Command {
                 Robot.HATCH.hatchClosed();
                 closed = true;
             }
+            System.out.println("Right: " + closed);
         }
         if (OI.xb.getBumperPressed(Hand.kLeft)) {
-            if(closed) {
+            if(down) {
                 Robot.HATCH.hatchOut();
-                closed = false;
+                down = false;
             } else {
                 Robot.HATCH.hatchIn();
-                closed = true;
+                down = true;
             }
+            System.out.println("Left: " + down);
         }
     }
-
-    @Override
-    protected boolean isFinished() {
-        return false;
-    }
-
 }

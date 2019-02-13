@@ -75,6 +75,14 @@ public class Elevator extends Subsystem {
         elevatorTalon.set(ControlMode.MotionMagic, height);
     }
 
+    public void setElevator(ElevatorHeights height) {
+        setElevator(getTicks(height));
+    }
+
+    public boolean isMPFinished() {
+        return elevatorTalon.isMotionProfileFinished();
+    }
+
     public void elevatorHold() {
         elevatorTalon.set(ControlMode.PercentOutput, Constants.Elevator.HOLD_VOLAGE);
     }

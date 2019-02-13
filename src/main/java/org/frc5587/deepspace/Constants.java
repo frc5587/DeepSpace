@@ -22,12 +22,8 @@ public class Constants {
     public static final class Elevator {
         public static final double STU_PER_INCH = 628.704;
 
-        public static final double spoolDiameter = 2.0;
-
         public static final double bottomTicks = 0;
-
         public static final double middleTicks = 47 * STU_PER_INCH;
-
         public static final double topTicks = 75 * STU_PER_INCH;
 
         public static final int kSlotIdx = 0;
@@ -68,7 +64,7 @@ public class Constants {
         // Safety limits
         public static final double minPercentOut = 0, maxPercentBw = 1, maxPercentFw = 1;
 
-        // PIDF Constants
+        // FPID Constants
         public static final FPID leftPIDs = new FPID(
                 (1 / 3933) * 1023, // kF
                 0.8056, // kP
@@ -82,12 +78,21 @@ public class Constants {
                 17.7232 // kD
         );
 
-        public static final int wheelDiameter = 6;
+        // Pathfinder constants
         public static double gyrokP = 0.00;
-
+        public static final int wheelDiameter = 6;
         public static final PIDVA pathfinderPIDVALeft = new PIDVA(0.04, 0.0, 0.0, 0.000327 * stuPerInch / 10f,
                 0.0001 * stuPerInch / 10f);
         public static final PIDVA pathfinderPIDVARight = new PIDVA(0.04, 0.0, 0.0, 0.000317 * stuPerInch / 10f,
                 0.0001 * stuPerInch / 10f);
+
+        // Turn controller
+        public static final double TOLERANCE_DEGREES = 2.0;
+        public static final FPID TURN_FPID = new FPID(
+                0,  // kF
+                0.03, // kP
+                0, // kI
+                0  // kD
+        );
     }
 }

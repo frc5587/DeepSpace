@@ -5,10 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.frc5587.deepspace.commands;
+package org.frc5587.deepspace.commands.control;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
@@ -20,6 +21,8 @@ import org.frc5587.deepspace.subsystems.Drive;
 public class ArcadeDrive extends InstantCommand {
 	private Drive kDrive;
 
+	private static final double targetAngle = 0.0;
+
 	public ArcadeDrive() {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.DRIVETRAIN);
@@ -29,7 +32,8 @@ public class ArcadeDrive extends InstantCommand {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		kDrive.enableBrakeMode(false);
+		kDrive.enableBrakeMode(true);
+		SmartDashboard.putNumber("Turn Angle", targetAngle);
 	}
 
 	// Called repeatedly when this Command is scheduled to run

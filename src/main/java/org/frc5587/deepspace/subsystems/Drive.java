@@ -7,11 +7,12 @@
 
 package org.frc5587.deepspace.subsystems;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.frc5587.lib.pathfinder.AbstractDrive;
-import org.frc5587.lib.pathfinder.GyroCompMPRunner;
 import org.frc5587.lib.pathfinder.Pathgen;
 import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.RobotMap;
@@ -24,10 +25,12 @@ import com.kauailabs.navx.frc.AHRS;
 /**
  * An example subsystem. You can replace me with your own Subsystem.
  */
-public class Drive extends AbstractDrive {
+public class Drive extends AbstractDrive implements PIDOutput {
 	public static final Pathgen SLOW_PATHGEN = new Pathgen(30, 0.010, 36, 60, 120);
 	public static final Pathgen MED_PATHGEN = new Pathgen(30, 0.010, 60, 80, 160);
 	public static final Pathgen FAST_PATHGEN = new Pathgen(30, 0.010, 84, 80, 160);
+
+	private PIDController turnController;
 
 	public Drive() {
 		super(new TalonSRX(RobotMap.Drive.LEFT_MASTER), new TalonSRX(RobotMap.Drive.RIGHT_MASTER),
@@ -36,6 +39,19 @@ public class Drive extends AbstractDrive {
 		setAHRS(new AHRS(Port.kMXP));
 		setConstants(Constants.Drive.kMaxVelocity, Constants.Drive.kTimeoutMs, Constants.Drive.stuPerRev,
 				Constants.Drive.stuPerInch, Constants.Drive.wheelDiameter, Constants.Drive.minBufferCount);
+
+		turnController = new PIDController(Constants.Drive.TURN_FPID.kP, Constants.Drive.TURN_FPID.kI,
+				Constants.Drive.TURN_FPID.kD, Constants.Drive.TURN_FPID.kF, ahrs, this);
+		
+		turnController.disable();
+		turnController.setInputRange(-180.0f, 180.0f);
+		turnController.setOutputRange(-1.0, 1.0);
+		turnController.setAbsoluteTolerance(Constants.Drive.TOLERANCE_DEGREES);
+		turnController.setContinuous(true);
+
+		// Add PID Controller to dashboard for testing
+		turnController.setName("DriveSystem", "RotateController");
+		SmartDashboard.putData(turnController);
 	}
 
 	@Override
@@ -87,6 +103,23 @@ public class Drive extends AbstractDrive {
 
 		leftMaster.set(ControlMode.Position, SmartDashboard.getNumber("Goto Position L", 0.0));
 		rightMaster.set(ControlMode.Position, SmartDashboard.getNumber("Goto Position R", 0.0));
+	}
+
+	public void enableTurnPID(boolean enabled) {
+		turnController.setEnabled(enabled);
+	}
+
+	public void setTurnPID(double setpoint) {
+		turnController.setSetpoint(setpoint);
+	}
+
+	public boolean turnPIDEnabled() {
+		return turnController.isEnabled();
+	}
+
+	@Override
+	public void pidWrite(double output) {
+		vbusArcade(0.4, output);
 	}
 
 	public void initDefaultCommand() {

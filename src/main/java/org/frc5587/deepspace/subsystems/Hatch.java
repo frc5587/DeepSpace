@@ -33,6 +33,14 @@ public class Hatch extends Subsystem {
         slicerPistons.set(Value.kReverse);
     }
 
+    public void setGrab(DoubleSolenoid.Value value) {
+        hatchPistons.set(value);
+    }
+
+    public void setFlip(DoubleSolenoid.Value value) {
+        slicerPistons.set(value);
+    }
+
     @Override
     protected void initDefaultCommand() {
 

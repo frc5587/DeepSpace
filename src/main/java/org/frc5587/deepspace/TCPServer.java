@@ -2,28 +2,26 @@ package org.frc5587.deepspace;
 
 import java.net.*;
 
-import org.frc5587.deepspace.commands.Routines;
-import org.frc5587.deepspace.subsystems.Drive;
+import org.frc5587.deepspace.commands.routines.RoutineMode;
 
-import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 
 import java.io.*;
 
 public class TCPServer extends Thread {
-    public static final boolean PATHFINDER_ALT = true;
+    public static final RoutineMode MODE = RoutineMode.PID;
     public static final int IN_BYTE_COUNT = 4;
     private ServerSocket serverSocket;
     private Socket currentServer;
     private InputStream inStream;
     private BufferedReader inReader;
 
-    private Command routineCommand;
+    private boolean pipeInput;
 
     public TCPServer(int port) throws IOException {
         serverSocket = new ServerSocket(port);
         // serverSocket.setSoTimeout(10000);
-        routineCommand = null;
+        pipeInput = false;
     }
 
     public void run() {
@@ -35,32 +33,33 @@ public class TCPServer extends Thread {
             inReader = new BufferedReader(new InputStreamReader(inStream));
 
             while (true) {
-                if (currentServer.getInputStream().available() > 1) {
-                    var messageParts = inReader.readLine().split(":");
+                // Check if there are any messages to be recieved
+                if (currentServer.getInputStream().available() > -1) {
+                    // Fetch message
+                    var messageParts = "1:180".split(":");
+                    // var messageParts = inReader.readLine().split(":");
 
                     var time = Double.parseDouble(messageParts[0]);
                     var angle = Double.parseDouble(messageParts[1]);
                     System.out.println(angle);
 
-                    if (PATHFINDER_ALT) {
-                        // Here, angle is degrees between midpoint of tap and centre of vision of camera
-                        // Grab additional elements of the message for pathfinder
-                        var distanceX = Double.parseDouble(messageParts[2]);
-                        var distanceY = Double.parseDouble(messageParts[3]);
+                    // If meant to control, check whether things have started
+                    if (pipeInput) {
+                        if (MODE == RoutineMode.PATHFINDER) {
+                            // Here, angle is degrees between midpoint of tape and centre of vision of
+                            // camera
+                            // Grab additional elements of the message for pathfinder
+                            // var distanceX = Double.parseDouble(messageParts[2]);
+                            // var distanceY = Double.parseDouble(messageParts[3]);
+                            // var infoMessage = new PathfinderGoalMessage(time, angle, distanceX, distanceY);
 
-                        var infoMessage = new DistToGoalMessage(time, angle, distanceX, distanceY);
-
-                        routineCommand = new Routines.PathfinderHatchPickup(Drive.SLOW_PATHGEN, infoMessage);
-                    } else {
-                        // Angle is how far off the robot is from being perpendicular to the target
-                        // Run with PID loop on angle
-                        var infoMessage = new AngleFromGoalMessage(time, angle);
-                        routineCommand = new Routines.PIDHatchPickup(infoMessage);
+                            // TODO: Implement for Pathfinder
+                            throw new UnsupportedOperationException("Pathfinder mode not implemented yet");
+                        } else if (MODE == RoutineMode.PID) {
+                            // If command running and it is PID loop, update it
+                            Robot.DRIVETRAIN.setTurnPID(angle);
+                        }
                     }
-
-                    routineCommand.start();
-
-                    // Robot.TURRET.setPositionDeg(Robot.DRIVETRAIN.getHeading() - angle);
                 }
             }
         } catch (IOException e) {
@@ -71,25 +70,28 @@ public class TCPServer extends Thread {
     public void close() {
         try {
             currentServer.close();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             System.out.println("Server already closed");
             return;
         }
     }
 
-    public class AngleFromGoalMessage {
-        public final double time, angleToPerpendicular;
+    public void startPiping() {
+        pipeInput = true;
+        Robot.DRIVETRAIN.enableTurnPID(true);
+    }
 
-        public AngleFromGoalMessage(double time, double angleToPerpendicular) {
-            this.time = time;
-            this.angleToPerpendicular = angleToPerpendicular;
+    public void stopPiping() {
+        if (MODE == RoutineMode.PID) {
+            pipeInput = false;
+            Robot.DRIVETRAIN.enableTurnPID(false);
         }
     }
 
-    public class DistToGoalMessage {
+    public class PathfinderGoalMessage {
         public final double time, angleToCenterRad, distanceX, distanceY;
 
-        public DistToGoalMessage(double time, double angleToCenterDeg, double distanceX, double distanceY) {
+        public PathfinderGoalMessage(double time, double angleToCenterDeg, double distanceX, double distanceY) {
             this.time = time;
             this.angleToCenterRad = Pathfinder.d2r(angleToCenterDeg);
             this.distanceX = distanceX;
