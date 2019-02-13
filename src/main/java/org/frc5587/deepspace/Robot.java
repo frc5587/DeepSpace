@@ -9,6 +9,7 @@ package org.frc5587.deepspace;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.subsystems.*;
@@ -16,6 +17,7 @@ import org.frc5587.deepspace.subsystems.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.cscore.UsbCamera;
@@ -29,14 +31,22 @@ import edu.wpi.cscore.UsbCamera;
  * project.
  */
 public class Robot extends TimedRobot {
+    public static final Compressor COMPRESSOR = new Compressor(RobotMap.PCM_ID);
+    public static final Elevator ELEVATOR = new Elevator();
     public static final Drive DRIVETRAIN = new Drive();
     public static final Hatch HATCH = new Hatch();
-    public static final Compressor c = new Compressor(RobotMap.COMPRESSOR);
-    public static final Elevator e = new Elevator();
+    
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
-
     private static TCPServer tcpServer;
+
+    private ArrayList<Command> controlCommands = new ArrayList<>();
+
+    public Robot() {
+        controlCommands.add(new ControlHatch());
+        controlCommands.add(new ControlElevator());
+        controlCommands.add(new ArcadeDrive());
+    }
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -44,10 +54,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        c.setClosedLoopControl(true);
-        cameraServer = CameraServer.getInstance();
-	    driverCamera = cameraServer.startAutomaticCapture(0);
-	    cameraServer.startAutomaticCapture(driverCamera);
+        COMPRESSOR.setClosedLoopControl(Constants.COMPRESSOR_ENABLED);
+        // cameraServer = CameraServer.getInstance();
+	    // driverCamera = cameraServer.startAutomaticCapture(0);
+	    // cameraServer.startAutomaticCapture(driverCamera);
     }
 
     @Override
@@ -62,10 +72,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         SmartDashboard.putData(new ResetElevator());
 
-        // new ArcadeDrive().start();
-        new ControlHatch().start();
-        new ControlElevator().start();
-        new ArcadeDrive().start();
+        controlCommands.forEach((c) -> c.start());
         
         // try {
         //     tcpServer = new TCPTestServer(Constants.TCP_PORT);
@@ -89,7 +96,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        Scheduler.getInstance().run();
     }
 
     @Override
