@@ -26,9 +26,9 @@ public class RobotMap {
 	public static final int COMPRESSOR = 0;
 
 	public static class Drive {
-		public static int leftMaster = 1;
-		public static int rightMaster = 2;
-		public static int leftSlave = 3;
-		public static int rightSlave = 4;
+		public static int leftMaster = 2;
+		public static int rightMaster = 3;
+		public static int leftSlave = 4;
+		public static int rightSlave = 5;
 	}
 }
