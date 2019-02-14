@@ -25,26 +25,26 @@ public class ControlHatch extends InstantCommand {
     protected void execute() {
         if (Robot.HATCH.limitControl()) {
             System.out.println("Running limit control");
-            Robot.HATCH.hatchOpen();
+            Robot.HATCH.grab();
             closed = false;
         }
 
         if (OI.xb.getBumperPressed(Hand.kRight)) {
             if (closed) {
-                Robot.HATCH.hatchOpen();
+                Robot.HATCH.grab();
                 closed = false;
             } else {
-                Robot.HATCH.hatchClosed();
+                Robot.HATCH.drop();
                 closed = true;
             }
             System.out.println("Right: " + closed);
         }
         if (OI.xb.getBumperPressed(Hand.kLeft)) {
             if(down) {
-                Robot.HATCH.hatchOut();
+                Robot.HATCH.out();
                 down = false;
             } else {
-                Robot.HATCH.hatchIn();
+                Robot.HATCH.stow();
                 down = true;
             }
             System.out.println("Left: " + down);

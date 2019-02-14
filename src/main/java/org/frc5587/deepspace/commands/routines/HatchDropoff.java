@@ -1,10 +1,9 @@
 package org.frc5587.deepspace.commands.routines;
 
 import org.frc5587.deepspace.ProcessTCPData;
-import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Elevator.ElevatorHeights;
+import org.frc5587.deepspace.subsystems.Hatch.HatchGrabState;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -15,7 +14,7 @@ public class HatchDropoff extends CommandGroup {
         addParallel(new SetElevator(height));
         addSequential(new UltrasonicThreshold(10));
         addSequential(new DisableTurningPID());
-        addSequential(new SetHatch(Value.kForward));
+        addSequential(new SetHatch(HatchGrabState.DROP));
     }
 
     @Override

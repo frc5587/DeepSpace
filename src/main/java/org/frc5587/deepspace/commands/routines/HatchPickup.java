@@ -2,9 +2,9 @@ package org.frc5587.deepspace.commands.routines;
 
 import org.frc5587.deepspace.ProcessTCPData;
 import org.frc5587.deepspace.subsystems.Elevator.ElevatorHeights;
+import org.frc5587.deepspace.subsystems.Hatch.HatchGrabState;
 import org.frc5587.lib.pathfinder.Pathgen;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -15,7 +15,7 @@ public class HatchPickup extends CommandGroup {
         addSequential(new SetElevator(ElevatorHeights.BOTTOM_LEVEL));
         addSequential(new UltrasonicThreshold(10));
         addSequential(new DisableTurningPID());
-        addSequential(new SetHatch(Value.kReverse));
+        addSequential(new SetHatch(HatchGrabState.GRAB));
     }
     
     public HatchPickup(Pathgen trajPathgen, ProcessTCPData.PathfinderGoalMessage infoMessage) {

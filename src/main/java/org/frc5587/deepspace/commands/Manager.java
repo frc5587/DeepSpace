@@ -23,8 +23,8 @@ public class Manager extends Command {
 
     @Override
     protected void initialize() {
-        Robot.HATCH.hatchOpen();
-        Robot.HATCH.hatchIn();
+        Robot.HATCH.grab();
+        Robot.HATCH.stow();
         ProcessTCPData.stopPiping();
     }
 
