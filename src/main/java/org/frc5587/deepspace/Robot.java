@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
     public static final Hatch HATCH = new Hatch();
     public static final Compressor c = new Compressor(RobotMap.COMPRESSOR);
     public static final Elevator e = new Elevator();
+    public static final LEDControl LED_CONTROL = new LEDControl();
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
 

@@ -105,6 +105,9 @@ public class Elevator extends Subsystem {
         return ticks / Constants.Elevator.STU_PER_INCH;
     }
 
+    public double ticksToInches() {
+        return elevatorTalon.getSelectedSensorPosition(0);
+    }
     @Override
     protected void initDefaultCommand() {
 
