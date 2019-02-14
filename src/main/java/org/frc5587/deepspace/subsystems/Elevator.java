@@ -11,16 +11,19 @@ import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.RobotMap;
 import org.frc5587.lib.MathHelper;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Elevator extends Subsystem {
     private static TalonSRX elevatorTalon;
     private static TalonSRX elevatorSlave;
+    private static DigitalInput elevatorLimitSwitch;
     private static HashMap<ElevatorHeights, Double> elevatorHeights;
 
     public Elevator() {
         elevatorTalon = new TalonSRX(RobotMap.Elevator.ELEVATOR_MASTER);
         elevatorSlave = new TalonSRX(RobotMap.Elevator.ELEVATOR_SLAVE);
+        elevatorLimitSwitch = new DigitalInput(RobotMap.Elevator.ELEVATOR_LIMIT_SWITCH);
         elevatorHeights = new HashMap<>();
 
         elevatorHeights.put(ElevatorHeights.BOTTOM_LEVEL, Constants.Elevator.bottomTicks);
@@ -115,6 +118,10 @@ public class Elevator extends Subsystem {
 
     public double ticksToInches(double ticks) {
         return ticks / Constants.Elevator.STU_PER_INCH;
+    }
+
+    public boolean limitSwitchValue() {
+        return elevatorLimitSwitch.get();
     }
 
     @Override
