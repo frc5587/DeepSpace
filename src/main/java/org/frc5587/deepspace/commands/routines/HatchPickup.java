@@ -1,7 +1,6 @@
 package org.frc5587.deepspace.commands.routines;
 
-import org.frc5587.deepspace.Robot;
-import org.frc5587.deepspace.TCPServer;
+import org.frc5587.deepspace.ProcessTCPData;
 import org.frc5587.deepspace.subsystems.Elevator.ElevatorHeights;
 import org.frc5587.lib.pathfinder.Pathgen;
 
@@ -19,7 +18,7 @@ public class HatchPickup extends CommandGroup {
         addSequential(new SetHatch(Value.kReverse));
     }
     
-    public HatchPickup(Pathgen trajPathgen, TCPServer.PathfinderGoalMessage infoMessage) {
+    public HatchPickup(Pathgen trajPathgen, ProcessTCPData.PathfinderGoalMessage infoMessage) {
         throw new UnsupportedOperationException("Processing with pathfinder is not supported yet");
         // var perpGoalTraj = trajPathgen.createTrajectory(new Waypoint(0, 0, 0),
         //         new Waypoint(infoMessage.distanceX, infoMessage.distanceY, infoMessage.angleToCenterRad));
@@ -29,12 +28,12 @@ public class HatchPickup extends CommandGroup {
 
     @Override
     protected void initialize() {
-        Robot.tcpServer.startPiping();
+        ProcessTCPData.startPiping();
     }
 
     @Override
     protected void end() {
-        Robot.tcpServer.stopPiping();
+        ProcessTCPData.stopPiping();
     }
 
     @Override

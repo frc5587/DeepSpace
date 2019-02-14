@@ -1,5 +1,6 @@
 package org.frc5587.deepspace.commands.routines;
 
+import org.frc5587.deepspace.ProcessTCPData;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Elevator.ElevatorHeights;
 
@@ -19,12 +20,12 @@ public class HatchDropoff extends CommandGroup {
 
     @Override
     protected void initialize() {
-        Robot.tcpServer.startPiping();
+        ProcessTCPData.startPiping();
     }
     
     @Override
     protected void end() {
-        Robot.tcpServer.stopPiping();
+        ProcessTCPData.stopPiping();
     }
 
     @Override

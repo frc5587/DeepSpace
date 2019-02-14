@@ -1,6 +1,7 @@
 package org.frc5587.deepspace.commands;
 
 import org.frc5587.deepspace.OI;
+import org.frc5587.deepspace.ProcessTCPData;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.commands.control.ArcadeDrive;
 import org.frc5587.deepspace.commands.control.ControlElevator;
@@ -24,7 +25,7 @@ public class Manager extends Command {
     protected void initialize() {
         Robot.HATCH.hatchOpen();
         Robot.HATCH.hatchIn();
-        Robot.tcpServer.stopPiping();
+        ProcessTCPData.stopPiping();
     }
 
     @Override

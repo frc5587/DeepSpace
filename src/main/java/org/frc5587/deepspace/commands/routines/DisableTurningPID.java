@@ -1,5 +1,6 @@
 package org.frc5587.deepspace.commands.routines;
 
+import org.frc5587.deepspace.ProcessTCPData;
 import org.frc5587.deepspace.Robot;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
@@ -14,7 +15,7 @@ public class DisableTurningPID extends InstantCommand {
 
     @Override
     protected void initialize() {
-        Robot.tcpServer.stopPiping();
+        ProcessTCPData.stopPiping();
         Robot.DRIVETRAIN.vbusLR(0, 0);
     }
 }
