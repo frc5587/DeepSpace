@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class ControlHatch extends InstantCommand {
-    private static boolean down = false;
-    private static boolean closed = false;
+    private static boolean down = true;
+    private static boolean closed = true;
 
     public ControlHatch() {
 
@@ -23,8 +23,13 @@ public class ControlHatch extends InstantCommand {
 
     @Override
     protected void execute() {
+        if (Robot.HATCH.limitControl()) {
+            System.out.println("Running limit control");
+            Robot.HATCH.hatchOpen();
+            closed = false;
+        }
 
-        if (OI.xb.getBumperPressed(Hand.kRight) || Robot.HATCH.limitControl()) {
+        if (OI.xb.getBumperPressed(Hand.kRight)) {
             if (closed) {
                 Robot.HATCH.hatchOpen();
                 closed = false;

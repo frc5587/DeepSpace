@@ -24,19 +24,19 @@ public class Hatch extends Subsystem {
     }
 
     public void hatchOpen() {
-        hatchPistons.set(Value.kForward);
-    }
-
-    public void hatchClosed() {
         hatchPistons.set(Value.kReverse);
     }
 
+    public void hatchClosed() {
+        hatchPistons.set(Value.kForward);
+    }
+
     public void hatchOut() {
-        slicerPistons.set(Value.kForward);
+        slicerPistons.set(Value.kReverse);
     }
 
     public void hatchIn() {
-        slicerPistons.set(Value.kReverse);
+        slicerPistons.set(Value.kForward);
     }
 
     public void setGrab(DoubleSolenoid.Value value) {
@@ -49,10 +49,10 @@ public class Hatch extends Subsystem {
 
     public boolean limitControl() {
         if (Constants.Hatch.REQUIRE_BOTH) {
-            return limitSwitchOne.get() && limitSwitchTwo.get();
+            return !limitSwitchOne.get() && !limitSwitchTwo.get();
         }
         else {
-            return limitSwitchOne.get() || limitSwitchTwo.get(); 
+            return !limitSwitchOne.get() || !limitSwitchTwo.get(); 
         } 
     }
 

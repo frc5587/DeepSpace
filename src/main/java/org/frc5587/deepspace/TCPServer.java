@@ -83,6 +83,7 @@ public class TCPServer extends Thread {
 
     public void stopPiping() {
         if (MODE == RoutineMode.PID) {
+            System.out.println("Disabling");
             pipeInput = false;
             Robot.DRIVETRAIN.enableTurnPID(false);
         }

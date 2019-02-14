@@ -54,13 +54,9 @@ public class Manager extends Command {
             }
 
             currentRoutine.start();
-        } else {
-            if (currentRoutine != null) {
-                if (OI.xb.getStickButtonReleased(Hand.kLeft) || OI.xb.getStickButtonReleased(Hand.kRight)) {
-                    currentRoutine.cancel();
-                    currentRoutine = null;
-                }
-            }
+        } else if (OI.xb.getStickButtonReleased(Hand.kLeft) || OI.xb.getStickButtonReleased(Hand.kRight)) {
+            currentRoutine.cancel();
+            currentRoutine = null;
         }
     }
 

@@ -22,6 +22,10 @@ public class Constants {
     public static final class Elevator {
         public static final double STU_PER_INCH = 628.704;
 
+        public static final int MIN_UNCHECKED_VELOCITY = 100;
+        public static final double UNSAFE_IDLE_CURRENT_DRAW = 10.0;
+        public static final double UNSAFE_TIME_BEFORE_STOP = 1.5;
+
         public static final double bottomTicks = 0;
         public static final double middleTicks = 47 * STU_PER_INCH;
         public static final double topTicks = 75 * STU_PER_INCH;

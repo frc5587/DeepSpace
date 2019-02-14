@@ -87,6 +87,10 @@ public class Elevator extends Subsystem {
         elevatorTalon.set(ControlMode.PercentOutput, Constants.Elevator.HOLD_VOLAGE);
     }
 
+    public double getCurrent() {
+        return elevatorTalon.getOutputCurrent();
+    }
+
     public void elevatorMove(double yInput) {
         yInput = yInput > 0 ? yInput : 0.5 * yInput;    
         var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLAGE, -1, 1);

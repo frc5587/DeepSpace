@@ -75,6 +75,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         SmartDashboard.putNumber("Heading", DRIVETRAIN.getHeading());
+        SmartDashboard.putNumber("Ele Current", ELEVATOR.getCurrent());
         Scheduler.getInstance().run();
     }
 
