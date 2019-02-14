@@ -40,8 +40,8 @@ public class ArcadeDrive extends Command {
 		// double throttle = -OI.xb.getY(Hand.kLeft);
 		// double curve = OI.xb.getX(Hand.kLeft);
 
-		double throttle = -OI.joy.getY(Hand.kLeft);
-		double curve = OI.joy.getX(Hand.kLeft);
+		double throttle = -OI.joy.getY();
+		double curve = OI.joy.getX();
 
 		kDrive.vbusArcade(throttle, curve);
 		kDrive.sendDebugInfo();

@@ -259,6 +259,11 @@ public class Drive extends Subsystem {
 		SmartDashboard.putNumber("Right Expected Vel", rightMaster.getActiveTrajectoryVelocity());
 	}
 
+	public void postCurrent() {
+		SmartDashboard.putNumber("Current L", leftMaster.getOutputCurrent());
+		SmartDashboard.putNumber("Current R", rightMaster.getOutputCurrent());
+	}
+
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new MySpecialCommand());
