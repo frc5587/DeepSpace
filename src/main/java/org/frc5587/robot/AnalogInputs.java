@@ -16,12 +16,16 @@ public class AnalogInputs extends Subsystem {
     }
 
     
-    public double rightSensor() {
+    public double getRight() {
         return MathHelper.map(right.getAverageVoltage(), 0, 5, 0, 1023) / 2;
     }
 
-    public double leftSensor() {
+    public double getLeft() {
         return MathHelper.map(left.getAverageVoltage(), 0, 5, 0, 1023) / 2;
+    }
+
+    public double getAverage() {
+        return (getRight() + getLeft()) / 2;
     }
 
     @Override

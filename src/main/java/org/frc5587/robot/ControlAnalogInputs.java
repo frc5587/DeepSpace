@@ -8,14 +8,13 @@ public class ControlAnalogInputs extends Command {
         requires(Robot.inputs);
     }
 
-    public void Print() {
-        System.out.println("Right equals: " + Robot.inputs.rightSensor());
-        System.out.println("Left equals: " + Robot.inputs.leftSensor());
-    }
-
     @Override
     protected void execute() {
-        Print();
+        var left = Robot.inputs.getLeft();
+        var right = Robot.inputs.getRight();
+        System.out.println("Left equals: " + left);
+        System.out.println("Right equals: " + right);
+        System.out.println("Average: " + (left + right) / 2);
     }
 
     @Override
