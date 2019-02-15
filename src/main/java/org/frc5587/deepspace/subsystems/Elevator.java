@@ -121,7 +121,8 @@ public class Elevator extends Subsystem {
     }
 
     public boolean limitSwitchValue() {
-        return elevatorLimitSwitch.get();
+        // Limit switches are pulled high
+        return !elevatorLimitSwitch.get();
     }
 
     @Override

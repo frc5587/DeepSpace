@@ -31,6 +31,7 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	public static final Pathgen FAST_PATHGEN = new Pathgen(30, 0.010, 84, 80, 160);
 
 	private PIDController turnController;
+	private boolean turnEnabledFirstTime;
 
 	public Drive() {
 		super(new TalonSRX(RobotMap.Drive.LEFT_MASTER), new TalonSRX(RobotMap.Drive.RIGHT_MASTER),
@@ -40,11 +41,11 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		setConstants(Constants.Drive.kMaxVelocity, Constants.Drive.kTimeoutMs, Constants.Drive.stuPerRev,
 				Constants.Drive.stuPerInch, Constants.Drive.wheelDiameter, Constants.Drive.minBufferCount);
 
-		turnController = new PIDController(Constants.Drive.TURN_FPID.kP, Constants.Drive.TURN_FPID.kI,
-				Constants.Drive.TURN_FPID.kD, Constants.Drive.TURN_FPID.kF, ahrs, this);
-		
+		var fpid = Constants.Drive.TURN_FPID;
+		turnController = new PIDController(fpid.kP, fpid.kI, fpid.kD, fpid.kF, ahrs, this);
+
 		turnController.disable();
-		turnController.setInputRange(-180.0f, 180.0f);
+		turnController.setInputRange(-180.0, 180.0);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(Constants.Drive.TOLERANCE_DEGREES);
 		turnController.setContinuous(true);
@@ -52,6 +53,7 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		// Add PID Controller to dashboard for testing
 		turnController.setName("DriveSystem", "RotateController");
 		SmartDashboard.putData(turnController);
+		turnEnabledFirstTime = false;
 	}
 
 	@Override
@@ -114,12 +116,16 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	}
 
 	public boolean turnPIDEnabled() {
+		turnEnabledFirstTime = true;
 		return turnController.isEnabled();
 	}
 
 	@Override
 	public void pidWrite(double output) {
-		vbusArcade(0.4, output);
+		if (turnEnabledFirstTime) {
+			System.out.println("Writing PID");
+			vbusArcade(0.4, output);	
+		}
 	}
 
 	public void initDefaultCommand() {

@@ -20,15 +20,15 @@ public class Constants {
     public static final double kVCompSaturation = 12.0;
 
     public static final class Elevator {
-        public static final double STU_PER_INCH = 628.704;
+        public static final double STU_PER_INCH = 18884 / 30;
 
         public static final int MIN_UNCHECKED_VELOCITY = 100;
         public static final double UNSAFE_IDLE_CURRENT_DRAW = 10.0;
         public static final double UNSAFE_TIME_BEFORE_STOP = 1.5;
 
         public static final double bottomTicks = 0;
-        public static final double middleTicks = 47 * STU_PER_INCH;
-        public static final double topTicks = 75 * STU_PER_INCH;
+        public static final double middleTicks = 28 * STU_PER_INCH;
+        public static final double topTicks = 56 * STU_PER_INCH;
 
         public static final int kSlotIdx = 0;
         public static final int kPIDLoopIdx = 0;
@@ -45,7 +45,7 @@ public class Constants {
         };
 
         public static final double minPercentOut = 0.0, maxPercentBw = .6, maxPercentFw = 1;
-        public static final double HOLD_VOLAGE = 0.05;
+        public static final double HOLD_VOLAGE = 0.075;
 
         public static final int maxVelocity = 5246, maxAcceleration = 5246;
     }
