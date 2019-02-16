@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
 	    // driverCamera = cameraServer.startAutomaticCapture(0);
         // cameraServer.startAutomaticCapture(driverCamera);
         new LimitResetElevator().start();
+        new UpdateGyroHistory().start();
     }
 
     @Override

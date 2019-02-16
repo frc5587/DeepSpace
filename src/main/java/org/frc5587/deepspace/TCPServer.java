@@ -31,8 +31,8 @@ public class TCPServer extends Thread {
                 // Check if there are any messages to be recieved
                 if (currentServer.getInputStream().available() > -1) {
                     // Fetch message
-                    var messageParts = "1:180".split(":");
-                    // var messageParts = inReader.readLine().split(":");
+                    // var messageParts = "1:180".split(":");
+                    var messageParts = inReader.readLine().split(":");
 
                     ProcessTCPData.update(messageParts);
                 }

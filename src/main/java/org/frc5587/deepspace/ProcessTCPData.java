@@ -2,6 +2,7 @@ package org.frc5587.deepspace;
 
 import org.frc5587.deepspace.commands.routines.RoutineMode;
 
+import edu.wpi.first.wpilibj.Timer;
 import jaci.pathfinder.Pathfinder;
 
 /**
@@ -12,29 +13,41 @@ public class ProcessTCPData {
 
     public static void update(String[] messageParts) {
         var time = Double.parseDouble(messageParts[0]);
-        var angle = Double.parseDouble(messageParts[1]);
-        System.out.println(angle);
 
-        // If meant to control, check whether things have started
-        if (pipeInput) {
-            switch (TCPServer.MODE) {
-            case PATHFINDER:
-                // Here, angle is degrees between midpoint of tape and centre of vision of
-                // camera
-                // Grab additional elements of the message for pathfinder
-                // var distanceX = Double.parseDouble(messageParts[2]);
-                // var distanceY = Double.parseDouble(messageParts[3]);
-                // var infoMessage = new PathfinderGoalMessage(time, angle, distanceX,
-                // distanceY);
+        if (messageParts.length <= 1) {
+            // Just a time packet for synchronisation purposes
+            var systemTime = Timer.getFPGATimestamp();
+            Robot.DRIVETRAIN.setVisionTimeDelta(systemTime - time);
+        } else {
+            var angleError = Double.parseDouble(messageParts[1]);
+            System.out.println(angleError);
 
-                // TODO: Implement for Pathfinder
+            // If meant to control, check whether things have started
+            if (pipeInput) {
+                switch (TCPServer.MODE) {
+                case PATHFINDER:
+                    // Here, angle is degrees between midpoint of tape and centre of vision of
+                    // camera
+                    // Grab additional elements of the message for pathfinder
+                    // var distanceX = Double.parseDouble(messageParts[2]);
+                    // var distanceY = Double.parseDouble(messageParts[3]);
+                    // var infoMessage = new PathfinderGoalMessage(time, angle, distanceX,
+                    // distanceY);
 
-                throw new UnsupportedOperationException("Pathfinder mode not implemented yet");
-                // break;
-            case PID:
-                // If command running and it is PID loop, update it
-                Robot.DRIVETRAIN.setTurnPID(angle);
-                break;
+                    // TODO: Implement for Pathfinder
+
+                    throw new UnsupportedOperationException("Pathfinder mode not implemented yet");
+                    // break;
+                case PID:
+                    // If command running and it is PID loop, update it
+                    // Start by using lag compensation
+                    var captureAngle = Robot.DRIVETRAIN.getAngleAtClosestTime(time);
+                    var desiredAngle = captureAngle + angleError;
+
+                    // Now update with corrected value
+                    Robot.DRIVETRAIN.setTurnPID(desiredAngle);
+                    break;
+                }
             }
         }
     }

@@ -7,20 +7,24 @@
 
 package org.frc5587.deepspace.subsystems;
 
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.frc5587.lib.pathfinder.AbstractDrive;
-import org.frc5587.lib.pathfinder.Pathgen;
-import org.frc5587.deepspace.Constants;
-import org.frc5587.deepspace.RobotMap;
+import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
+
+import org.frc5587.deepspace.Constants;
+import org.frc5587.deepspace.RobotMap;
+import org.frc5587.lib.LimitedHashMap;
+import org.frc5587.lib.pathfinder.AbstractDrive;
+import org.frc5587.lib.pathfinder.Pathgen;
+
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.SPI.Port;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * An example subsystem. You can replace me with your own Subsystem.
@@ -30,6 +34,9 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	public static final Pathgen MED_PATHGEN = new Pathgen(30, 0.010, 60, 80, 160);
 	public static final Pathgen FAST_PATHGEN = new Pathgen(30, 0.010, 84, 80, 160);
 
+	private LimitedHashMap<Double, Double> gyroHistory;
+	private ArrayList<Double> visionTimeDeltas;
+	private Double visionTimeDelta;
 	private PIDController turnController;
 	private boolean turnEnabledFirstTime;
 
@@ -40,6 +47,9 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		setAHRS(new AHRS(Port.kMXP));
 		setConstants(Constants.Drive.kMaxVelocity, Constants.Drive.kTimeoutMs, Constants.Drive.stuPerRev,
 				Constants.Drive.stuPerInch, Constants.Drive.wheelDiameter, Constants.Drive.minBufferCount);
+
+		gyroHistory = new LimitedHashMap<>(Constants.Drive.GYRO_HISTORY_LENGTH);
+		visionTimeDeltas = new ArrayList<>();
 
 		var fpid = Constants.Drive.TURN_FPID;
 		turnController = new PIDController(fpid.kP, fpid.kI, fpid.kD, fpid.kF, ahrs, this);
@@ -123,11 +133,48 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		return turnController.isEnabled();
 	}
 
+	public void setVisionTimeDelta(double visionTimeDelta) {
+		visionTimeDeltas.add(visionTimeDelta);
+
+		double sum = 0;
+		for (var delta : visionTimeDeltas) {
+			sum += delta;
+		}
+
+		this.visionTimeDelta = sum / visionTimeDeltas.size();
+	}
+
+	public void updateGyroHistory() {
+		if (visionTimeDelta != null) {
+			gyroHistory.put(Timer.getFPGATimestamp() + visionTimeDelta, getHeading());
+		}
+	}
+
+	public double getAngleAtClosestTime(double time) {
+		double lastVal = 0;
+		double lastDeltaSign = Double.NaN;
+
+		// gyroHistory array is sorted, given that it's made up of times
+		for (var entry : gyroHistory.keySet()) {
+			// When sign of delta changes, we know we have overshot, so use last (closest) value
+			var delta = time - entry;
+			var sign = Math.signum(delta);
+			if (lastDeltaSign != Double.NaN && lastDeltaSign != sign) {
+				break;
+			} else {
+				lastVal = entry;
+				lastDeltaSign = sign;
+			}
+		}
+
+		return gyroHistory.get(lastVal);
+	}
+
 	@Override
 	public void pidWrite(double output) {
 		if (turnEnabledFirstTime) {
 			System.out.println("Writing PID");
-			vbusArcade(0.4, output);	
+			vbusArcade(0.0, output);	
 		}
 	}
 
