@@ -33,6 +33,7 @@ public class Robot extends TimedRobot {
     public static final Elevator ELEVATOR = new Elevator();
     public static final Drive DRIVETRAIN = new Drive();
     public static final Hatch HATCH = new Hatch();
+    public static final Lift LIFT = new Lift();
     
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;

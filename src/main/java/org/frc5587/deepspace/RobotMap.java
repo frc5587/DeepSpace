@@ -36,4 +36,8 @@ public class RobotMap {
 		public static final int ELEVATOR_LIMIT_SWITCH = 2;
 	}
 
+	public static class Lift {
+		public static int LIFT_MOTOR_ONE = 8;
+		public static int LIFT_MOTOR_TWO = 9;
+	}
 }
