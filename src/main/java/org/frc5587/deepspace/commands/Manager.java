@@ -25,7 +25,6 @@ public class Manager extends Command {
     protected void initialize() {
         Robot.HATCH.grab();
         Robot.HATCH.stow();
-        ProcessTCPData.stopPiping();
     }
 
     @Override

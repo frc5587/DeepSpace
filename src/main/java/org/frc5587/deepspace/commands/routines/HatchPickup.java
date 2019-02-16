@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class HatchPickup extends CommandGroup {
     public HatchPickup() {
-        addSequential(new SetElevator(ElevatorHeights.BOTTOM_LEVEL));
+        addParallel(new SetElevator(ElevatorHeights.BOTTOM_LEVEL));
         addSequential(new UltrasonicThreshold(10));
         addSequential(new DisableTurningPID());
         addSequential(new SetHatch(HatchGrabState.GRAB));

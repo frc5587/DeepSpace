@@ -49,6 +49,7 @@ public class ProcessTCPData {
             System.out.println("Disabling");
             pipeInput = false;
             Robot.DRIVETRAIN.enableTurnPID(false);
+            Robot.DRIVETRAIN.stop();
         }
     }
 
