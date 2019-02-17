@@ -11,7 +11,6 @@ import jaci.pathfinder.Pathfinder;
 public class ProcessTCPData {
     public static void update(String[] messageParts) {
         var time = Double.parseDouble(messageParts[0]);
-        System.out.println(messageParts.length);
 
         if (messageParts.length <= 1) {
             // Just a time packet for synchronisation purposes

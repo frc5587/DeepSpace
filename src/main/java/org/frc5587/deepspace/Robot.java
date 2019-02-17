@@ -52,6 +52,13 @@ public class Robot extends TimedRobot {
         // cameraServer.startAutomaticCapture(driverCamera);
         new LimitResetElevator().start();
         new UpdateGyroHistory().start();
+
+        try {
+            tcpServer = new TCPServer(Constants.TCP_PORT);
+            tcpServer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -69,13 +76,6 @@ public class Robot extends TimedRobot {
 
         new Manager().start();
         new ControlLift().start();
-
-        try {
-            tcpServer = new TCPServer(Constants.TCP_PORT);
-            tcpServer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -87,9 +87,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        if (tcpServer != null) {
-            tcpServer.close();
-        }
     }
 
     @Override
