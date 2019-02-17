@@ -22,7 +22,7 @@ public class Manager extends Command {
 
     @Override
     protected void initialize() {
-        Robot.HATCH.grab();
+        Robot.HATCH.drop();
         Robot.HATCH.stow();
     }
 

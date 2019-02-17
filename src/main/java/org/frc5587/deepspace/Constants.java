@@ -102,6 +102,6 @@ public class Constants {
     }
 
     public static final class Hatch {
-        public static final boolean REQUIRE_BOTH = true;
+        public static final boolean REQUIRE_BOTH = false;
     }
 }

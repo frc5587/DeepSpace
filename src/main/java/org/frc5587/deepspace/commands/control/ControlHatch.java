@@ -37,8 +37,8 @@ public class ControlHatch extends InstantCommand {
                 Robot.HATCH.drop();
                 closed = true;
             }
-            System.out.println("Right: " + closed);
         }
+
         if (OI.xb.getBumperPressed(Hand.kLeft)) {
             if(down) {
                 Robot.HATCH.out();
@@ -47,7 +47,6 @@ public class ControlHatch extends InstantCommand {
                 Robot.HATCH.stow();
                 down = true;
             }
-            System.out.println("Left: " + down);
         }
     }
 }

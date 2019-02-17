@@ -11,6 +11,7 @@ package org.frc5587.deepspace;
 import java.io.IOException;
 
 import org.frc5587.deepspace.commands.*;
+import org.frc5587.deepspace.commands.control.ControlLift;
 import org.frc5587.deepspace.subsystems.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -67,6 +68,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(new ResetElevator());
 
         new Manager().start();
+        new ControlLift().start();
 
         try {
             tcpServer = new TCPServer(Constants.TCP_PORT);
