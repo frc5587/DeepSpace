@@ -8,6 +8,7 @@
 package org.frc5587.deepspace.subsystems;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -151,11 +152,15 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	}
 
 	public double getAngleAtClosestTime(double time) {
-		double lastVal = 0;
+		double lastVal = Double.NaN;
 		double lastDeltaSign = Double.NaN;
 
+		time += visionTimeDelta;
+
+		var currentCopy = new LinkedHashMap<>(gyroHistory);
+
 		// gyroHistory array is sorted, given that it's made up of times
-		for (var entry : gyroHistory.keySet()) {
+		for (var entry : currentCopy.keySet()) {
 			// When sign of delta changes, we know we have overshot, so use last (closest) value
 			var delta = time - entry;
 			var sign = Math.signum(delta);
@@ -167,6 +172,9 @@ public class Drive extends AbstractDrive implements PIDOutput {
 			}
 		}
 
+		System.out.println("TARGET TIME: " + time);
+		System.out.println("LAST VAL: " + lastVal);
+
 		return gyroHistory.get(lastVal);
 	}
 
@@ -174,7 +182,7 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	public void pidWrite(double output) {
 		if (turnEnabledFirstTime) {
 			System.out.println("Writing PID");
-			vbusArcade(0.0, output);	
+			vbusArcade(0.4, Constants.Drive.LPF_PERCENT * output);	
 		}
 	}
 

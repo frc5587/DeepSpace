@@ -91,7 +91,8 @@ public class Constants {
                 0.0001 * stuPerInch / 10f);
 
         // Turn controller
-        public static final int GYRO_HISTORY_LENGTH = 20;
+        public static final int GYRO_HISTORY_LENGTH = 50;
+        public static final double LPF_PERCENT = 0.5;
         public static final double TOLERANCE_DEGREES = 2.0;
         public static final FPID TURN_FPID = new FPID(
                 0,  // kF
