@@ -47,9 +47,11 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         COMPRESSOR.setClosedLoopControl(Constants.COMPRESSOR_ENABLED);
-        // cameraServer = CameraServer.getInstance();
-	    // driverCamera = cameraServer.startAutomaticCapture(0);
-        // cameraServer.startAutomaticCapture(driverCamera);
+
+        cameraServer = CameraServer.getInstance();
+	    driverCamera = cameraServer.startAutomaticCapture(0);
+        cameraServer.startAutomaticCapture(driverCamera);
+
         new LimitResetElevator().start();
         new UpdateGyroHistory().start();
         new LogDebugData().start();
