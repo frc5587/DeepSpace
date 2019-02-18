@@ -13,7 +13,7 @@ public class ControlLift extends Command {
 
     @Override
     protected void execute() {
-        var throttle = OI.xb.getY(Hand.kLeft);
+        var throttle = OI.xb.getY(Hand.kRight);
         Robot.LIFT.setLift(throttle);
     }
 

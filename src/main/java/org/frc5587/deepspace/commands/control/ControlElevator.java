@@ -22,7 +22,7 @@ public class ControlElevator extends InstantCommand {
 
     @Override
     protected void execute() {
-        var throttle = -OI.xb.getY(Hand.kRight);    
+        var throttle = -OI.xb.getY(Hand.kLeft);    
         if (!OI.xb.getTrigger(Hand.kLeft)) {
             if (manualControl) {
                 // B/c coming from manual, override last input
