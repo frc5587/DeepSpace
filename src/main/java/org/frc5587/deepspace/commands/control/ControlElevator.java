@@ -6,10 +6,10 @@ import org.frc5587.deepspace.subsystems.Elevator;
 import org.frc5587.deepspace.subsystems.Elevator.ElevatorHeights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ControlElevator extends InstantCommand {
+public class ControlElevator extends Command {
     private static Elevator elevator;
     private static boolean manualControl;
 
@@ -43,5 +43,10 @@ public class ControlElevator extends InstantCommand {
         }
 
         SmartDashboard.putNumber("Elevator Pos", elevator.getPosition());
+    }
+
+    @Override
+    protected boolean isFinished() {
+        return false;
     }
 }

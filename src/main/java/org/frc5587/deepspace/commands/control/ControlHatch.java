@@ -4,9 +4,9 @@ import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.Command;
 
-public class ControlHatch extends InstantCommand {
+public class ControlHatch extends Command {
     private static boolean down = true;
     private static boolean closed = true;
 
@@ -48,5 +48,10 @@ public class ControlHatch extends InstantCommand {
                 down = true;
             }
         }
+    }
+
+    @Override
+    protected boolean isFinished() {
+        return false;
     }
 }
