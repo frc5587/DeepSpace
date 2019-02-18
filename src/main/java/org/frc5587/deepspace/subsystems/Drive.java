@@ -147,7 +147,7 @@ public class Drive extends AbstractDrive implements PIDOutput {
 
 	public void updateGyroHistory() {
 		if (visionTimeDelta != null) {
-			gyroHistory.put(Timer.getFPGATimestamp() + visionTimeDelta, getHeading());
+			gyroHistory.put(Timer.getFPGATimestamp() + visionTimeDelta, getHeading(180.0));
 		}
 	}
 
@@ -181,8 +181,7 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	@Override
 	public void pidWrite(double output) {
 		if (turnEnabledFirstTime) {
-			System.out.println("Writing PID");
-			vbusArcade(0.4, Constants.Drive.LPF_PERCENT * output);	
+			vbusArcade(0.3, Constants.Drive.LPF_PERCENT * output);	
 		}
 	}
 

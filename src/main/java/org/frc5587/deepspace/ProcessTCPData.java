@@ -41,7 +41,8 @@ public class ProcessTCPData {
                 // Start by using lag compensation
                 // var captureAngle = Robot.DRIVETRAIN.getAngleAtClosestTime(time);
                 // var desiredAngle = captureAngle + angleError;
-                var desiredAngle = Robot.DRIVETRAIN.getHeading() - angleError;
+                var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
+                double desiredAngle = currentHeading - angleError;
 
                 // Now update with corrected value
                 Robot.DRIVETRAIN.setTurnPID(desiredAngle);

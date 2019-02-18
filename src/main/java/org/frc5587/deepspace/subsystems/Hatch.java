@@ -101,8 +101,8 @@ public class Hatch extends Subsystem {
 
     public void sendDebugInfo() {
         SmartDashboard.putBoolean("Hatch Held", limitControl());
-        SmartDashboard.putString("Stowed", stowedState.toString());
-        SmartDashboard.putString("Grab", grabState.toString());
+        SmartDashboard.putString("Stowed", stowedState == null ? "null" : stowedState.toString());
+        SmartDashboard.putString("Grab", grabState == null ? "null" : grabState.toString());
     }
 
     @Override

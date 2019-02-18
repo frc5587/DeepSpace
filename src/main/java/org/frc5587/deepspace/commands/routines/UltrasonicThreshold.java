@@ -30,7 +30,7 @@ public class UltrasonicThreshold extends Command {
     @Override
     protected boolean isFinished() {
         // TODO: Use real ultrasonic sensors
-        return OI.joy.getTrigger();
+        return OI.joy.getRawButton(10);
     }
 
     @Override

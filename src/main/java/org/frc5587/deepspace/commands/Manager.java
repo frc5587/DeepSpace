@@ -16,7 +16,7 @@ public class Manager extends Command {
 
     @Override
     protected void initialize() {
-        Robot.HATCH.drop();
+        Robot.HATCH.grab();
         Robot.HATCH.stow();
     }
 
@@ -29,7 +29,7 @@ public class Manager extends Command {
             } else {
                 new ArcadeDrive().start();
             }
-        } else if (OI.xb.getRawButtonReleased(12)) {
+        } else if (OI.joy.getRawButtonReleased(12)) {
             currentRoutine.cancel();
             currentRoutine = null;
         }
@@ -38,5 +38,17 @@ public class Manager extends Command {
     @Override
     protected boolean isFinished() {
         return false;
+    }
+
+    @Override
+    protected void end() {
+        if (currentRoutine != null) {
+            currentRoutine.cancel();
+        }
+    }
+
+    @Override
+    protected void interrupted() {
+        end();
     }
 }

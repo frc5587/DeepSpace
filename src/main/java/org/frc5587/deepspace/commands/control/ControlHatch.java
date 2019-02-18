@@ -23,11 +23,11 @@ public class ControlHatch extends Command {
 
     @Override
     protected void execute() {
-        if (Robot.HATCH.limitControl()) {
-            System.out.println("Running limit control");
-            Robot.HATCH.grab();
-            closed = false;
-        }
+        // if (Robot.HATCH.limitControl()) {
+        //     System.out.println("Running limit control");
+        //     Robot.HATCH.grab();
+        //     closed = false;
+        // }
 
         if (OI.xb.getBumperPressed(Hand.kRight)) {
             if (closed) {
