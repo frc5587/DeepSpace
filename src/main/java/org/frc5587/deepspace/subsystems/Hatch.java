@@ -7,14 +7,16 @@ import org.frc5587.deepspace.RobotMap;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Hatch extends Subsystem {
     private HashMap<HatchGrabState, DoubleSolenoid.Value> stateMap;
     private HashMap<HatchStowedState, DoubleSolenoid.Value> stowedMap;
     private DoubleSolenoid hatchPistons, slicerPistons;
     private DigitalInput limitSwitchOne, limitSwitchTwo;
+    private HatchStowedState stowedState;
+    private HatchGrabState grabState;
 
     public Hatch() {
         hatchPistons = new DoubleSolenoid(RobotMap.PCM_ID, RobotMap.Hatch.HATCH_PISTONS[0],
@@ -25,12 +27,33 @@ public class Hatch extends Subsystem {
         limitSwitchTwo = new DigitalInput(RobotMap.Hatch.LIMIT_SWITCH_TWO);
 
         stateMap = new HashMap<>();
-        stateMap.put(HatchGrabState.DROP, Value.kReverse);
-        stateMap.put(HatchGrabState.GRAB, Value.kForward);
+        stateMap.put(HatchGrabState.DROP, DoubleSolenoid.Value.kReverse);
+        stateMap.put(HatchGrabState.GRAB, DoubleSolenoid.Value.kForward);
 
         stowedMap = new HashMap<>();
-        stowedMap.put(HatchStowedState.OUT, Value.kReverse);
-        stowedMap.put(HatchStowedState.STOWED, Value.kForward);
+        stowedMap.put(HatchStowedState.OUT, DoubleSolenoid.Value.kReverse);
+        stowedMap.put(HatchStowedState.STOWED, DoubleSolenoid.Value.kForward);
+
+        stowedState = getStowedState(slicerPistons.get());
+        grabState = getGrabState(hatchPistons.get());
+    }
+
+    private HatchStowedState getStowedState(DoubleSolenoid.Value val) {
+        for (var entryPair : stowedMap.entrySet()) {
+            if (entryPair.getValue() == val) {
+                return entryPair.getKey();
+            }
+        }
+        return null;
+    }
+
+    private HatchGrabState getGrabState(DoubleSolenoid.Value val) {
+        for (var entryPair : stateMap.entrySet()) {
+            if (entryPair.getValue() == val) {
+                return entryPair.getKey();
+            }
+        }
+        return null;
     }
 
     private DoubleSolenoid.Value getVal(HatchGrabState state)  {
@@ -42,26 +65,28 @@ public class Hatch extends Subsystem {
     }
 
     public void grab() {
-        hatchPistons.set(getVal(HatchGrabState.DROP));
+        setGrab(HatchGrabState.DROP);
     }
 
     public void drop() {
-        hatchPistons.set(getVal(HatchGrabState.GRAB));
+        setGrab(HatchGrabState.GRAB);
     }
 
     public void out() {
-        slicerPistons.set(getVal(HatchStowedState.OUT));
+        setStow(HatchStowedState.OUT);
     }
 
     public void stow() {
-        slicerPistons.set(getVal(HatchStowedState.STOWED));
+        setStow(HatchStowedState.STOWED);
     }
 
     public void setGrab(HatchGrabState state) {
+        grabState = state;
         hatchPistons.set(getVal(state));
     }
 
     public void setStow(HatchStowedState state) {
+        stowedState = state;
         slicerPistons.set(getVal(state));
     }
 
@@ -72,6 +97,12 @@ public class Hatch extends Subsystem {
         else {
             return !limitSwitchOne.get() || !limitSwitchTwo.get(); 
         } 
+    }
+
+    public void sendDebugInfo() {
+        SmartDashboard.putBoolean("Hatch Held", limitControl());
+        SmartDashboard.putString("Stowed", stowedState.toString());
+        SmartDashboard.putString("Grab", grabState.toString());
     }
 
     @Override

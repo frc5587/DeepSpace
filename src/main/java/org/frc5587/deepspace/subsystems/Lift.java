@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.frc5587.deepspace.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Lift extends Subsystem {
     private TalonSRX liftLeader, liftFollower;
@@ -32,6 +33,11 @@ public class Lift extends Subsystem {
 
     public void setLift(double value) {
         liftLeader.set(ControlMode.PercentOutput, value);
+    }
+
+    public void sendDebugData() {
+        SmartDashboard.putNumber("Lift Current", liftLeader.getOutputCurrent());
+        SmartDashboard.putNumber("Lift Out %", liftLeader.getMotorOutputPercent());
     }
 
     @Override

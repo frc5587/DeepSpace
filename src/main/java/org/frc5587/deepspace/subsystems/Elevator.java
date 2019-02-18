@@ -13,6 +13,7 @@ import org.frc5587.lib.MathHelper;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends Subsystem {
     private static TalonSRX elevatorTalon;
@@ -123,6 +124,13 @@ public class Elevator extends Subsystem {
     public boolean limitSwitchValue() {
         // Limit switches are pulled high
         return !elevatorLimitSwitch.get();
+    }
+
+    public void sendDebugData() {
+        SmartDashboard.putBoolean("Ele Switch", limitSwitchValue());
+        SmartDashboard.putNumber("Ele Current", getCurrent());
+        SmartDashboard.putNumber("Ele Out %", elevatorTalon.getMotorOutputPercent());
+        SmartDashboard.putBoolean("Ele MP Done", elevatorTalon.isMotionProfileFinished());
     }
 
     @Override
