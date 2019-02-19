@@ -127,10 +127,23 @@ public class Elevator extends Subsystem {
     }
 
     public void sendDebugData() {
+        SmartDashboard.putNumber("Ele Pos", getPosition());
         SmartDashboard.putBoolean("Ele Switch", limitSwitchValue());
         SmartDashboard.putNumber("Ele Current", getCurrent());
         SmartDashboard.putNumber("Ele Out %", elevatorTalon.getMotorOutputPercent());
         SmartDashboard.putBoolean("Ele MP Done", elevatorTalon.isMotionProfileFinished());
+    }
+
+    public void startRefresh() {
+        SmartDashboard.putNumber("Ele P", 0.0);
+        SmartDashboard.putNumber("Ele I", 0.0);
+        SmartDashboard.putNumber("Ele D", 0.0);
+    }
+
+    public void refreshPID() {
+        elevatorTalon.config_kP(0, SmartDashboard.getNumber("Ele P", 0.0), 20);
+        elevatorTalon.config_kI(0, SmartDashboard.getNumber("Ele I", 0.0), 20);
+        elevatorTalon.config_kD(0, SmartDashboard.getNumber("Ele D", 0.0), 20);
     }
 
     @Override

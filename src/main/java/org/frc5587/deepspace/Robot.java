@@ -9,6 +9,7 @@ package org.frc5587.deepspace;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.commands.control.*;
@@ -17,6 +18,7 @@ import org.frc5587.deepspace.subsystems.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.cscore.UsbCamera;
@@ -36,6 +38,7 @@ public class Robot extends TimedRobot {
     public static final Hatch HATCH = new Hatch();
     public static final Lift LIFT = new Lift();
     
+    private static ArrayList<Command> controlCommands;
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
     public static TCPServer tcpServer;
@@ -52,9 +55,17 @@ public class Robot extends TimedRobot {
 	    driverCamera = cameraServer.startAutomaticCapture(0);
         cameraServer.startAutomaticCapture(driverCamera);
 
+        SmartDashboard.putData(new ResetElevator());
+
         new LimitResetElevator().start();
         new UpdateGyroHistory().start();
         new LogDebugData().start();
+
+        controlCommands = new ArrayList<>();
+        controlCommands.add(new Manager());
+        controlCommands.add(new ControlElevator());
+        controlCommands.add(new ControlHatch());
+        controlCommands.add(new ControlLift());
 
         try {
             tcpServer = new TCPServer(Constants.TCP_PORT);
@@ -64,8 +75,17 @@ public class Robot extends TimedRobot {
         }
     }
 
+    private void startControlCommands() {
+        for (var command : controlCommands) {
+            if (!command.isRunning()) {
+                command.start();
+            }
+        }
+    }
+
     @Override
     public void autonomousInit() {
+        startControlCommands();
     }
 
     @Override
@@ -75,12 +95,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        SmartDashboard.putData(new ResetElevator());
-
-        new Manager().start();
-        new ControlElevator().start();
-        new ControlHatch().start();
-        new ControlLift().start();
+        startControlCommands();
     }
 
     @Override
@@ -90,6 +105,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
+        for (var command : controlCommands) {
+            command.cancel();
+        }
     }
 
     @Override
