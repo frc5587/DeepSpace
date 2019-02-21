@@ -1,7 +1,6 @@
 package org.frc5587.deepspace.commands;
 
 import org.frc5587.deepspace.OI;
-import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.commands.control.ArcadeDrive;
 import org.frc5587.deepspace.commands.routines.AutoCenter;
 
@@ -16,8 +15,7 @@ public class Manager extends Command {
 
     @Override
     protected void initialize() {
-        Robot.HATCH.grab();
-        Robot.HATCH.stow();
+
     }
 
     @Override

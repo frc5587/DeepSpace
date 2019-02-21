@@ -104,5 +104,6 @@ public class Constants {
 
     public static final class Hatch {
         public static final boolean REQUIRE_BOTH = false;
+        public static final boolean LIMIT_CONTROL_ON = false;
     }
 }
