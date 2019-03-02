@@ -40,4 +40,8 @@ public class RobotMap {
 		public static int LIFT_MOTOR_ONE = 8;
 		public static int LIFT_MOTOR_TWO = 9;
 	}
+
+	public static class Cargo {
+		public static int CARGO_MOTOR = 11;
+	}
 }

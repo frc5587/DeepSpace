@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
     public static final Drive DRIVETRAIN = new Drive();
     public static final Hatch HATCH = new Hatch();
     public static final Lift LIFT = new Lift();
+    public static final Cargo CARGO = new Cargo();
     
     private static ArrayList<Command> controlCommands;
     public static CameraServer cameraServer;
