@@ -88,7 +88,7 @@ public class Elevator extends Subsystem {
     }
 
     public void elevatorHold() {
-        elevatorTalon.set(ControlMode.PercentOutput, Constants.Elevator.HOLD_VOLAGE);
+        elevatorTalon.set(ControlMode.PercentOutput, Constants.Elevator.HOLD_VOLTAGE);
     }
 
     public double getCurrent() {
@@ -97,7 +97,7 @@ public class Elevator extends Subsystem {
 
     public void elevatorMove(double yInput) {
         yInput = yInput > 0 ? yInput : 0.5 * yInput;    
-        var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLAGE, -1, 1);
+        var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLTAGE, -1, 1);
         elevatorTalon.set(ControlMode.PercentOutput, scaledValue);
     }
 
