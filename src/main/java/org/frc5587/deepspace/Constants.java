@@ -45,7 +45,7 @@ public class Constants {
         };
 
         public static final double minPercentOut = 0.0, maxPercentBw = .6, maxPercentFw = 1;
-        public static final double HOLD_VOLAGE = 0.075;
+        public static final double HOLD_VOLTAGE = 0.075;
 
         public static final int maxVelocity = 5246, maxAcceleration = 5246;
     }
