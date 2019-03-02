@@ -67,6 +67,7 @@ public class Robot extends TimedRobot {
         controlCommands.add(new ControlElevator());
         controlCommands.add(new ControlHatch());
         controlCommands.add(new ControlLift());
+        controlCommands.add(new ControlCargo());
 
         try {
             tcpServer = new TCPServer(Constants.TCP_PORT);
