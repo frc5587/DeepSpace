@@ -1,99 +1,90 @@
 package org.frc5587.deepspace;
 
 import java.net.*;
+import java.util.concurrent.TimeUnit;
 
-import org.frc5587.deepspace.commands.Routines;
-import org.frc5587.deepspace.subsystems.Drive;
-
-import edu.wpi.first.wpilibj.command.Command;
-import jaci.pathfinder.Pathfinder;
+import org.frc5587.deepspace.commands.routines.RoutineMode;
 
 import java.io.*;
 
 public class TCPServer extends Thread {
-    public static final boolean PATHFINDER_ALT = true;
+    public static final RoutineMode MODE = RoutineMode.PID;
     public static final int IN_BYTE_COUNT = 4;
+    private final int bindPort;
     private ServerSocket serverSocket;
     private Socket currentServer;
     private InputStream inStream;
     private BufferedReader inReader;
 
-    private Command routineCommand;
-
     public TCPServer(int port) throws IOException {
+        // Create a port that will wait forever and then connect to port
         serverSocket = new ServerSocket(port);
-        // serverSocket.setSoTimeout(10000);
-        routineCommand = null;
+        serverSocket.setSoTimeout(0);
+        this.bindPort = port;
     }
 
     public void run() {
         try {
-            System.out.println("Waiting for client on port " + serverSocket.getLocalPort() + "...");
-            currentServer = serverSocket.accept();
-            System.out.println("Just connected to " + currentServer.getRemoteSocketAddress());
-            inStream = currentServer.getInputStream();
-            inReader = new BufferedReader(new InputStreamReader(inStream));
+            connect();
 
             while (true) {
-                if (currentServer.getInputStream().available() > 1) {
+                // Check if there are any messages to be recieved
+                if (currentServer.getInputStream().available() > -1) {
+                    // Fetch message
+                    // var messageParts = "1:180".split(":");
                     var messageParts = inReader.readLine().split(":");
 
-                    var time = Double.parseDouble(messageParts[0]);
-                    var angle = Double.parseDouble(messageParts[1]);
-                    System.out.println(angle);
-
-                    if (PATHFINDER_ALT) {
-                        // Here, angle is degrees between midpoint of tap and centre of vision of camera
-                        // Grab additional elements of the message for pathfinder
-                        var distanceX = Double.parseDouble(messageParts[2]);
-                        var distanceY = Double.parseDouble(messageParts[3]);
-
-                        var infoMessage = new DistToGoalMessage(time, angle, distanceX, distanceY);
-
-                        routineCommand = new Routines.PathfinderHatchPickup(Drive.SLOW_PATHGEN, infoMessage);
-                    } else {
-                        // Angle is how far off the robot is from being perpendicular to the target
-                        // Run with PID loop on angle
-                        var infoMessage = new AngleFromGoalMessage(time, angle);
-                        routineCommand = new Routines.PIDHatchPickup(infoMessage);
-                    }
-
-                    routineCommand.start();
-
-                    // Robot.TURRET.setPositionDeg(Robot.DRIVETRAIN.getHeading() - angle);
+                    ProcessTCPData.update(messageParts);
                 }
             }
+        } catch (SocketException | NullPointerException e) {
+            // If socket has disconnected, try to reconnect
+            System.out.println(e.getStackTrace().toString());
+            reconnect();
+            // reconnect();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void reconnect() {
+        while (true) {
+            try {
+                // serverSocket = new ServerSocket(bindPort);
+                serverSocket.close();
+                serverSocket = new ServerSocket(bindPort);
+                break;
+            } catch (IOException ioException) {
+                try {
+                    ioException.printStackTrace();
+                    System.out.println("Could not open port. Waiting one second and trying again...");
+                    TimeUnit.SECONDS.sleep(1);
+                    System.out.println("Done sleeping; reconnecting");
+                    continue;
+                } catch (InterruptedException interruptedException) {
+                    System.out.println("TCP Server interrupted while trying to reconnect");
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        
+        this.run();
+    }
+
+    private void connect() throws IOException {
+        System.out.println("Waiting for client on port " + serverSocket.getLocalPort() + "...");
+        currentServer = serverSocket.accept();
+        System.out.println("Just connected to " + currentServer.getRemoteSocketAddress());
+        inStream = currentServer.getInputStream();
+        inReader = new BufferedReader(new InputStreamReader(inStream));
+    }
+
     public void close() {
         try {
             currentServer.close();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             System.out.println("Server already closed");
             return;
-        }
-    }
-
-    public class AngleFromGoalMessage {
-        public final double time, angleToPerpendicular;
-
-        public AngleFromGoalMessage(double time, double angleToPerpendicular) {
-            this.time = time;
-            this.angleToPerpendicular = angleToPerpendicular;
-        }
-    }
-
-    public class DistToGoalMessage {
-        public final double time, angleToCenterRad, distanceX, distanceY;
-
-        public DistToGoalMessage(double time, double angleToCenterDeg, double distanceX, double distanceY) {
-            this.time = time;
-            this.angleToCenterRad = Pathfinder.d2r(angleToCenterDeg);
-            this.distanceX = distanceX;
-            this.distanceY = distanceY;
         }
     }
 }

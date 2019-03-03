@@ -7,27 +7,39 @@
 
 package org.frc5587.deepspace.subsystems;
 
-import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.frc5587.lib.pathfinder.AbstractDrive;
-import org.frc5587.lib.pathfinder.GyroCompMPRunner;
-import org.frc5587.lib.pathfinder.Pathgen;
-import org.frc5587.deepspace.Constants;
-import org.frc5587.deepspace.RobotMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
+import org.frc5587.deepspace.Constants;
+import org.frc5587.deepspace.RobotMap;
+import org.frc5587.lib.LimitedHashMap;
+import org.frc5587.lib.pathfinder.AbstractDrive;
+import org.frc5587.lib.pathfinder.Pathgen;
+
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.SPI.Port;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * An example subsystem. You can replace me with your own Subsystem.
  */
-public class Drive extends AbstractDrive {
+public class Drive extends AbstractDrive implements PIDOutput {
 	public static final Pathgen SLOW_PATHGEN = new Pathgen(30, 0.010, 36, 60, 120);
 	public static final Pathgen MED_PATHGEN = new Pathgen(30, 0.010, 60, 80, 160);
 	public static final Pathgen FAST_PATHGEN = new Pathgen(30, 0.010, 84, 80, 160);
+
+	private LimitedHashMap<Double, Double> gyroHistory;
+	private ArrayList<Double> visionTimeDeltas;
+	private Double visionTimeDelta;
+	private PIDController turnController;
+	private boolean turnEnabledFirstTime;
 
 	public Drive() {
 		super(new TalonSRX(RobotMap.Drive.LEFT_MASTER), new TalonSRX(RobotMap.Drive.RIGHT_MASTER),
@@ -36,6 +48,22 @@ public class Drive extends AbstractDrive {
 		setAHRS(new AHRS(Port.kMXP));
 		setConstants(Constants.Drive.kMaxVelocity, Constants.Drive.kTimeoutMs, Constants.Drive.stuPerRev,
 				Constants.Drive.stuPerInch, Constants.Drive.wheelDiameter, Constants.Drive.minBufferCount);
+
+		gyroHistory = new LimitedHashMap<>(Constants.Drive.GYRO_HISTORY_LENGTH);
+		visionTimeDeltas = new ArrayList<>();
+
+		var fpid = Constants.Drive.TURN_FPID;
+		turnController = new PIDController(fpid.kP, fpid.kI, fpid.kD, fpid.kF, ahrs, this);
+		turnController.setInputRange(-180.0, 180.0);
+		turnController.setOutputRange(-1.0, 1.0);
+		turnController.setAbsoluteTolerance(Constants.Drive.TOLERANCE_DEGREES);
+		turnController.setContinuous(true);
+		turnController.disable();
+
+		// Add PID Controller to dashboard for testing
+		turnController.setName("DriveSystem", "RotateController");
+		SmartDashboard.putData(turnController);
+		turnEnabledFirstTime = false;
 	}
 
 	@Override
@@ -87,6 +115,74 @@ public class Drive extends AbstractDrive {
 
 		leftMaster.set(ControlMode.Position, SmartDashboard.getNumber("Goto Position L", 0.0));
 		rightMaster.set(ControlMode.Position, SmartDashboard.getNumber("Goto Position R", 0.0));
+	}
+
+	public void enableTurnPID(boolean enabled) {
+		System.out.println("Enabling PID...");
+		if (enabled) {
+			turnEnabledFirstTime = true;
+		}
+
+		turnController.setEnabled(enabled);
+	}
+
+	public void setTurnPID(double setpoint) {
+		turnController.setSetpoint(setpoint);
+	}
+
+	public boolean turnPIDEnabled() {
+		return turnController.isEnabled();
+	}
+
+	public void setVisionTimeDelta(double visionTimeDelta) {
+		visionTimeDeltas.add(visionTimeDelta);
+
+		double sum = 0;
+		for (var delta : visionTimeDeltas) {
+			sum += delta;
+		}
+
+		this.visionTimeDelta = sum / visionTimeDeltas.size();
+	}
+
+	public void updateGyroHistory() {
+		if (visionTimeDelta != null) {
+			gyroHistory.put(Timer.getFPGATimestamp() + visionTimeDelta, getHeading(180.0));
+		}
+	}
+
+	public double getAngleAtClosestTime(double time) {
+		double lastVal = Double.NaN;
+		double lastDeltaSign = Double.NaN;
+
+		time += visionTimeDelta;
+
+		var currentCopy = new LinkedHashMap<>(gyroHistory);
+
+		// gyroHistory array is sorted, given that it's made up of times
+		for (var entry : currentCopy.keySet()) {
+			// When sign of delta changes, we know we have overshot, so use last (closest) value
+			var delta = time - entry;
+			var sign = Math.signum(delta);
+			if (lastDeltaSign != Double.NaN && lastDeltaSign != sign) {
+				break;
+			} else {
+				lastVal = entry;
+				lastDeltaSign = sign;
+			}
+		}
+
+		System.out.println("TARGET TIME: " + time);
+		System.out.println("LAST VAL: " + lastVal);
+
+		return gyroHistory.get(lastVal);
+	}
+
+	@Override
+	public void pidWrite(double output) {
+		if (turnEnabledFirstTime) {
+			vbusArcade(0.3, Constants.Drive.LPF_PERCENT * output);	
+		}
 	}
 
 	public void initDefaultCommand() {

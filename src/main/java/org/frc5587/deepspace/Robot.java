@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.frc5587.deepspace.commands.*;
+import org.frc5587.deepspace.commands.control.*;
 import org.frc5587.deepspace.subsystems.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,18 +36,12 @@ public class Robot extends TimedRobot {
     public static final Elevator ELEVATOR = new Elevator();
     public static final Drive DRIVETRAIN = new Drive();
     public static final Hatch HATCH = new Hatch();
+    public static final Lift LIFT = new Lift();
     
+    private static ArrayList<Command> controlCommands;
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
-    private static TCPServer tcpServer;
-
-    private ArrayList<Command> controlCommands = new ArrayList<>();
-
-    public Robot() {
-        controlCommands.add(new ControlHatch());
-        controlCommands.add(new ControlElevator());
-        controlCommands.add(new ArcadeDrive());
-    }
+    public static TCPServer tcpServer;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -55,31 +50,52 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         COMPRESSOR.setClosedLoopControl(Constants.COMPRESSOR_ENABLED);
-        // cameraServer = CameraServer.getInstance();
-	    // driverCamera = cameraServer.startAutomaticCapture(0);
-	    // cameraServer.startAutomaticCapture(driverCamera);
+
+        cameraServer = CameraServer.getInstance();
+	    driverCamera = cameraServer.startAutomaticCapture(0);
+        cameraServer.startAutomaticCapture(driverCamera);
+
+        SmartDashboard.putData(new ResetElevator());
+
+        new LimitResetElevator().start();
+        new UpdateGyroHistory().start();
+        new LogDebugData().start();
+
+        controlCommands = new ArrayList<>();
+        controlCommands.add(new Manager());
+        controlCommands.add(new ControlElevator());
+        controlCommands.add(new ControlHatch());
+        controlCommands.add(new ControlLift());
+
+        try {
+            tcpServer = new TCPServer(Constants.TCP_PORT);
+            tcpServer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startControlCommands() {
+        for (var command : controlCommands) {
+            if (!command.isRunning()) {
+                command.start();
+            }
+        }
     }
 
     @Override
     public void autonomousInit() {
+        startControlCommands();
     }
 
     @Override
     public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
     }
 
     @Override
     public void teleopInit() {
-        SmartDashboard.putData(new ResetElevator());
-
-        controlCommands.forEach((c) -> c.start());
-        
-        // try {
-        //     tcpServer = new TCPTestServer(Constants.TCP_PORT);
-        //     tcpServer.start();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+        startControlCommands();
     }
 
     @Override
@@ -89,8 +105,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        if (tcpServer != null) {
-            tcpServer.close();
+        for (var command : controlCommands) {
+            command.cancel();
         }
     }
 

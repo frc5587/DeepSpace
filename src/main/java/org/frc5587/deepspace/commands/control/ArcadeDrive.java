@@ -5,10 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.frc5587.deepspace.commands;
+package org.frc5587.deepspace.commands.control;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Drive;
@@ -16,8 +18,10 @@ import org.frc5587.deepspace.subsystems.Drive;
 /**
  * An example command.  You can replace me with your own command.
  */
-public class ArcadeDrive extends Command {
+public class ArcadeDrive extends InstantCommand {
 	private Drive kDrive;
+
+	private static final double targetAngle = 0.0;
 
 	public ArcadeDrive() {
 		// Use requires() here to declare subsystem dependencies
@@ -28,7 +32,8 @@ public class ArcadeDrive extends Command {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		kDrive.enableBrakeMode(false);
+		kDrive.enableBrakeMode(true);
+		SmartDashboard.putNumber("Turn Angle", targetAngle);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -45,12 +50,6 @@ public class ArcadeDrive extends Command {
 		kDrive.vbusArcade(throttle, curve);
 
 		kDrive.sendDebugInfo();
-	}
-
-	// Make this return true when this Command no longer needs to run execute()
-	@Override
-	protected boolean isFinished() {
-		return false;
 	}
 
 	// Called once after isFinished returns true

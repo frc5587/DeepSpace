@@ -11,16 +11,20 @@ import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.RobotMap;
 import org.frc5587.lib.MathHelper;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends Subsystem {
     private static TalonSRX elevatorTalon;
     private static TalonSRX elevatorSlave;
+    private static DigitalInput elevatorLimitSwitch;
     private static HashMap<ElevatorHeights, Double> elevatorHeights;
 
     public Elevator() {
         elevatorTalon = new TalonSRX(RobotMap.Elevator.ELEVATOR_MASTER);
         elevatorSlave = new TalonSRX(RobotMap.Elevator.ELEVATOR_SLAVE);
+        elevatorLimitSwitch = new DigitalInput(RobotMap.Elevator.ELEVATOR_LIMIT_SWITCH);
         elevatorHeights = new HashMap<>();
 
         elevatorHeights.put(ElevatorHeights.BOTTOM_LEVEL, Constants.Elevator.bottomTicks);
@@ -67,21 +71,33 @@ public class Elevator extends Subsystem {
         elevatorTalon.configVoltageCompSaturation(Constants.Elevator.vCompSaturation, Constants.Elevator.kTimeoutMs);
     }
 
-    public double getTicks(ElevatorHeights e) {
-        return elevatorHeights.get(e);
+    public double getTicks(ElevatorHeights height) {
+        return elevatorHeights.get(height);
     }
 
-    public void setElevator(double d) {
-        elevatorTalon.set(ControlMode.MotionMagic, d);
+    public void setElevator(double height) {
+        elevatorTalon.set(ControlMode.MotionMagic, height);
+    }
+
+    public void setElevator(ElevatorHeights height) {
+        setElevator(getTicks(height));
+    }
+
+    public boolean isMPFinished() {
+        return elevatorTalon.isMotionProfileFinished();
     }
 
     public void elevatorHold() {
-        elevatorTalon.set(ControlMode.PercentOutput, Constants.Elevator.HOLD_VOLAGE);
+        elevatorTalon.set(ControlMode.PercentOutput, Constants.Elevator.HOLD_VOLTAGE);
+    }
+
+    public double getCurrent() {
+        return elevatorTalon.getOutputCurrent();
     }
 
     public void elevatorMove(double yInput) {
         yInput = yInput > 0 ? yInput : 0.5 * yInput;    
-        var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLAGE, -1, 1);
+        var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLTAGE, -1, 1);
         elevatorTalon.set(ControlMode.PercentOutput, scaledValue);
     }
 
@@ -103,6 +119,31 @@ public class Elevator extends Subsystem {
 
     public double ticksToInches(double ticks) {
         return ticks / Constants.Elevator.STU_PER_INCH;
+    }
+
+    public boolean limitSwitchValue() {
+        // Limit switches are pulled high
+        return !elevatorLimitSwitch.get();
+    }
+
+    public void sendDebugData() {
+        SmartDashboard.putNumber("Ele Pos", getPosition());
+        SmartDashboard.putBoolean("Ele Switch", limitSwitchValue());
+        SmartDashboard.putNumber("Ele Current", getCurrent());
+        SmartDashboard.putNumber("Ele Out %", elevatorTalon.getMotorOutputPercent());
+        SmartDashboard.putBoolean("Ele MP Done", elevatorTalon.isMotionProfileFinished());
+    }
+
+    public void startRefresh() {
+        SmartDashboard.putNumber("Ele P", 0.0);
+        SmartDashboard.putNumber("Ele I", 0.0);
+        SmartDashboard.putNumber("Ele D", 0.0);
+    }
+
+    public void refreshPID() {
+        elevatorTalon.config_kP(0, SmartDashboard.getNumber("Ele P", 0.0), 20);
+        elevatorTalon.config_kI(0, SmartDashboard.getNumber("Ele I", 0.0), 20);
+        elevatorTalon.config_kD(0, SmartDashboard.getNumber("Ele D", 0.0), 20);
     }
 
     @Override
