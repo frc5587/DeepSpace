@@ -70,16 +70,16 @@ public class Constants {
 
         // FPID Constants
         public static final FPID leftPIDs = new FPID(
-                (1 / 3933) * 1023, // kF
-                0.8056, // kP
+                (1 / 4284) * 1023, // kF
+                0.42752, // kP
                 0.001, // kI
-                17.7232 // kD
+                8.5504 // kD
         );
         public static final FPID rightPIDs = new FPID(
-                (1 / 4060) * 1023, // kF
-                0.8056, // kP
+                (1 / 4553) * 1023, // kF
+                0.37584, // kP
                 0.001, // kI
-                17.7232 // kD
+                7.5168 // kD
         );
 
         // Pathfinder constants

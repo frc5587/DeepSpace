@@ -10,13 +10,7 @@ public class ControlCargo extends Command {
 
     @Override
     protected void execute() {
-        if(OI.xb.getY(Hand.kLeft) > 0) {
-            Robot.CARGO.cargoIn();
-        } else if(OI.xb.getY(Hand.kLeft) < 0) {
-            Robot.CARGO.cargoOut();
-        } else {
-            Robot.CARGO.cargoStop();
-        }
+        Robot.CARGO.cargoSet(OI.xb.getY(Hand.kLeft));
     }
 
     @Override

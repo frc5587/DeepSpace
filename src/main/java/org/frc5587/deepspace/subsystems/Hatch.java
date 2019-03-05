@@ -27,12 +27,12 @@ public class Hatch extends Subsystem {
         limitSwitchTwo = new DigitalInput(RobotMap.Hatch.LIMIT_SWITCH_TWO);
 
         stateMap = new HashMap<>();
-        stateMap.put(HatchGrabState.DROP, DoubleSolenoid.Value.kReverse);
-        stateMap.put(HatchGrabState.GRAB, DoubleSolenoid.Value.kForward);
+        stateMap.put(HatchGrabState.DROP, DoubleSolenoid.Value.kForward);
+        stateMap.put(HatchGrabState.GRAB, DoubleSolenoid.Value.kReverse);
 
         stowedMap = new HashMap<>();
-        stowedMap.put(HatchStowedState.OUT, DoubleSolenoid.Value.kReverse);
-        stowedMap.put(HatchStowedState.STOWED, DoubleSolenoid.Value.kForward);
+        stowedMap.put(HatchStowedState.OUT, DoubleSolenoid.Value.kForward);
+        stowedMap.put(HatchStowedState.STOWED, DoubleSolenoid.Value.kReverse);
 
         stowedState = getStowedState(slicerPistons.get());
         grabState = getGrabState(hatchPistons.get());

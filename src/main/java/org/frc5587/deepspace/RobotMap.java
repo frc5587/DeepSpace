@@ -42,6 +42,6 @@ public class RobotMap {
 	}
 
 	public static class Cargo {
-		public static int CARGO_MOTOR = 11;
+		public static int CARGO_MOTOR = 12;
 	}
 }

@@ -24,6 +24,8 @@ public class Elevator extends Subsystem {
     public Elevator() {
         elevatorTalon = new TalonSRX(RobotMap.Elevator.ELEVATOR_MASTER);
         elevatorSlave = new TalonSRX(RobotMap.Elevator.ELEVATOR_SLAVE);
+        elevatorSlave.setInverted(true);
+
         elevatorLimitSwitch = new DigitalInput(RobotMap.Elevator.ELEVATOR_LIMIT_SWITCH);
         elevatorHeights = new HashMap<>();
 
@@ -97,7 +99,9 @@ public class Elevator extends Subsystem {
 
     public void elevatorMove(double yInput) {
         yInput = yInput > 0 ? yInput : 0.5 * yInput;    
-        var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLTAGE, -1, 1);
+        // var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLTAGE, -1, 1);
+        var scaledValue = yInput;
+        System.out.println(scaledValue);
         elevatorTalon.set(ControlMode.PercentOutput, scaledValue);
     }
 
@@ -138,6 +142,8 @@ public class Elevator extends Subsystem {
         SmartDashboard.putNumber("Ele P", 0.0);
         SmartDashboard.putNumber("Ele I", 0.0);
         SmartDashboard.putNumber("Ele D", 0.0);
+
+        SmartDashboard.putNumber("Ele Set", 0.0);
     }
 
     public void refreshPID() {

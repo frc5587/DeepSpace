@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ControlElevator extends Command {
     private static Elevator elevator;
     private static boolean manualControl;
+    
+    // private static double maxVelocity = Double.MIN_VALUE;
 
     public ControlElevator() {
         elevator = Robot.ELEVATOR;
@@ -22,6 +24,14 @@ public class ControlElevator extends Command {
 
     @Override
     protected void execute() {
+
+        // Code for finding max velocity of elevator motors
+        // var vel = elevator.getVelocity();
+        // if (vel > maxVelocity) {
+        //     maxVelocity = vel;
+        //     System.out.println(vel);
+        // }
+
         var throttle = -OI.xb.getY(Hand.kLeft);    
         if (!OI.xb.getTrigger(Hand.kLeft)) {
             if (manualControl) {
@@ -38,6 +48,7 @@ public class ControlElevator extends Command {
                 elevator.setElevator(ElevatorHeights.TOP_LEVEL);
             }
         } else {
+            // elevator.setElevator(SmartDashboard.getNumber("Ele Set", 0));
             elevator.elevatorMove(throttle);
             manualControl = true;
         }

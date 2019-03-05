@@ -26,6 +26,10 @@ public class Cargo extends Subsystem {
     cargoTalon.neutralOutput();
   }
 
+  public void cargoSet(double val) {
+    cargoTalon.set(ControlMode.PercentOutput, val);
+  }
+
   @Override
   protected void initDefaultCommand() {
 
