@@ -26,7 +26,7 @@ public class ControlElevator extends Command {
     protected void execute() {
 
         // Code for finding max velocity of elevator motors
-        // var vel = elevator.getVelocity();
+        // var vel = -elevator.getVelocity();
         // if (vel > maxVelocity) {
         //     maxVelocity = vel;
         //     System.out.println(vel);

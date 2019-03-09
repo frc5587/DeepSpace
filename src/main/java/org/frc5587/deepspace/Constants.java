@@ -20,15 +20,15 @@ public class Constants {
     public static final double kVCompSaturation = 12.0;
 
     public static final class Elevator {
-        public static final double STU_PER_INCH = 18884 / 30;
+        public static final double STU_PER_INCH = 18349 / 27;
 
         public static final int MIN_UNCHECKED_VELOCITY = 100;
         public static final double UNSAFE_IDLE_CURRENT_DRAW = 10.0;
         public static final double UNSAFE_TIME_BEFORE_STOP = 1.5;
 
         public static final double bottomTicks = 0;
-        public static final double middleTicks = 28 * STU_PER_INCH;
-        public static final double topTicks = 56 * STU_PER_INCH;
+        public static final double middleTicks = -28 * STU_PER_INCH;
+        public static final double topTicks = -56 * STU_PER_INCH;
 
         public static final int kSlotIdx = 0;
         public static final int kPIDLoopIdx = 0;
@@ -41,13 +41,13 @@ public class Constants {
             2.9568, //kP
             0.0, //kI
             10.9136, //kD
-            (1 / 5246) * 1023 // kF
+            (1 / 1678) * 1023 // kF
         };
 
         public static final double minPercentOut = 0.0, maxPercentBw = .6, maxPercentFw = 1;
-        public static final double HOLD_VOLTAGE = 0.075;
+        public static final double HOLD_VOLTAGE = 0.0;
 
-        public static final int maxVelocity = 5246, maxAcceleration = 5246;
+        public static final int maxVelocity = 1678, maxAcceleration = 1678;
     }
 
     public static final class Drive {

@@ -19,7 +19,7 @@ public class ControlHatch extends Command {
     @Override
     protected void initialize() {
         Robot.HATCH.grab();
-        Robot.HATCH.stow();
+        Robot.HATCH.out();
     }
 
     @Override

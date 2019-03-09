@@ -10,7 +10,7 @@ public class ControlCargo extends Command {
 
     @Override
     protected void execute() {
-        Robot.CARGO.cargoSet(OI.xb.getY(Hand.kLeft));
+        Robot.CARGO.cargoSet(OI.xb.getY(Hand.kRight));
     }
 
     @Override

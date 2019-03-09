@@ -101,7 +101,7 @@ public class Elevator extends Subsystem {
         yInput = yInput > 0 ? yInput : 0.5 * yInput;    
         // var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLTAGE, -1, 1);
         var scaledValue = yInput;
-        System.out.println(scaledValue);
+        // System.out.println(scaledValue);
         elevatorTalon.set(ControlMode.PercentOutput, scaledValue);
     }
 

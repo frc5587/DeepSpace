@@ -64,9 +64,9 @@ public class Robot extends TimedRobot {
 
         controlCommands = new ArrayList<>();
         controlCommands.add(new Manager());
-        // controlCommands.add(new ControlElevator());
+        controlCommands.add(new ControlElevator());
         controlCommands.add(new ControlHatch());
-        controlCommands.add(new ControlLift());
+        // controlCommands.add(new ControlLift());
         controlCommands.add(new ControlCargo());
 
         try {
