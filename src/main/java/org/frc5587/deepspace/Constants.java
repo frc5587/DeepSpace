@@ -30,6 +30,11 @@ public class Constants {
         public static final double middleTicks = -28 * STU_PER_INCH;
         public static final double topTicks = -56 * STU_PER_INCH;
 
+        public static final double cargoShip = 23.5 * STU_PER_INCH;
+        public static final double bottomCargo = 19.5 * STU_PER_INCH;
+        public static final double middleCargo = 47.5 * STU_PER_INCH;
+        public static final double topCargo = 75.5 * STU_PER_INCH;
+
         public static final int kSlotIdx = 0;
         public static final int kPIDLoopIdx = 0;
 

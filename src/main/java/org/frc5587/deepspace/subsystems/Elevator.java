@@ -20,6 +20,7 @@ public class Elevator extends Subsystem {
     private static TalonSRX elevatorSlave;
     private static DigitalInput elevatorLimitSwitch;
     private static HashMap<ElevatorHeights, Double> elevatorHeights;
+    private static HashMap<CargoHeights, Double> cargoHeights;
 
     public Elevator() {
         elevatorTalon = new TalonSRX(RobotMap.Elevator.ELEVATOR_MASTER);
@@ -33,6 +34,13 @@ public class Elevator extends Subsystem {
         elevatorHeights.put(ElevatorHeights.MIDDLE_LEVEL, Constants.Elevator.middleTicks);
         elevatorHeights.put(ElevatorHeights.TOP_LEVEL, Constants.Elevator.topTicks);
 
+        cargoHeights = new HashMap<>();
+
+        cargoHeights.put(CargoHeights.CARGO_SHIP, Constants.Elevator.cargoShip);
+        cargoHeights.put(CargoHeights.BOTTOM_CARGO, Constants.Elevator.bottomCargo);
+        cargoHeights.put(CargoHeights.MIDDLE_CARGO, Constants.Elevator.middleCargo);
+        cargoHeights.put(CargoHeights.TOP_CARGO, Constants.Elevator.topCargo);
+
         elevatorSlave.follow(elevatorTalon);
 
         configureTalon();
@@ -41,6 +49,10 @@ public class Elevator extends Subsystem {
     public static enum ElevatorHeights {
         BOTTOM_LEVEL, MIDDLE_LEVEL, TOP_LEVEL;
 
+    }
+
+    public static enum CargoHeights {
+        CARGO_SHIP, BOTTOM_CARGO, MIDDLE_CARGO, TOP_CARGO;
     }
 
     private static void configureTalon() {
@@ -77,11 +89,19 @@ public class Elevator extends Subsystem {
         return elevatorHeights.get(height);
     }
 
+    public double getTicks(CargoHeights height) {
+        return cargoHeights.get(height);
+    }
+
     public void setElevator(double height) {
         elevatorTalon.set(ControlMode.MotionMagic, height);
     }
 
     public void setElevator(ElevatorHeights height) {
+        setElevator(getTicks(height));
+    }
+
+    public void setElevator(CargoHeights height) {
         setElevator(getTicks(height));
     }
 
