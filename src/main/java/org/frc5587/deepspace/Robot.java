@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
     public static final Hatch HATCH = new Hatch();
     public static final Lift LIFT = new Lift();
     public static final Cargo CARGO = new Cargo();
+    public static final PistonLift PISTON_LIFT = new PistonLift();
     
     private static ArrayList<Command> controlCommands;
     public static CameraServer cameraServer;
@@ -68,6 +69,7 @@ public class Robot extends TimedRobot {
         controlCommands.add(new ControlHatch());
         // controlCommands.add(new ControlLift());
         controlCommands.add(new ControlCargo());
+        controlCommands.add(new ControlPistonLift());
 
         try {
             tcpServer = new TCPServer(Constants.TCP_PORT);
