@@ -8,27 +8,18 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class PistonLift extends Subsystem {
 
-    private DoubleSolenoid pistonOne, pistonTwo;
+    private DoubleSolenoid liftPistons;
 
     public PistonLift() {
-        pistonOne = new DoubleSolenoid(RobotMap.PistonLift.PISTON_ONE[0], RobotMap.PistonLift.PISTON_ONE[1]);
-        pistonTwo = new DoubleSolenoid(RobotMap.PistonLift.PISTON_TWO[0], RobotMap.PistonLift.PISTON_TWO[1]);
+        liftPistons = new DoubleSolenoid(RobotMap.PistonLift.LIFT_PISTON[0], RobotMap.PistonLift.LIFT_PISTON[1]);
     }
 
-    public void pistonOneDown() {
-        pistonOne.set(Value.kForward);
+    public void pistonsDown() {
+        liftPistons.set(Value.kForward);
     }
 
-    public void pistonTwoDown() {
-        pistonTwo.set(Value.kForward);
-    }
-    
-    public void pistonOneUp() {
-        pistonOne.set(Value.kReverse);
-    }
-
-    public void pistonTwoUp() {
-        pistonTwo.set(Value.kReverse);
+    public void pistonsUp() {
+        liftPistons.set(Value.kReverse);
     }
 
     @Override

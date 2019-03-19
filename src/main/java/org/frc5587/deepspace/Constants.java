@@ -26,7 +26,7 @@ public class Constants {
         public static final double UNSAFE_IDLE_CURRENT_DRAW = 10.0;
         public static final double UNSAFE_TIME_BEFORE_STOP = 1.5;
 
-        public static final double bottomTicks = 0;
+        public static final double bottomTicks = -3 * STU_PER_INCH;
         public static final double middleTicks = -28 * STU_PER_INCH;
         public static final double topTicks = -56 * STU_PER_INCH;
 
