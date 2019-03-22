@@ -15,6 +15,7 @@ public class TCPServer extends Thread {
     private Socket currentServer;
     private InputStream inStream;
     private BufferedReader inReader;
+    private PrintWriter out;
 
     public TCPServer(int port) throws IOException {
         // Create a port that will wait forever and then connect to port
@@ -29,11 +30,14 @@ public class TCPServer extends Thread {
 
             while (true) {
                 // Check if there are any messages to be recieved
-                if (currentServer.getInputStream().available() > -1) {
-                    // Fetch message
-                    // var messageParts = "1:180".split(":");
-                    var messageParts = inReader.readLine().split(":");
+                String[] messageParts = null;
+                while (inStream.available() > 0) {
+                    var fromClient = recieve();
+                    messageParts = fromClient.split(":");
+                }
 
+                // Process only when something has been recieved
+                if (messageParts != null) {
                     ProcessTCPData.update(messageParts);
                 }
             }
@@ -41,10 +45,25 @@ public class TCPServer extends Thread {
             // If socket has disconnected, try to reconnect
             System.out.println(e.getStackTrace().toString());
             reconnect();
-            // reconnect();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String recieve() throws IOException, NullPointerException {
+        var fromClient = inReader.readLine();
+        System.out.println("Recieved: " + fromClient);
+
+        if (fromClient == null) {
+            throw new NullPointerException("Recieved null from the client");
+        }
+
+        return fromClient;
+    }
+
+    private void send(String message) {
+        System.out.println("Send: " + message);
+        out.println(message);
     }
 
     private void reconnect() {
@@ -67,7 +86,7 @@ public class TCPServer extends Thread {
                 }
             }
         }
-        
+
         this.run();
     }
 
@@ -77,6 +96,7 @@ public class TCPServer extends Thread {
         System.out.println("Just connected to " + currentServer.getRemoteSocketAddress());
         inStream = currentServer.getInputStream();
         inReader = new BufferedReader(new InputStreamReader(inStream));
+        out = new PrintWriter(new DataOutputStream(currentServer.getOutputStream()), true);
     }
 
     public void close() {

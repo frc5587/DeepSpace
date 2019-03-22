@@ -10,13 +10,12 @@ import jaci.pathfinder.Pathfinder;
  */
 public class ProcessTCPData {
     public static void update(String[] messageParts) {
-        var time = Double.parseDouble(messageParts[0]);
+        var rpiTime = Double.parseDouble(messageParts[0]);
 
         if (messageParts.length <= 1) {
             // Just a time packet for synchronisation purposes
             var systemTime = Timer.getFPGATimestamp();
-            System.out.println("Delta: " + (systemTime - time));
-            Robot.DRIVETRAIN.setVisionTimeDelta(systemTime - time);
+            Robot.DRIVETRAIN.setVisionTimeDelta(rpiTime, systemTime);
         } else {
             var angleError = Double.parseDouble(messageParts[1]);
             System.out.println("Angle Error" + angleError);
