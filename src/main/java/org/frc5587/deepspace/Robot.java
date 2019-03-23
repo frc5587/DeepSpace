@@ -52,9 +52,8 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         COMPRESSOR.setClosedLoopControl(Constants.COMPRESSOR_ENABLED);
 
-        cameraServer = CameraServer.getInstance();
-	    driverCamera = cameraServer.startAutomaticCapture(0);
-        cameraServer.startAutomaticCapture(driverCamera);
+        CameraServer.getInstance().startAutomaticCapture();
+        CameraServer.getInstance().startAutomaticCapture();
 
         SmartDashboard.putData(new ResetElevator());
 

@@ -25,6 +25,7 @@ public class Elevator extends Subsystem {
     public Elevator() {
         elevatorTalon = new TalonSRX(RobotMap.Elevator.ELEVATOR_MASTER);
         elevatorSlave = new TalonSRX(RobotMap.Elevator.ELEVATOR_SLAVE);
+        elevatorTalon.setInverted(false);
         elevatorSlave.setInverted(true);
 
         elevatorLimitSwitch = new DigitalInput(RobotMap.Elevator.ELEVATOR_LIMIT_SWITCH);
@@ -113,12 +114,16 @@ public class Elevator extends Subsystem {
         elevatorTalon.set(ControlMode.PercentOutput, Constants.Elevator.HOLD_VOLTAGE);
     }
 
-    public double getCurrent() {
+    public double getCurrentMaster() {
         return elevatorTalon.getOutputCurrent();
     }
 
+    public double getCurrentSlave() {
+        return elevatorSlave.getOutputCurrent();
+    }
+
     public void elevatorMove(double yInput) {
-        yInput = yInput > 0 ? yInput : 0.5 * yInput;    
+        // yInput = yInput > 0 ? yInput : 0.5 * yInput;    
         // var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLTAGE, -1, 1);
         var scaledValue = yInput;
         // System.out.println(scaledValue);
@@ -153,7 +158,8 @@ public class Elevator extends Subsystem {
     public void sendDebugData() {
         SmartDashboard.putNumber("Ele Pos", getPosition());
         SmartDashboard.putBoolean("Ele Switch", limitSwitchValue());
-        SmartDashboard.putNumber("Ele Current", getCurrent());
+        SmartDashboard.putNumber("Ele Current M", getCurrentMaster());
+        SmartDashboard.putNumber("Ele Current S", getCurrentSlave());
         SmartDashboard.putNumber("Ele Out %", elevatorTalon.getMotorOutputPercent());
         SmartDashboard.putBoolean("Ele MP Done", elevatorTalon.isMotionProfileFinished());
     }

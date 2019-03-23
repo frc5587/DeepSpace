@@ -33,7 +33,7 @@ public class SetElevator extends Command {
     @Override
     protected void execute() {
         if (elevator.getVelocity() < Constants.Elevator.MIN_UNCHECKED_VELOCITY
-                && elevator.getCurrent() > Constants.Elevator.UNSAFE_IDLE_CURRENT_DRAW) {
+                && elevator.getCurrentMaster() > Constants.Elevator.UNSAFE_IDLE_CURRENT_DRAW) {
             if (!runningCheck) {
                 emergencyStopTimer.reset();
                 emergencyStopTimer.start();

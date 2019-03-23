@@ -49,10 +49,10 @@ public class Constants {
             (1 / 1678) * 1023 // kF
         };
 
-        public static final double minPercentOut = 0.0, maxPercentBw = .6, maxPercentFw = 1;
+        public static final double minPercentOut = 0.0, maxPercentBw = 1, maxPercentFw = 1;
         public static final double HOLD_VOLTAGE = 0.0;
 
-        public static final int maxVelocity = 1678, maxAcceleration = 1678;
+        public static final int maxVelocity = 16780, maxAcceleration = 16780;
     }
 
     public static final class Drive {
