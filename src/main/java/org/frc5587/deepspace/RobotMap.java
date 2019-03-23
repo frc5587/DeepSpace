@@ -46,6 +46,6 @@ public class RobotMap {
 	}
 
 	public static class PistonLift {
-		public static int[] LIFT_PISTON = { 4, 5};
+		public static int[] LIFT_PISTON = { 4, 5 };
 	}
 }
