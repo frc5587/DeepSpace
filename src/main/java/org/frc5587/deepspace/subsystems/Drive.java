@@ -8,7 +8,6 @@
 package org.frc5587.deepspace.subsystems;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -134,8 +133,10 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		return turnController.isEnabled();
 	}
 
-	public void setVisionTimeDelta(double visionTimeDelta) {
-		visionTimeDeltas.add(visionTimeDelta);
+	public void setVisionTimeDelta(double rpiTime, double systemTime) {
+		// The pi script starts after the rio boots (time delay in script)
+		System.out.println("Delta: " + (systemTime - rpiTime));
+		visionTimeDeltas.add(systemTime - rpiTime);
 
 		double sum = 0;
 		for (var delta : visionTimeDeltas) {
@@ -147,35 +148,41 @@ public class Drive extends AbstractDrive implements PIDOutput {
 
 	public void updateGyroHistory() {
 		if (visionTimeDelta != null) {
-			gyroHistory.put(Timer.getFPGATimestamp() + visionTimeDelta, getHeading(180.0));
+			gyroHistory.put(Timer.getFPGATimestamp() - visionTimeDelta, getHeading(180.0));
 		}
 	}
 
 	public double getAngleAtClosestTime(double time) {
-		double lastVal = Double.NaN;
-		double lastDeltaSign = Double.NaN;
+		double closestVal = 0;
+		double minDistance = Double.MAX_VALUE;
+		Double lastSign = null;
 
 		time += visionTimeDelta;
 
-		var currentCopy = new LinkedHashMap<>(gyroHistory);
-
-		// gyroHistory array is sorted, given that it's made up of times
-		for (var entry : currentCopy.keySet()) {
-			// When sign of delta changes, we know we have overshot, so use last (closest) value
+		for (var entry : gyroHistory.keySet()) {
 			var delta = time - entry;
 			var sign = Math.signum(delta);
-			if (lastDeltaSign != Double.NaN && lastDeltaSign != sign) {
-				break;
-			} else {
-				lastVal = entry;
-				lastDeltaSign = sign;
+			var distance = Math.abs(delta);
+
+			System.out.println(distance);
+
+			if (distance < minDistance) {
+				System.out.println("Hello");
+				closestVal = entry;
+				minDistance = distance;
 			}
+
+			// Check if we can end early
+			if (lastSign != null && lastSign != sign) {
+				break;
+			}
+			lastSign = sign;
 		}
 
 		System.out.println("TARGET TIME: " + time);
-		System.out.println("LAST VAL: " + lastVal);
+		System.out.println("CLOSEST VAL: " + closestVal);
 
-		return gyroHistory.get(lastVal);
+		return gyroHistory.get(closestVal);
 	}
 
 	@Override
