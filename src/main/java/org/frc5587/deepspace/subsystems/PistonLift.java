@@ -16,15 +16,15 @@ public class PistonLift extends Subsystem {
     }
 
     public void pistonsDown() {
-        liftPistons.set(Value.kForward);
+        liftPistons.set(Value.kReverse);
     }
 
     public void pistonsUp() {
-        liftPistons.set(Value.kReverse);
+        liftPistons.set(Value.kForward);
     }
 
     @Override
     protected void initDefaultCommand() {
-        
+
     }
 }
