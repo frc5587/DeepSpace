@@ -24,7 +24,7 @@ public class UltrasonicThreshold extends Command {
 
     @Override
     protected void execute() {
-        System.out.println("Running Ultrasonic Threshold");
+        // System.out.println("Running Ultrasonic Threshold");
     }
 
     @Override

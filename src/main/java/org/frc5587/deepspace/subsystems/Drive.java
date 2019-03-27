@@ -8,6 +8,7 @@
 package org.frc5587.deepspace.subsystems;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -34,11 +35,15 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	public static final Pathgen MED_PATHGEN = new Pathgen(30, 0.010, 60, 80, 160);
 	public static final Pathgen FAST_PATHGEN = new Pathgen(30, 0.010, 84, 80, 160);
 
-	private LimitedHashMap<Double, Double> gyroHistory;
-	private ArrayList<Double> visionTimeDeltas;
-	private Double visionTimeDelta;
-	private PIDController turnController;
-	private boolean turnEnabledFirstTime;
+	private static LimitedHashMap<Double, Double> gyroHistory;
+	private static LimitedHashMap<Double, Double> whileReadingHistory;
+	public static boolean readingHistory = false;
+	private static boolean lastReadingState = false;
+
+	private static ArrayList<Double> visionTimeDeltas;
+	private static Double visionTimeDelta;
+	private static PIDController turnController;
+	private static boolean turnEnabledFirstTime;
 
 	public Drive() {
 		super(new TalonSRX(RobotMap.Drive.LEFT_MASTER), new TalonSRX(RobotMap.Drive.RIGHT_MASTER),
@@ -147,19 +152,42 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	}
 
 	public void updateGyroHistory() {
+		// System.out.println("Trying to update");
 		if (visionTimeDelta != null) {
-			gyroHistory.put(Timer.getFPGATimestamp() - visionTimeDelta, getHeading(180.0));
+			var currentTime = Timer.getFPGATimestamp() - visionTimeDelta;
+			// System.out.println("Updating history...");
+			if (readingHistory) {
+				if (!lastReadingState) {
+					// Not reading before, but now reading so clear old data
+					whileReadingHistory.clear();
+				}
+				// Reading now, so store data temporarily
+				whileReadingHistory.put(currentTime, getHeading(180.0));
+			} else {
+				if (lastReadingState) {
+					// Not reading now but reading before, so copy to gyroHistory map
+					gyroHistory.putAll(whileReadingHistory);
+				}
+				// Not reading now, so update old data
+				gyroHistory.put(currentTime, getHeading(180.0));
+			}
 		}
+		lastReadingState = readingHistory;
 	}
 
 	public double getAngleAtClosestTime(double time) {
+		readingHistory = true;
+
 		double closestVal = 0;
 		double minDistance = Double.MAX_VALUE;
 		Double lastSign = null;
 
 		time += visionTimeDelta;
 
-		for (var entry : gyroHistory.keySet()) {
+		var historyCopy = new LinkedHashMap<>(gyroHistory);
+		System.out.println(historyCopy.toString());
+
+		for (var entry : historyCopy.keySet()) {
 			var delta = time - entry;
 			var sign = Math.signum(delta);
 			var distance = Math.abs(delta);
@@ -182,13 +210,14 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		System.out.println("TARGET TIME: " + time);
 		System.out.println("CLOSEST VAL: " + closestVal);
 
-		return gyroHistory.get(closestVal);
+		readingHistory = false;
+		return historyCopy.get(closestVal);
 	}
 
 	@Override
 	public void pidWrite(double output) {
 		if (turnEnabledFirstTime) {
-			vbusArcade(0.3, Constants.Drive.LPF_PERCENT * output);	
+			vbusArcade(0, Constants.Drive.LPF_PERCENT * output);	
 		}
 	}
 

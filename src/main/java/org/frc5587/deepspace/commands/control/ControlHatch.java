@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class ControlHatch extends Command {
     private static boolean down = true;
-    private static boolean closed = true;
+    private static boolean closed = false;
     private static boolean limitControlEngaged = false;
 
     public ControlHatch() {

@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
     public static TCPServer tcpServer;
+    public static Thread updateGyro;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -58,7 +59,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData(new ResetElevator());
 
         new LimitResetElevator().start();
-        // new UpdateGyroHistory().start();
+        // updateGyro = new UpdateGyroHistory();
+        // updateGyro.start();
         new LogDebugData().start();
 
         controlCommands = new ArrayList<>();
@@ -97,11 +99,18 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         startControlCommands();
+        // ELEVATOR.startRefresh();
     }
 
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        // ELEVATOR.refreshPID();
+    }
+
+    @Override
+    public void robotPeriodic() {
+        // System.out.println(updateGyro.isAlive());
     }
 
     @Override

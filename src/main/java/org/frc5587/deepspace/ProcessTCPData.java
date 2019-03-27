@@ -14,6 +14,7 @@ public class ProcessTCPData {
 
         if (messageParts.length <= 1) {
             // Just a time packet for synchronisation purposes
+            System.out.println("Recieved a time...");
             var systemTime = Timer.getFPGATimestamp();
             Robot.DRIVETRAIN.setVisionTimeDelta(rpiTime, systemTime);
         } else {
@@ -37,13 +38,15 @@ public class ProcessTCPData {
                 // break;
             case PID:
                 // If command running and it is PID loop, update it
-                // Start by using lag compensation
-                // var captureAngle = Robot.DRIVETRAIN.getAngleAtClosestTime(time);
+                // Lag compensation
+                // var captureAngle = Robot.DRIVETRAIN.getAngleAtClosestTime(rpiTime);
+                // System.out.println(captureAngle);
                 // var desiredAngle = captureAngle + angleError;
+                // Robot.DRIVETRAIN.setTurnPID(desiredAngle);
+
+                // No lag compensation 
                 var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
                 double desiredAngle = currentHeading - angleError;
-
-                // Now update with corrected value
                 Robot.DRIVETRAIN.setTurnPID(desiredAngle);
                 break;
             }

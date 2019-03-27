@@ -20,17 +20,17 @@ public class Constants {
     public static final double kVCompSaturation = 12.0;
 
     public static final class Elevator {
-        public static final double STU_PER_INCH = 18349 / 27;
+        public static final double STU_PER_INCH = 28797 / 51.5;
 
         public static final int MIN_UNCHECKED_VELOCITY = 100;
         public static final double UNSAFE_IDLE_CURRENT_DRAW = 10.0;
         public static final double UNSAFE_TIME_BEFORE_STOP = 1.5;
 
-        public static final double bottomTicks = -3 * STU_PER_INCH;
-        public static final double middleTicks = -28 * STU_PER_INCH;
-        public static final double topTicks = -56 * STU_PER_INCH;
+        public static final double bottomTicks = 3 * STU_PER_INCH;
+        public static final double middleTicks = 28 * STU_PER_INCH;
+        public static final double topTicks = 56 * STU_PER_INCH;
 
-        public static final double cargoShip = 23.5 * STU_PER_INCH;
+        public static final double cargoShip = 27.5 * STU_PER_INCH;
         public static final double bottomCargo = 19.5 * STU_PER_INCH;
         public static final double middleCargo = 47.5 * STU_PER_INCH;
         public static final double topCargo = 75.5 * STU_PER_INCH;
@@ -43,16 +43,16 @@ public class Constants {
         public static final double vCompSaturation = 12.0;
 
         public static final double[] PIDs = {
-            2.9568, //kP
+            0.677, //kP
             0.0, //kI
-            10.9136, //kD
-            (1 / 1678) * 1023 // kF
+            27.108, //kD
+            (1 / 2991.0) * 1023 // kF
         };
 
         public static final double minPercentOut = 0.0, maxPercentBw = 1, maxPercentFw = 1;
-        public static final double HOLD_VOLTAGE = 0.0;
+        public static final double HOLD_VOLTAGE = 0.05;
 
-        public static final int maxVelocity = 16780, maxAcceleration = 16780;
+        public static final int maxVelocity = 2991, maxAcceleration = 2991;
     }
 
     public static final class Drive {
@@ -97,7 +97,7 @@ public class Constants {
 
         // Turn controller
         public static final int GYRO_HISTORY_LENGTH = 50;
-        public static final double LPF_PERCENT = 0.5;
+        public static final double LPF_PERCENT = 1;
         public static final double TOLERANCE_DEGREES = 2.0;
         public static final FPID TURN_FPID = new FPID(
                 0,  // kF
