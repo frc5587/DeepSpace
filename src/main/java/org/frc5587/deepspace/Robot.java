@@ -42,7 +42,6 @@ public class Robot extends TimedRobot {
     private static ArrayList<Command> controlCommands;
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
-    public static TCPServer tcpServer;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -69,12 +68,6 @@ public class Robot extends TimedRobot {
         // controlCommands.add(new ControlLift());
         controlCommands.add(new ControlCargo());
 
-        try {
-            tcpServer = new TCPServer(Constants.TCP_PORT);
-            tcpServer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void startControlCommands() {

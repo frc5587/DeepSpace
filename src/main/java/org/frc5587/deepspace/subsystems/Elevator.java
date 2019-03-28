@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.RobotMap;
-import org.frc5587.lib.MathHelper;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
