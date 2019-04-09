@@ -3,6 +3,9 @@ package org.frc5587.deepspace;
 import org.frc5587.lib.pid.FPID;
 import org.frc5587.lib.pid.PIDVA;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 /**
  * Constants is a central place in which to store all of the constants having to
  * do with the robot and its subsystems. Where applicable, the constants are
@@ -105,6 +108,11 @@ public class Constants {
                 0, // kI
                 0  // kD
         );
+
+        public static final double heightOne = 8.25;
+        public static final double heightTwo = 25;
+        public static final double angleOne = 55;
+        public static final NetworkTableEntry tyCell = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
     }
 
     public static final class Hatch {

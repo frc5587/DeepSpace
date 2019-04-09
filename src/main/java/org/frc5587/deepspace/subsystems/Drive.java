@@ -178,6 +178,31 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		return gyroHistory.get(lastVal);
 	}
 
+	public double getHeading() {
+		return gyro.getAngle();
+	}
+
+	public double getHeading(Double wrapValue) {
+		var heading = getHeading() % 360;
+		return ((heading > 180.0) ? (heading - 360.0) : ((heading < -180.0) ? (heading + 360.0) : heading));
+	}
+
+	public double distance() {
+		var angleTwo = Constants.Drive.tyCell.getDouble(0);
+		return (Constants.Drive.heightTwo - Constants.Drive.heightOne)
+				/ Math.tan(Math.toRadians(Constants.Drive.angleOne + angleTwo));
+	}
+
+	public double throttle(double distance) {
+		System.out.println(distance());
+		if(Math.tanh((distance()) / 16) < 0.1) {
+			double tValue = 0.1;
+			return tValue;
+		} else {
+		return Math.tanh((distance()) / 16);
+		}
+	}
+
 	@Override
 	public void pidWrite(double output) {
 		if (turnEnabledFirstTime) {
