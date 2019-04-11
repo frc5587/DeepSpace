@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class ControlHatch extends Command {
     private static boolean down = true;
-    private static boolean closed = true;
     private static boolean limitControlEngaged = false;
 
     public ControlHatch() {
@@ -29,7 +28,6 @@ public class ControlHatch extends Command {
                 if (Robot.HATCH.limitControl()) {
                     System.out.println("Running limit control");
                     Robot.HATCH.grab();
-                    closed = false;
                     limitControlEngaged = true;
                 }
             } else {
@@ -40,16 +38,12 @@ public class ControlHatch extends Command {
         }
 
         if (OI.xb.getBumperPressed(Hand.kRight)) {
-            if (closed) {
                 Robot.HATCH.grab();
-                closed = false;
-            } else {
+        } else if (OI.xb.getBumperPressed(Hand.kLeft)) {
                 Robot.HATCH.drop();
-                closed = true;
-            }
         }
 
-        if (OI.xb.getBumperPressed(Hand.kLeft)) {
+        if (OI.xb.getBackButtonPressed()) {
             if (down) {
                 Robot.HATCH.out();
                 down = false;

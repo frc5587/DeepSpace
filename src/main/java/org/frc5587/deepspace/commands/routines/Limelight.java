@@ -50,14 +50,15 @@ public class Limelight extends Command {
             while (!interrupted()) {
                 // Check if the new error is equal so as not to recompute PID
                 var newError = tx.getDouble(0);
-                if (newError != lastAngleError) {
+                System.out.println("oldError: " + lastAngleError + " | newError: " + newError);
+                // if (newError != lastAngleError) {
                     // Send information to the drivetrain now
-                    var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
-                    double desiredAngle = currentHeading + newError;
-                    Robot.DRIVETRAIN.setTurnPID(desiredAngle);
+                var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
+                double desiredAngle = currentHeading + newError;
+                Robot.DRIVETRAIN.setTurnPID(desiredAngle);
 
-                    lastAngleError = newError;
-                }
+                lastAngleError = newError;
+                // }
             }
         }
     }

@@ -82,15 +82,23 @@ public class Drive extends AbstractDrive implements PIDOutput {
 
 	@Override
 	public void configSettings() {
-		rightMaster.configVoltageCompSaturation(Constants.kVCompSaturation, Constants.Drive.kTimeoutMs);
+		var timeoutMs =  Constants.Drive.kTimeoutMs;
+		rightMaster.configVoltageCompSaturation(Constants.kVCompSaturation, timeoutMs);
 		rightMaster.enableVoltageCompensation(true);
-		leftMaster.configVoltageCompSaturation(Constants.kVCompSaturation, Constants.Drive.kTimeoutMs);
+		leftMaster.configVoltageCompSaturation(Constants.kVCompSaturation, timeoutMs);
 		leftMaster.enableVoltageCompensation(true);
 
-		leftMaster.configPeakOutputForward(Constants.Drive.maxPercentFw, Constants.Drive.kTimeoutMs);
-		leftMaster.configPeakOutputReverse(-Constants.Drive.maxPercentBw, Constants.Drive.kTimeoutMs);
-		rightMaster.configPeakOutputForward(Constants.Drive.maxPercentFw, Constants.Drive.kTimeoutMs);
-		rightMaster.configPeakOutputReverse(-Constants.Drive.maxPercentBw, Constants.Drive.kTimeoutMs);
+		rightMaster.configPeakCurrentLimit(35, timeoutMs);
+		leftMaster.configPeakCurrentLimit(35, timeoutMs);
+		rightMaster.configPeakCurrentDuration(2000);
+		leftMaster.configPeakCurrentDuration(2000);
+		rightMaster.configContinuousCurrentLimit(35, timeoutMs);
+		leftMaster.configContinuousCurrentLimit(35, timeoutMs);
+
+		leftMaster.configPeakOutputForward(Constants.Drive.maxPercentFw, timeoutMs);
+		leftMaster.configPeakOutputReverse(-Constants.Drive.maxPercentBw, timeoutMs);
+		rightMaster.configPeakOutputForward(Constants.Drive.maxPercentFw, timeoutMs);
+		rightMaster.configPeakOutputReverse(-Constants.Drive.maxPercentBw, timeoutMs);
 	}
 
 	public void startRefresh() {

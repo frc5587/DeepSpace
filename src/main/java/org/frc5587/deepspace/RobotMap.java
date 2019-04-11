@@ -36,16 +36,11 @@ public class RobotMap {
 		public static final int ELEVATOR_LIMIT_SWITCH = 2;
 	}
 
-	public static class Lift {
-		public static int LIFT_MOTOR_ONE = 8;
-		public static int LIFT_MOTOR_TWO = 9;
-	}
-
 	public static class Cargo {
 		public static int CARGO_MOTOR = 12;
 	}
 
 	public static class PistonLift {
-		public static int[] LIFT_PISTON = { 4, 5};
+		public static int[] LIFT_PISTON = { 4, 5 };
 	}
 }

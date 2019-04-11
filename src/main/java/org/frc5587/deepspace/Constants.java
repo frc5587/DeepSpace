@@ -27,13 +27,13 @@ public class Constants {
         public static final double UNSAFE_TIME_BEFORE_STOP = 1.5;
 
         public static final double bottomTicks = 0;
-        public static final double middleTicks = 28 * STU_PER_INCH;
-        public static final double topTicks = 50 * STU_PER_INCH;
+        public static final double middleTicks = 23.5 * STU_PER_INCH;
+        public static final double topTicks = 45 * STU_PER_INCH;
 
-        public static final double cargoShip = 24.5 * STU_PER_INCH;
+        public static final double cargoShip = 20.5 * STU_PER_INCH;
         public static final double bottomCargo = 20.5 * STU_PER_INCH;
-        public static final double middleCargo = 48.5 * STU_PER_INCH;
-        public static final double topCargo = 76.5 * STU_PER_INCH;
+        public static final double middleCargo = 40.5 * STU_PER_INCH;
+        public static final double topCargo = 58.5 * STU_PER_INCH;
 
         public static final int kSlotIdx = 0;
         public static final int kPIDLoopIdx = 0;
@@ -97,7 +97,7 @@ public class Constants {
 
         // Turn controller
         public static final int GYRO_HISTORY_LENGTH = 50;
-        public static final double LPF_PERCENT = 0.5;
+        public static final double LPF_PERCENT = 1;
         public static final double TOLERANCE_DEGREES = 2.0;
         public static final FPID TURN_FPID = new FPID(
                 0,  // kF

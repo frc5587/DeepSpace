@@ -16,10 +16,10 @@ public class ControlPistonLift extends Command {
     @Override
     protected void execute() {
         if(OI.xb.getStartButtonPressed()) {
-            if(up = true) {
+            if(up == true) {
                 Robot.PISTON_LIFT.pistonsDown();
                 up = false;
-            } else if (up = false) {
+            } else if (up == false) {
                 Robot.PISTON_LIFT.pistonsUp();
                 up = true;
             } 
