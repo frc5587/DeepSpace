@@ -36,7 +36,6 @@ public class Robot extends TimedRobot {
     public static final Elevator ELEVATOR = new Elevator();
     public static final Drive DRIVETRAIN = new Drive();
     public static final Hatch HATCH = new Hatch();
-    public static final Lift LIFT = new Lift();
     public static final Cargo CARGO = new Cargo();
     public static final PistonLift PISTON_LIFT = new PistonLift();
     
