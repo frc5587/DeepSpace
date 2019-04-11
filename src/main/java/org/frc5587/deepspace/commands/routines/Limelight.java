@@ -35,7 +35,7 @@ public class Limelight extends Command {
 
     @Override
     protected boolean isFinished() {
-        return !limelightWorker.isInterrupted();
+        return limelightWorker.isInterrupted();
     }
 
     private static class LimelightWorker extends Thread {
@@ -53,7 +53,7 @@ public class Limelight extends Command {
                 if (newError != lastAngleError) {
                     // Send information to the drivetrain now
                     var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
-                    double desiredAngle = currentHeading - newError;
+                    double desiredAngle = currentHeading + newError;
                     Robot.DRIVETRAIN.setTurnPID(desiredAngle);
 
                     lastAngleError = newError;

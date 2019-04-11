@@ -26,14 +26,14 @@ public class Constants {
         public static final double UNSAFE_IDLE_CURRENT_DRAW = 10.0;
         public static final double UNSAFE_TIME_BEFORE_STOP = 1.5;
 
-        public static final double bottomTicks = -3 * STU_PER_INCH;
-        public static final double middleTicks = -28 * STU_PER_INCH;
-        public static final double topTicks = -56 * STU_PER_INCH;
+        public static final double bottomTicks = 0;
+        public static final double middleTicks = 28 * STU_PER_INCH;
+        public static final double topTicks = 50 * STU_PER_INCH;
 
-        public static final double cargoShip = 23.5 * STU_PER_INCH;
-        public static final double bottomCargo = 19.5 * STU_PER_INCH;
-        public static final double middleCargo = 47.5 * STU_PER_INCH;
-        public static final double topCargo = 75.5 * STU_PER_INCH;
+        public static final double cargoShip = 24.5 * STU_PER_INCH;
+        public static final double bottomCargo = 20.5 * STU_PER_INCH;
+        public static final double middleCargo = 48.5 * STU_PER_INCH;
+        public static final double topCargo = 76.5 * STU_PER_INCH;
 
         public static final int kSlotIdx = 0;
         public static final int kPIDLoopIdx = 0;
@@ -52,7 +52,7 @@ public class Constants {
         public static final double minPercentOut = 0.0, maxPercentBw = .6, maxPercentFw = 1;
         public static final double HOLD_VOLTAGE = 0.0;
 
-        public static final int maxVelocity = 1678, maxAcceleration = 1678;
+        public static final int maxVelocity = 1678, maxAcceleration = 2 * maxVelocity;
     }
 
     public static final class Drive {
