@@ -44,4 +44,8 @@ public class RobotMap {
 	public static class Cargo {
 		public static int CARGO_MOTOR = 12;
 	}
+
+	public static class PistonLift {
+		public static int[] LIFT_PISTON = { 4, 5};
+	}
 }
