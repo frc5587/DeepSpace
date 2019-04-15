@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.RobotMap;
+import org.frc5587.lib.MathHelper;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -117,10 +118,8 @@ public class Elevator extends Subsystem {
     }
 
     public void elevatorMove(double yInput) {
-        yInput = yInput > 0 ? yInput : 0.5 * yInput;    
-        // var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLTAGE, -1, 1);
-        var scaledValue = yInput;
-        // System.out.println(scaledValue);
+        // yInput = yInput > 0 ? yInput : 0.5 * yInput;    
+        var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLTAGE, -1, 1);
         elevatorTalon.set(ControlMode.PercentOutput, scaledValue);
     }
 

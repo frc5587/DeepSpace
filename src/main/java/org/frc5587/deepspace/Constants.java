@@ -42,17 +42,17 @@ public class Constants {
 
         public static final double vCompSaturation = 12.0;
 
+        public static final int maxVelocity = 2269, maxAcceleration = 2 * maxVelocity;
+
         public static final double[] PIDs = {
             2.9568, //kP
-            0.0, //kI
+            0.001, //kI
             10.9136, //kD
-            (1 / 1678) * 1023 // kF
+            (1 / maxVelocity) * 1023 // kF
         };
 
-        public static final double minPercentOut = 0.0, maxPercentBw = .6, maxPercentFw = 1;
-        public static final double HOLD_VOLTAGE = 0.0;
-
-        public static final int maxVelocity = 1678, maxAcceleration = 2 * maxVelocity;
+        public static final double minPercentOut = 0.0, maxPercentBw = 1, maxPercentFw = 1;
+        public static final double HOLD_VOLTAGE = 0.05;
     }
 
     public static final class Drive {

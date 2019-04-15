@@ -44,8 +44,8 @@ public class ArcadeDrive extends InstantCommand {
 
 		// Joystick configuration
 		var throttle = -OI.joy.getY();
-		var curve = OI.joy.getX();
-		
+		var curve = OI.joy.getX() * 0.85;
+
 		// Code for finding max velocity of a given motor
 		// var currentVel = kDrive.getLeftVelocity();
 		// if (currentVel > maxVelocity) {
