@@ -3,18 +3,19 @@ package org.frc5587.deepspace.commands.control;
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class ControlLift extends Command {
-    public ControlLift() {
-
+public class ControlPistonLift extends Command {
+    public ControlPistonLift() {
     }
 
     @Override
     protected void execute() {
-        var throttle = OI.xb.getY(Hand.kRight);
-        Robot.LIFT.setLift(throttle);
+        if (OI.xb.getStartButtonPressed()) {
+            Robot.PISTON_LIFT.pistonsDown();
+        } else if (OI.xb.getStartButtonReleased()) {
+            Robot.PISTON_LIFT.pistonsUp();
+        }
     }
 
     @Override

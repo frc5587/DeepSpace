@@ -21,7 +21,7 @@ import org.frc5587.deepspace.subsystems.Drive;
 public class ArcadeDrive extends InstantCommand {
 	private Drive kDrive;
 
-	private static final double targetAngle = 0.0;
+	// private static double maxVelocity = Double.MIN_VALUE;
 
 	public ArcadeDrive() {
 		// Use requires() here to declare subsystem dependencies
@@ -33,7 +33,6 @@ public class ArcadeDrive extends InstantCommand {
 	@Override
 	protected void initialize() {
 		kDrive.enableBrakeMode(true);
-		SmartDashboard.putNumber("Turn Angle", targetAngle);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -45,7 +44,14 @@ public class ArcadeDrive extends InstantCommand {
 
 		// Joystick configuration
 		var throttle = -OI.joy.getY();
-		var curve = OI.joy.getX();
+		var curve = OI.joy.getX() * 0.85;
+
+		// Code for finding max velocity of a given motor
+		// var currentVel = kDrive.getLeftVelocity();
+		// if (currentVel > maxVelocity) {
+		// 	maxVelocity = currentVel;
+		// 	System.out.println(maxVelocity);
+		// }
 
 		kDrive.vbusArcade(throttle, curve);
 

@@ -15,9 +15,9 @@ public class LogDebugData extends Command {
     @Override
     protected void execute() {
         Robot.DRIVETRAIN.sendDebugInfo();
-        Robot.ELEVATOR.sendDebugData();
+        // Robot.ELEVATOR.sendDebugData();
         Robot.HATCH.sendDebugInfo();
-        Robot.LIFT.sendDebugData();
+        // Robot.LIFT.sendDebugData();
     }
 
     @Override

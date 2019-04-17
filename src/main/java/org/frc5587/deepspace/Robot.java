@@ -36,12 +36,12 @@ public class Robot extends TimedRobot {
     public static final Elevator ELEVATOR = new Elevator();
     public static final Drive DRIVETRAIN = new Drive();
     public static final Hatch HATCH = new Hatch();
-    public static final Lift LIFT = new Lift();
+    public static final Cargo CARGO = new Cargo();
+    public static final PistonLift PISTON_LIFT = new PistonLift();
     
     private static ArrayList<Command> controlCommands;
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
-    public static TCPServer tcpServer;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -52,32 +52,28 @@ public class Robot extends TimedRobot {
         COMPRESSOR.setClosedLoopControl(Constants.COMPRESSOR_ENABLED);
 
         cameraServer = CameraServer.getInstance();
-	    driverCamera = cameraServer.startAutomaticCapture(0);
-        cameraServer.startAutomaticCapture(driverCamera);
+        cameraServer.startAutomaticCapture();
+        cameraServer.startAutomaticCapture();
 
         SmartDashboard.putData(new ResetElevator());
 
         new LimitResetElevator().start();
-        new UpdateGyroHistory().start();
+        // new UpdateGyroHistory().start();
         new LogDebugData().start();
 
         controlCommands = new ArrayList<>();
         controlCommands.add(new Manager());
         controlCommands.add(new ControlElevator());
         controlCommands.add(new ControlHatch());
-        controlCommands.add(new ControlLift());
+        // controlCommands.add(new ControlLift());
+        controlCommands.add(new ControlCargo());
+        controlCommands.add(new ControlPistonLift());
 
-        try {
-            tcpServer = new TCPServer(Constants.TCP_PORT);
-            tcpServer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void startControlCommands() {
         for (var command : controlCommands) {
-            if (!command.isRunning()) {
+            if (command.isCompleted() || !command.isRunning()) {
                 command.start();
             }
         }
@@ -105,9 +101,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        for (var command : controlCommands) {
-            command.cancel();
-        }
+        // for (var command : controlCommands) {
+        //     command.cancel();
+        // }
     }
 
     @Override

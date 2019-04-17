@@ -2,7 +2,7 @@ package org.frc5587.deepspace.commands;
 
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.commands.control.ArcadeDrive;
-import org.frc5587.deepspace.commands.routines.AutoCenter;
+import org.frc5587.deepspace.commands.routines.Limelight;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -22,7 +22,7 @@ public class Manager extends Command {
     protected void execute() {
         if (currentRoutine == null) {
             if (OI.joy.getRawButton(12)) {
-                currentRoutine = new AutoCenter();
+                currentRoutine = new Limelight();
                 currentRoutine.start();
             } else {
                 new ArcadeDrive().start();
