@@ -1,5 +1,9 @@
 package org.frc5587.deepspace.commands.routines;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.frc5587.deepspace.Robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -9,47 +13,34 @@ import edu.wpi.first.wpilibj.command.Command;
 public class Limelight extends Command {
     // current horizontal angle
     private static final NetworkTableEntry tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
-
-    private LimelightWorker limelightWorker;
-
-    public Limelight() {
-        this.limelightWorker = new LimelightWorker();
-    }
+    private static final ScheduledExecutorService schedulerExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     @Override
     protected void initialize() {
-        limelightWorker.start();
+        schedulerExecutorService.scheduleAtFixedRate(new LimelightWorker(), 0, 10, TimeUnit.MILLISECONDS);
         Robot.DRIVETRAIN.enableTurnPID(true);
     }
 
     @Override
-    protected void execute() {
-    }
-
-    @Override
     protected void end() {
-        limelightWorker.interrupt();
+        // May need to be changed to shutdownNow depending on behaviour
+        schedulerExecutorService.shutdown();
         Robot.DRIVETRAIN.enableTurnPID(false);
-        Robot.DRIVETRAIN.vbusLR(0, 0);
+        Robot.DRIVETRAIN.stop();
     }
 
     @Override
     protected boolean isFinished() {
-        return limelightWorker.isInterrupted();
+        return schedulerExecutorService.isTerminated();
     }
 
-    private static class LimelightWorker extends Thread {
-        public LimelightWorker() {
-        }
-
+    private static class LimelightWorker implements Runnable {
         @Override
         public void run() {
-            while (!interrupted()) {
-                var newError = tx.getDouble(0);
-                var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
-                double desiredAngle = currentHeading + newError;
-                Robot.DRIVETRAIN.setTurnPID(desiredAngle);
-            }
+            var newError = tx.getDouble(0);
+            var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
+            double desiredAngle = currentHeading + newError;
+            Robot.DRIVETRAIN.setTurnPID(desiredAngle);
         }
     }
 }

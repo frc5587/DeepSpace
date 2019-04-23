@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData(new ResetElevator());
 
-        // new LimitResetElevator().start();
+        new LimitResetElevator().start();
         // new UpdateGyroHistory().start();
         new LogDebugData().start();
 
@@ -65,7 +65,6 @@ public class Robot extends TimedRobot {
         controlCommands.add(new Manager());
         controlCommands.add(new ControlElevator());
         controlCommands.add(new ControlHatch());
-        // controlCommands.add(new ControlLift());
         controlCommands.add(new ControlCargo());
         controlCommands.add(new ControlPistonLift());
 
@@ -101,9 +100,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        // for (var command : controlCommands) {
-        //     command.cancel();
-        // }
     }
 
     @Override
