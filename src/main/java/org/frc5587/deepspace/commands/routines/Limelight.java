@@ -13,36 +13,49 @@ import edu.wpi.first.wpilibj.command.Command;
 public class Limelight extends Command {
     // current horizontal angle
     private static final NetworkTableEntry tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
-    private static final ScheduledExecutorService schedulerExecutorService = Executors.newSingleThreadScheduledExecutor();
+    private static final NetworkTableEntry ledMode = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode");
+    private static boolean lockLEDs = false;
+
+    private ScheduledExecutorService scheduledExecutorService;
+
+    public Limelight() {
+        requires(Robot.DRIVETRAIN);
+    }
 
     @Override
     protected void initialize() {
-        schedulerExecutorService.scheduleAtFixedRate(new LimelightWorker(), 0, 10, TimeUnit.MILLISECONDS);
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(Limelight::updatePID, 0, 10, TimeUnit.MILLISECONDS);
         Robot.DRIVETRAIN.enableTurnPID(true);
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("LEDMode").setNumber(3);
+        lockLEDs = true;
+        ledMode.setNumber(3);
     }
 
     @Override
     protected void end() {
         // May need to be changed to shutdownNow depending on behaviour
-        schedulerExecutorService.shutdown();
+        scheduledExecutorService.shutdown();
         Robot.DRIVETRAIN.enableTurnPID(false);
         Robot.DRIVETRAIN.stop();
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("LEDMode").setNumber(0);
+        lockLEDs = false;
+        ledMode.setNumber(1);
     }
 
     @Override
     protected boolean isFinished() {
-        return schedulerExecutorService.isTerminated();
+        return scheduledExecutorService.isTerminated();
     }
 
-    private static class LimelightWorker implements Runnable {
-        @Override
-        public void run() {
-            var newError = tx.getDouble(0);
-            var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
-            double desiredAngle = currentHeading + newError;
-            Robot.DRIVETRAIN.setTurnPID(desiredAngle);
+    public static void disableLEDs() {
+        if (!lockLEDs) {
+            ledMode.setNumber(1);
         }
+    }
+
+    private static void updatePID() {
+        var newError = tx.getDouble(0);
+        var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
+        double desiredAngle = currentHeading + newError;
+        Robot.DRIVETRAIN.setTurnPID(desiredAngle);
     }
 }

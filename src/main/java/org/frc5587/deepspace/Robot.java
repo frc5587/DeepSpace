@@ -7,12 +7,11 @@
 
 package org.frc5587.deepspace;
 
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.commands.control.*;
+import org.frc5587.deepspace.commands.routines.Limelight;
 import org.frc5587.deepspace.subsystems.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,7 +21,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.cscore.UsbCamera;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,7 +36,8 @@ public class Robot extends TimedRobot {
     public static final Hatch HATCH = new Hatch();
     public static final Cargo CARGO = new Cargo();
     public static final PistonLift PISTON_LIFT = new PistonLift();
-    
+
+    private static ArrayList<Command> constantCommands;
     private static ArrayList<Command> controlCommands;
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
@@ -57,9 +56,11 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData(new ResetElevator());
 
-        new LimitResetElevator().start();
-        // new UpdateGyroHistory().start();
-        new LogDebugData().start();
+        constantCommands = new ArrayList<>();
+        constantCommands.add(new LimitResetElevator());
+        // constantCommands.add(new UpdateGyroHistory());
+        constantCommands.add(new LogDebugData());
+        constantCommands.forEach((c) -> c.start());
 
         controlCommands = new ArrayList<>();
         controlCommands.add(new Manager());
@@ -68,6 +69,7 @@ public class Robot extends TimedRobot {
         controlCommands.add(new ControlCargo());
         controlCommands.add(new ControlPistonLift());
 
+        Limelight.disableLEDs();
     }
 
     private void startControlCommands() {

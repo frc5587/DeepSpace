@@ -8,7 +8,6 @@ import org.frc5587.deepspace.subsystems.Elevator.ElevatorHeights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ControlElevator extends Command {
     private static Elevator elevator;

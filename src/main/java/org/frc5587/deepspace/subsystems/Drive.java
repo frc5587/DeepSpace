@@ -126,7 +126,6 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	}
 
 	public void enableTurnPID(boolean enabled) {
-		System.out.println("Enabling PID...");
 		if (enabled) {
 			turnEnabledFirstTime = true;
 		}

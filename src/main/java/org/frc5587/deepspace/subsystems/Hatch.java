@@ -38,6 +38,7 @@ public class Hatch extends Subsystem {
         // grabState = getGrabState(hatchPistons.get());
     }
 
+    @SuppressWarnings("unused")
     private HatchStowedState getStowedState(DoubleSolenoid.Value val) {
         for (var entryPair : stowedMap.entrySet()) {
             if (entryPair.getValue() == val) {
@@ -47,6 +48,7 @@ public class Hatch extends Subsystem {
         return null;
     }
 
+    @SuppressWarnings("unused")
     private HatchGrabState getGrabState(DoubleSolenoid.Value val) {
         for (var entryPair : stateMap.entrySet()) {
             if (entryPair.getValue() == val) {
