@@ -19,6 +19,7 @@ public class Limelight extends Command {
     protected void initialize() {
         schedulerExecutorService.scheduleAtFixedRate(new LimelightWorker(), 0, 10, TimeUnit.MILLISECONDS);
         Robot.DRIVETRAIN.enableTurnPID(true);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("LEDMode").setNumber(3);
     }
 
     @Override
@@ -27,6 +28,7 @@ public class Limelight extends Command {
         schedulerExecutorService.shutdown();
         Robot.DRIVETRAIN.enableTurnPID(false);
         Robot.DRIVETRAIN.stop();
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("LEDMode").setNumber(0);
     }
 
     @Override
