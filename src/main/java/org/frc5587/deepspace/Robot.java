@@ -7,22 +7,29 @@
 
 package org.frc5587.deepspace;
 
-
-import java.io.IOException;
 import java.util.ArrayList;
 
-import org.frc5587.deepspace.commands.*;
-import org.frc5587.deepspace.commands.control.*;
-import org.frc5587.deepspace.subsystems.*;
+import org.frc5587.deepspace.commands.LimitResetElevator;
+import org.frc5587.deepspace.commands.LogDebugData;
+import org.frc5587.deepspace.commands.Manager;
+import org.frc5587.deepspace.commands.ResetElevator;
+import org.frc5587.deepspace.commands.control.ControlCargo;
+import org.frc5587.deepspace.commands.control.ControlElevator;
+import org.frc5587.deepspace.commands.control.ControlHatch;
+import org.frc5587.deepspace.commands.control.ControlPistonLift;
+import org.frc5587.deepspace.subsystems.Cargo;
+import org.frc5587.deepspace.subsystems.Drive;
+import org.frc5587.deepspace.subsystems.Elevator;
+import org.frc5587.deepspace.subsystems.Hatch;
+import org.frc5587.deepspace.subsystems.PistonLift;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.cscore.UsbCamera;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,8 +45,9 @@ public class Robot extends TimedRobot {
     public static final Hatch HATCH = new Hatch();
     public static final Cargo CARGO = new Cargo();
     public static final PistonLift PISTON_LIFT = new PistonLift();
-    
+
     private static ArrayList<Command> controlCommands;
+    private static ArrayList<Command> continuousCommands;
     public static CameraServer cameraServer;
     public static UsbCamera driverCamera;
 
@@ -57,9 +65,11 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData(new ResetElevator());
 
-        new LimitResetElevator().start();
-        // new UpdateGyroHistory().start();
-        new LogDebugData().start();
+        continuousCommands = new ArrayList<>();
+        continuousCommands.add(new LimitResetElevator());
+        // continuousCommands.add(new UpdateGyroHistory());
+        continuousCommands.add(new LogDebugData());
+        continuousCommands.forEach(c -> c.start());
 
         controlCommands = new ArrayList<>();
         controlCommands.add(new Manager());
@@ -102,7 +112,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         // for (var command : controlCommands) {
-        //     command.cancel();
+        // command.cancel();
         // }
     }
 
