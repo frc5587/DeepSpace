@@ -46,8 +46,8 @@ public class Drive extends AbstractDrive implements PIDOutput {
 				new VictorSPX(RobotMap.Drive.LEFT_SLAVE), new VictorSPX(RobotMap.Drive.RIGHT_SLAVE), true);
 
 		setAHRS(new AHRS(Port.kMXP));
-		setConstants(Constants.Drive.kMaxVelocity, Constants.Drive.kTimeoutMs, Constants.Drive.stuPerRev,
-				Constants.Drive.stuPerInch, Constants.Drive.wheelDiameter, Constants.Drive.minBufferCount);
+		setConstants(Constants.Drive.K_MAX_VELOCITY, Constants.Drive.K_TIMEOUT_MS, Constants.Drive.STU_PER_REV,
+				Constants.Drive.STU_PER_INCH, Constants.Drive.WHEEL_DIAMETER, Constants.Drive.MIN_BUFFER_COUNT);
 
 		gyroHistory = new LimitedHashMap<>(Constants.Drive.GYRO_HISTORY_LENGTH);
 		visionTimeDeltas = new ArrayList<>();
@@ -68,24 +68,24 @@ public class Drive extends AbstractDrive implements PIDOutput {
 
 	@Override
 	public void configPID(int slot) {
-		leftMaster.config_kF(slot, Constants.Drive.leftPIDs.kF, 0);
-		leftMaster.config_kP(slot, Constants.Drive.leftPIDs.kP, 0);
+		leftMaster.config_kF(slot, Constants.Drive.LEFT_PIDS.kF, 0);
+		leftMaster.config_kP(slot, Constants.Drive.LEFT_PIDS.kP, 0);
 		leftMaster.config_IntegralZone(slot, 50);
-		leftMaster.config_kI(slot, Constants.Drive.leftPIDs.kI, 0);
-		leftMaster.config_kD(slot, Constants.Drive.leftPIDs.kD, 0);
+		leftMaster.config_kI(slot, Constants.Drive.LEFT_PIDS.kI, 0);
+		leftMaster.config_kD(slot, Constants.Drive.LEFT_PIDS.kD, 0);
 
-		rightMaster.config_kF(slot, Constants.Drive.rightPIDs.kF, 0);
-		rightMaster.config_kP(slot, Constants.Drive.rightPIDs.kP, 0);
-		rightMaster.config_kI(slot, Constants.Drive.rightPIDs.kI, 0);
-		rightMaster.config_kD(slot, Constants.Drive.rightPIDs.kD, 0);
+		rightMaster.config_kF(slot, Constants.Drive.RIGHT_PIDS.kF, 0);
+		rightMaster.config_kP(slot, Constants.Drive.RIGHT_PIDS.kP, 0);
+		rightMaster.config_kI(slot, Constants.Drive.RIGHT_PIDS.kI, 0);
+		rightMaster.config_kD(slot, Constants.Drive.RIGHT_PIDS.kD, 0);
 	}
 
 	@Override
 	public void configSettings() {
-		var timeoutMs =  Constants.Drive.kTimeoutMs;
-		rightMaster.configVoltageCompSaturation(Constants.kVCompSaturation, timeoutMs);
+		var timeoutMs =  Constants.Drive.K_TIMEOUT_MS;
+		rightMaster.configVoltageCompSaturation(Constants.K_V_COMP_SATURATION, timeoutMs);
 		rightMaster.enableVoltageCompensation(true);
-		leftMaster.configVoltageCompSaturation(Constants.kVCompSaturation, timeoutMs);
+		leftMaster.configVoltageCompSaturation(Constants.K_V_COMP_SATURATION, timeoutMs);
 		leftMaster.enableVoltageCompensation(true);
 
 		rightMaster.configPeakCurrentLimit(35, timeoutMs);
@@ -95,21 +95,21 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		rightMaster.configContinuousCurrentLimit(35, timeoutMs);
 		leftMaster.configContinuousCurrentLimit(35, timeoutMs);
 
-		leftMaster.configPeakOutputForward(Constants.Drive.maxPercentFw, timeoutMs);
-		leftMaster.configPeakOutputReverse(-Constants.Drive.maxPercentBw, timeoutMs);
-		rightMaster.configPeakOutputForward(Constants.Drive.maxPercentFw, timeoutMs);
-		rightMaster.configPeakOutputReverse(-Constants.Drive.maxPercentBw, timeoutMs);
+		leftMaster.configPeakOutputForward(Constants.Drive.MAX_PERCENT_FW, timeoutMs);
+		leftMaster.configPeakOutputReverse(-Constants.Drive.MAX_PERCENT_BW, timeoutMs);
+		rightMaster.configPeakOutputForward(Constants.Drive.MAX_PERCENT_FW, timeoutMs);
+		rightMaster.configPeakOutputReverse(-Constants.Drive.MAX_PERCENT_BW, timeoutMs);
 	}
 
 	public void startRefresh() {
-		SmartDashboard.putNumber("Left P", Constants.Drive.leftPIDs.kP);
-		SmartDashboard.putNumber("Left I", Constants.Drive.leftPIDs.kI);
-		SmartDashboard.putNumber("Left D", Constants.Drive.leftPIDs.kD);
+		SmartDashboard.putNumber("Left P", Constants.Drive.LEFT_PIDS.kP);
+		SmartDashboard.putNumber("Left I", Constants.Drive.LEFT_PIDS.kI);
+		SmartDashboard.putNumber("Left D", Constants.Drive.LEFT_PIDS.kD);
 		SmartDashboard.putNumber("Goto Position L", 0.0);
 
-		SmartDashboard.putNumber("Right P", Constants.Drive.rightPIDs.kP);
-		SmartDashboard.putNumber("Right I", Constants.Drive.rightPIDs.kI);
-		SmartDashboard.putNumber("Right D", Constants.Drive.rightPIDs.kD);
+		SmartDashboard.putNumber("Right P", Constants.Drive.RIGHT_PIDS.kP);
+		SmartDashboard.putNumber("Right I", Constants.Drive.RIGHT_PIDS.kI);
+		SmartDashboard.putNumber("Right D", Constants.Drive.RIGHT_PIDS.kD);
 		SmartDashboard.putNumber("Goto Position R", 0.0);
 	}
 

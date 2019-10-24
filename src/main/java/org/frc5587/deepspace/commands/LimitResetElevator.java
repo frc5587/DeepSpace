@@ -1,26 +1,26 @@
-package org.frc5587.deepspace.commands;
+// package org.frc5587.deepspace.commands;
 
-import org.frc5587.deepspace.Robot;
+// import org.frc5587.deepspace.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+// import edu.wpi.first.wpilibj.command.Command;
 
-public class LimitResetElevator extends Command {
+// public class LimitResetElevator extends Command {
 
-    public LimitResetElevator() {
-        setRunWhenDisabled(true);
-    }
+//     public LimitResetElevator() {
+//         setRunWhenDisabled(true);
+//     }
   
-    @Override
-    protected void execute() {
-        if(Robot.ELEVATOR.limitSwitchValue()) {
-            Robot.ELEVATOR.resetEncoder();
-            // Robot.ELEVATOR.elevatorHold();
-        }
-    }
+//     @Override
+//     protected void execute() {
+//         if(Robot.ELEVATOR.limitSwitchValue()) {
+//             Robot.ELEVATOR.resetEncoder();
+//             // Robot.ELEVATOR.elevatorHold();
+//         }
+//     }
 
-    @Override
-    protected boolean isFinished() {
-        return false;
-    }
+//     @Override
+//     protected boolean isFinished() {
+//         return false;
+//     }
 
-}
+// }

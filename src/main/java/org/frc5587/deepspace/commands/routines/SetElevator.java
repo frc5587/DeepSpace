@@ -52,6 +52,7 @@ public class SetElevator extends Command {
 
     @Override
     protected boolean isFinished() {
-        return elevator.isMPFinished() || emergencyStop;
+        return emergencyStop;
+        // return elevator.isMPFinished() || emergencyStop;
     }
 }

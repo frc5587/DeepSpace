@@ -9,10 +9,10 @@ package org.frc5587.deepspace;
 
 import java.util.ArrayList;
 
-import org.frc5587.deepspace.commands.LimitResetElevator;
+// import org.frc5587.deepspace.commands.LimitResetElevator;
 import org.frc5587.deepspace.commands.LogDebugData;
 import org.frc5587.deepspace.commands.Manager;
-import org.frc5587.deepspace.commands.ResetElevator;
+// import org.frc5587.deepspace.commands.ResetElevator;
 import org.frc5587.deepspace.commands.control.ControlCargo;
 import org.frc5587.deepspace.commands.control.ControlElevator;
 import org.frc5587.deepspace.commands.control.ControlHatch;
@@ -63,10 +63,10 @@ public class Robot extends TimedRobot {
         cameraServer.startAutomaticCapture();
         cameraServer.startAutomaticCapture();
 
-        SmartDashboard.putData(new ResetElevator());
+        // SmartDashboard.putData(new ResetElevator());
 
         continuousCommands = new ArrayList<>();
-        continuousCommands.add(new LimitResetElevator());
+        // continuousCommands.add(new LimitResetElevator());
         // continuousCommands.add(new UpdateGyroHistory());
         continuousCommands.add(new LogDebugData());
         continuousCommands.forEach(c -> c.start());

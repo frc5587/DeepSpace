@@ -2,10 +2,12 @@ package org.frc5587.deepspace.subsystems;
 
 import java.util.HashMap;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.ControlType;
 
 import org.frc5587.deepspace.Constants;
 import org.frc5587.deepspace.RobotMap;
@@ -16,34 +18,34 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends Subsystem {
-    private static TalonSRX elevatorTalon;
-    private static TalonSRX elevatorSlave;
+    private static CANSparkMax elevatorSpark;
     private static DigitalInput elevatorLimitSwitch;
     private static HashMap<ElevatorHeights, Double> elevatorHeights;
     private static HashMap<CargoHeights, Double> cargoHeights;
+    private static CANPIDController spark_pidController;
+    private static CANEncoder spark_encoder;
 
     public Elevator() {
-        elevatorTalon = new TalonSRX(RobotMap.Elevator.ELEVATOR_MASTER);
-        elevatorSlave = new TalonSRX(RobotMap.Elevator.ELEVATOR_SLAVE);
-        elevatorSlave.setInverted(true);
+        elevatorSpark = new CANSparkMax(RobotMap.Elevator.ELEVATOR_SPARK, MotorType.kBrushless);
 
         elevatorLimitSwitch = new DigitalInput(RobotMap.Elevator.ELEVATOR_LIMIT_SWITCH);
         elevatorHeights = new HashMap<>();
 
-        elevatorHeights.put(ElevatorHeights.BOTTOM_LEVEL, Constants.Elevator.bottomTicks);
-        elevatorHeights.put(ElevatorHeights.MIDDLE_LEVEL, Constants.Elevator.middleTicks);
-        elevatorHeights.put(ElevatorHeights.TOP_LEVEL, Constants.Elevator.topTicks);
+        elevatorHeights.put(ElevatorHeights.BOTTOM_LEVEL, Constants.Elevator.BOTTOM_TICKS);
+        elevatorHeights.put(ElevatorHeights.MIDDLE_LEVEL, Constants.Elevator.MIDDLE_TICKS);
+        elevatorHeights.put(ElevatorHeights.TOP_LEVEL, Constants.Elevator.TOP_TICKS);
 
         cargoHeights = new HashMap<>();
 
-        cargoHeights.put(CargoHeights.CARGO_SHIP, Constants.Elevator.cargoShip);
-        cargoHeights.put(CargoHeights.BOTTOM_CARGO, Constants.Elevator.bottomCargo);
-        cargoHeights.put(CargoHeights.MIDDLE_CARGO, Constants.Elevator.middleCargo);
-        cargoHeights.put(CargoHeights.TOP_CARGO, Constants.Elevator.topCargo);
+        cargoHeights.put(CargoHeights.CARGO_SHIP, Constants.Elevator.CARGO_SHIP);
+        cargoHeights.put(CargoHeights.BOTTOM_CARGO, Constants.Elevator.BOTTOM_CARGO);
+        cargoHeights.put(CargoHeights.MIDDLE_CARGO, Constants.Elevator.MIDDLE_CARGO);
+        cargoHeights.put(CargoHeights.TOP_CARGO, Constants.Elevator.TOP_CARGO);
 
-        elevatorSlave.follow(elevatorTalon);
+        spark_pidController = elevatorSpark.getPIDController();
+        spark_encoder = elevatorSpark.getEncoder();
 
-        configureTalon();
+        configureSpark();
     }
 
     public static enum ElevatorHeights {
@@ -55,34 +57,27 @@ public class Elevator extends Subsystem {
         CARGO_SHIP, BOTTOM_CARGO, MIDDLE_CARGO, TOP_CARGO;
     }
 
-    private static void configureTalon() {
-        elevatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
-                Constants.Elevator.kPIDLoopIdx, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.setSensorPhase(false);
-        elevatorTalon.setInverted(false);
-        elevatorTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10,
-                Constants.Elevator.kTimeoutMs);
+    private static void configureSpark() {
+        elevatorSpark.setInverted(false);
 
-        elevatorTalon.configNominalOutputForward(Constants.Elevator.minPercentOut, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.configNominalOutputReverse(-Constants.Elevator.minPercentOut, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.configPeakOutputForward(Constants.Elevator.maxPercentFw, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.configPeakOutputReverse(-Constants.Elevator.maxPercentBw, Constants.Elevator.kTimeoutMs);
+        elevatorSpark.setSoftLimit(SoftLimitDirection.kForward, Constants.Elevator.MAX_PERCENT_FW);
+        elevatorSpark.setSoftLimit(SoftLimitDirection.kReverse, -Constants.Elevator.MAX_PERCENT_BW);
+        spark_pidController.setOutputRange(Constants.Elevator.MIN_PERCENT_OUT, Constants.Elevator.MAX_PERCENT_FW);
 
-        elevatorTalon.configPeakCurrentLimit(40, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.configPeakCurrentDuration(200, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.configContinuousCurrentLimit(35, Constants.Elevator.kTimeoutMs);
+        elevatorSpark.setSmartCurrentLimit(40, 35);
 
-        elevatorTalon.selectProfileSlot(Constants.Elevator.kSlotIdx, Constants.Elevator.kPIDLoopIdx);
-        elevatorTalon.config_kF(0, Constants.Elevator.PIDs[3], Constants.Elevator.kTimeoutMs);
-        elevatorTalon.config_kP(0, Constants.Elevator.PIDs[0], Constants.Elevator.kTimeoutMs);
-        elevatorTalon.config_kI(0, Constants.Elevator.PIDs[1], Constants.Elevator.kTimeoutMs);
-        elevatorTalon.config_kD(0, Constants.Elevator.PIDs[2], Constants.Elevator.kTimeoutMs);
+        spark_pidController.setP(Constants.Elevator.PIDs[0], Constants.Elevator.K_TIMEOUT_MS);
+        spark_pidController.setI(Constants.Elevator.PIDs[1], Constants.Elevator.K_TIMEOUT_MS);
+        spark_pidController.setD(Constants.Elevator.PIDs[2], Constants.Elevator.K_TIMEOUT_MS);
+        spark_pidController.setFF(Constants.Elevator.PIDs[3], Constants.Elevator.K_TIMEOUT_MS);
 
-        elevatorTalon.configMotionCruiseVelocity(Constants.Elevator.maxVelocity, Constants.Elevator.kTimeoutMs);
-        elevatorTalon.configMotionAcceleration(Constants.Elevator.maxAcceleration, Constants.Elevator.kTimeoutMs);
+        spark_pidController.setSmartMotionMaxVelocity(Constants.Elevator.MAX_VELOCITY, Constants.Elevator.K_TIMEOUT_MS);
+        spark_pidController.setSmartMotionMaxAccel(Constants.Elevator.MAX_ACCELERATION, Constants.Elevator.K_TIMEOUT_MS);
+        spark_pidController.setSmartMotionMinOutputVelocity(Constants.Elevator.MIN_VELOCITY, Constants.Elevator.SMART_MOTION_SLOT);
+        spark_pidController.setSmartMotionAllowedClosedLoopError(Constants.Elevator.ALLOWED_ERR, Constants.Elevator.SMART_MOTION_SLOT);
 
-        elevatorTalon.configVoltageCompSaturation(Constants.Elevator.vCompSaturation, Constants.Elevator.kTimeoutMs);
+        elevatorSpark.enableVoltageCompensation(Constants.Elevator.V_COMP_SATURATION);
+
     }
 
     public double getTicks(ElevatorHeights height) {
@@ -94,45 +89,41 @@ public class Elevator extends Subsystem {
     }
 
     public void setElevator(double height) {
-        elevatorTalon.set(ControlMode.MotionMagic, height);
+        spark_pidController.setReference(height, ControlType.kVelocity);
     }
 
     public void setElevator(ElevatorHeights height) {
-        setElevator(getTicks(height));
+    setElevator(getTicks(height));
     }
 
     public void setElevator(CargoHeights height) {
-        setElevator(getTicks(height));
-    }
-
-    public boolean isMPFinished() {
-        return elevatorTalon.isMotionProfileFinished();
+    setElevator(getTicks(height));
     }
 
     public void elevatorHold() {
-        elevatorTalon.set(ControlMode.PercentOutput, Constants.Elevator.HOLD_VOLTAGE);
+        elevatorSpark.set(Constants.Elevator.HOLD_VOLTAGE);
     }
 
     public double getCurrent() {
-        return elevatorTalon.getOutputCurrent();
+        return elevatorSpark.getOutputCurrent();
     }
 
     public void elevatorMove(double yInput) {
-        // yInput = yInput > 0 ? yInput : 0.5 * yInput;    
+        // yInput = yInput > 0 ? yInput : 0.5 * yInput; <- makes it go down slower
         var scaledValue = MathHelper.limit(yInput + Constants.Elevator.HOLD_VOLTAGE, -1, 1);
-        elevatorTalon.set(ControlMode.PercentOutput, scaledValue);
+        elevatorSpark.set(scaledValue);
     }
 
     public void resetEncoder() {
-        elevatorTalon.setSelectedSensorPosition(0);
+        spark_encoder.setPosition(0);
     }
 
-    public int getPosition() {
-        return elevatorTalon.getSelectedSensorPosition();
+    public double getPosition() {
+        return spark_encoder.getPosition();
     }
 
-    public int getVelocity() {
-        return elevatorTalon.getSelectedSensorVelocity();
+    public double getVelocity() {
+        return spark_encoder.getVelocity();
     }
 
     public double inchesToTicks(double inches) {
@@ -152,8 +143,7 @@ public class Elevator extends Subsystem {
         SmartDashboard.putNumber("Ele Pos", getPosition());
         SmartDashboard.putBoolean("Ele Switch", limitSwitchValue());
         SmartDashboard.putNumber("Ele Current", getCurrent());
-        SmartDashboard.putNumber("Ele Out %", elevatorTalon.getMotorOutputPercent());
-        SmartDashboard.putBoolean("Ele MP Done", elevatorTalon.isMotionProfileFinished());
+        SmartDashboard.putNumber("Ele Out %", elevatorSpark.getAppliedOutput());
     }
 
     public void startRefresh() {
@@ -165,9 +155,9 @@ public class Elevator extends Subsystem {
     }
 
     public void refreshPID() {
-        elevatorTalon.config_kP(0, SmartDashboard.getNumber("Ele P", 0.0), 20);
-        elevatorTalon.config_kI(0, SmartDashboard.getNumber("Ele I", 0.0), 20);
-        elevatorTalon.config_kD(0, SmartDashboard.getNumber("Ele D", 0.0), 20);
+        spark_pidController.setP(SmartDashboard.getNumber("Ele I", 0.0), 20);
+        spark_pidController.setI(SmartDashboard.getNumber("Ele I", 0.0), 20);
+        spark_pidController.setD(SmartDashboard.getNumber("Ele D", 0.0), 20);
     }
 
     @Override
