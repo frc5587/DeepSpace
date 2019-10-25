@@ -15,8 +15,8 @@ public class Hatch extends Subsystem {
     private HashMap<HatchStowedState, DoubleSolenoid.Value> stowedMap;
     private DoubleSolenoid hatchPistons, slicerPistons;
     private DigitalInput limitSwitchOne, limitSwitchTwo;
-    private HatchStowedState stowedState;
-    private HatchGrabState grabState;
+    // private HatchStowedState stowedState;
+    // private HatchGrabState grabState;
 
     public Hatch() {
         hatchPistons = new DoubleSolenoid(RobotMap.PCM_ID, RobotMap.Hatch.HATCH_PISTONS[0],
@@ -34,10 +34,11 @@ public class Hatch extends Subsystem {
         stowedMap.put(HatchStowedState.OUT, DoubleSolenoid.Value.kReverse);
         stowedMap.put(HatchStowedState.STOWED, DoubleSolenoid.Value.kForward);
 
-        stowedState = getStowedState(slicerPistons.get());
-        grabState = getGrabState(hatchPistons.get());
+        // stowedState = getStowedState(slicerPistons.get());
+        // grabState = getGrabState(hatchPistons.get());
     }
 
+    @SuppressWarnings("unused")
     private HatchStowedState getStowedState(DoubleSolenoid.Value val) {
         for (var entryPair : stowedMap.entrySet()) {
             if (entryPair.getValue() == val) {
@@ -47,6 +48,7 @@ public class Hatch extends Subsystem {
         return null;
     }
 
+    @SuppressWarnings("unused")
     private HatchGrabState getGrabState(DoubleSolenoid.Value val) {
         for (var entryPair : stateMap.entrySet()) {
             if (entryPair.getValue() == val) {
@@ -81,12 +83,12 @@ public class Hatch extends Subsystem {
     }
 
     public void setGrab(HatchGrabState state) {
-        grabState = state;
+        // grabState = state;
         hatchPistons.set(getVal(state));
     }
 
     public void setStow(HatchStowedState state) {
-        stowedState = state;
+        // stowedState = state;
         slicerPistons.set(getVal(state));
     }
 
@@ -101,8 +103,8 @@ public class Hatch extends Subsystem {
 
     public void sendDebugInfo() {
         SmartDashboard.putBoolean("Hatch Held", limitControl());
-        SmartDashboard.putString("Stowed", stowedState == null ? "null" : stowedState.toString());
-        SmartDashboard.putString("Grab", grabState == null ? "null" : grabState.toString());
+        // SmartDashboard.putString("Stowed", stowedState == null ? "null" : stowedState.toString());
+        // SmartDashboard.putString("Grab", grabState == null ? "null" : grabState.toString());
     }
 
     @Override

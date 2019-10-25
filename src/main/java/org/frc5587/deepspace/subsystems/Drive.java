@@ -53,7 +53,7 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		visionTimeDeltas = new ArrayList<>();
 
 		var fpid = Constants.Drive.TURN_FPID;
-		turnController = new PIDController(fpid.kP, fpid.kI, fpid.kD, fpid.kF, ahrs, this);
+		turnController = new PIDController(fpid.kP, fpid.kI, fpid.kD, fpid.kF, ahrs, this, 0.010);
 		turnController.setInputRange(-180.0, 180.0);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(Constants.Drive.TOLERANCE_DEGREES);
@@ -61,8 +61,8 @@ public class Drive extends AbstractDrive implements PIDOutput {
 		turnController.disable();
 
 		// Add PID Controller to dashboard for testing
-		turnController.setName("DriveSystem", "RotateController");
-		SmartDashboard.putData(turnController);
+		// turnController.setName("DriveSystem", "RotateController");
+		// SmartDashboard.putData(turnController);
 		turnEnabledFirstTime = false;
 	}
 
@@ -126,7 +126,6 @@ public class Drive extends AbstractDrive implements PIDOutput {
 	}
 
 	public void enableTurnPID(boolean enabled) {
-		System.out.println("Enabling PID...");
 		if (enabled) {
 			turnEnabledFirstTime = true;
 		}

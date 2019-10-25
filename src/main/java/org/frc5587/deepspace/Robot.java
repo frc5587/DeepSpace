@@ -9,19 +9,10 @@ package org.frc5587.deepspace;
 
 import java.util.ArrayList;
 
-// import org.frc5587.deepspace.commands.LimitResetElevator;
-import org.frc5587.deepspace.commands.LogDebugData;
-import org.frc5587.deepspace.commands.Manager;
-// import org.frc5587.deepspace.commands.ResetElevator;
-import org.frc5587.deepspace.commands.control.ControlCargo;
-import org.frc5587.deepspace.commands.control.ControlElevator;
-import org.frc5587.deepspace.commands.control.ControlHatch;
-import org.frc5587.deepspace.commands.control.ControlPistonLift;
-import org.frc5587.deepspace.subsystems.Cargo;
-import org.frc5587.deepspace.subsystems.Drive;
-import org.frc5587.deepspace.subsystems.Elevator;
-import org.frc5587.deepspace.subsystems.Hatch;
-import org.frc5587.deepspace.subsystems.PistonLift;
+import org.frc5587.deepspace.commands.*;
+import org.frc5587.deepspace.commands.control.*;
+import org.frc5587.deepspace.commands.routines.Limelight;
+import org.frc5587.deepspace.subsystems.*;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -29,7 +20,6 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -75,10 +65,10 @@ public class Robot extends TimedRobot {
         controlCommands.add(new Manager());
         controlCommands.add(new ControlElevator());
         controlCommands.add(new ControlHatch());
-        // controlCommands.add(new ControlLift());
         controlCommands.add(new ControlCargo());
         controlCommands.add(new ControlPistonLift());
 
+        Limelight.disableLEDs();
     }
 
     private void startControlCommands() {
@@ -111,9 +101,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        // for (var command : controlCommands) {
-        // command.cancel();
-        // }
     }
 
     @Override

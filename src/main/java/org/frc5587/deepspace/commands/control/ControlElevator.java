@@ -27,11 +27,11 @@ public class ControlElevator extends Command {
     protected void execute() {
 
         // Code for finding max velocity of elevator motors
-        var vel = elevator.getVelocity();
-        if (vel > maxVelocity) {
-            maxVelocity = vel;
-            SmartDashboard.putNumber("Max Ele Vel", vel);
-        }
+        // var vel = elevator.getVelocity();
+        // if (vel > maxVelocity) {
+        //     maxVelocity = vel;
+        //     SmartDashboard.putNumber("Max Ele Vel", vel);
+        // }
 
         var throttle = -OI.xb.getY(Hand.kLeft);
         if (!OI.xb.getTrigger(Hand.kLeft)) {
@@ -62,7 +62,7 @@ public class ControlElevator extends Command {
             }
 
         } else {
-            elevator.setElevator(SmartDashboard.getNumber("Ele Set", 0));
+            // elevator.setElevator(SmartDashboard.getNumber("Ele Set", 0));
             elevator.elevatorMove(throttle);
             manualControl = true;
         }
