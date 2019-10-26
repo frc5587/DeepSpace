@@ -90,10 +90,12 @@ public class Drive extends AbstractDrive implements PIDOutput {
 
 		rightMaster.configPeakCurrentLimit(35, timeoutMs);
 		leftMaster.configPeakCurrentLimit(35, timeoutMs);
-		rightMaster.configPeakCurrentDuration(2000);
-		leftMaster.configPeakCurrentDuration(2000);
+		rightMaster.configPeakCurrentDuration(20, timeoutMs);
+		leftMaster.configPeakCurrentDuration(20, timeoutMs);
 		rightMaster.configContinuousCurrentLimit(35, timeoutMs);
 		leftMaster.configContinuousCurrentLimit(35, timeoutMs);
+		rightMaster.enableCurrentLimit(true);
+		leftMaster.enableCurrentLimit(true);
 
 		leftMaster.configPeakOutputForward(Constants.Drive.MAX_PERCENT_FW, timeoutMs);
 		leftMaster.configPeakOutputReverse(-Constants.Drive.MAX_PERCENT_BW, timeoutMs);
