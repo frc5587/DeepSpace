@@ -62,7 +62,7 @@ public class Elevator extends Subsystem {
 
         elevatorSpark.setSoftLimit(SoftLimitDirection.kForward, Constants.Elevator.MAX_PERCENT_FW);
         elevatorSpark.setSoftLimit(SoftLimitDirection.kReverse, -Constants.Elevator.MAX_PERCENT_BW);
-        spark_pidController.setOutputRange(Constants.Elevator.MIN_PERCENT_OUT, Constants.Elevator.MAX_PERCENT_FW);
+        spark_pidController.setOutputRange(-Constants.Elevator.MAX_PERCENT_BW, Constants.Elevator.MAX_PERCENT_FW);
 
         elevatorSpark.setSmartCurrentLimit(40, 35);
 
@@ -89,7 +89,7 @@ public class Elevator extends Subsystem {
     }
 
     public void setElevator(double height) {
-        spark_pidController.setReference(height, ControlType.kVelocity);
+        spark_pidController.setReference(height, ControlType.kSmartMotion);
     }
 
     public void setElevator(ElevatorHeights height) {
@@ -155,9 +155,11 @@ public class Elevator extends Subsystem {
     }
 
     public void refreshPID() {
-        spark_pidController.setP(SmartDashboard.getNumber("Ele I", 0.0), 20);
+        spark_pidController.setP(SmartDashboard.getNumber("Ele P", 0.0), 20);
         spark_pidController.setI(SmartDashboard.getNumber("Ele I", 0.0), 20);
         spark_pidController.setD(SmartDashboard.getNumber("Ele D", 0.0), 20);
+
+        spark_pidController.setReference(SmartDashboard.getNumber("Ele Set", 0.0), ControlType.kPosition);
     }
 
     @Override
