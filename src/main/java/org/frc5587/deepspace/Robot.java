@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import org.frc5587.deepspace.commands.*;
 import org.frc5587.deepspace.commands.control.*;
-import org.frc5587.deepspace.commands.routines.Limelight;
 import org.frc5587.deepspace.subsystems.*;
 
 import edu.wpi.cscore.UsbCamera;
@@ -20,6 +19,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -53,11 +53,10 @@ public class Robot extends TimedRobot {
         cameraServer.startAutomaticCapture(0);
         // cameraServer.startAutomaticCapture(1);
 
-        // SmartDashboard.putData(new ResetElevator());
+        SmartDashboard.putData(new ResetElevator());
 
         continuousCommands = new ArrayList<>();
-        // continuousCommands.add(new LimitResetElevator());
-        // continuousCommands.add(new UpdateGyroHistory());
+        continuousCommands.add(new LimitResetElevator());
         continuousCommands.add(new LogDebugData());
         continuousCommands.forEach(c -> c.start());
 
