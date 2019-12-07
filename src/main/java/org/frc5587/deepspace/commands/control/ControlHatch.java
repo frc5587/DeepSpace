@@ -8,10 +8,28 @@ import org.frc5587.deepspace.subsystems.Hatch;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * ControlHatch uses the Xbox controller's right bumper and back button for
+ * controlling the hatch intake with the Hatch subsystem, defaulting to the
+ * intake being down and not grabbing hatches.
+ * 
+ * <p>
+ * The right bumper grabs hatches when held but defaults to not grabbing by
+ * contracting the hatch intake's fingers. The back button then toggles between
+ * the down and contracted/up states of the intake.
+ * 
+ * <p>
+ * Automatic control of the hatch intake is also offered if
+ * {@link Constants.Hatch#LIMIT_CONTROL_ON} is enabled. If enabled, this command
+ * uses a limit switch to determine if a hatch is in the intake and should thus
+ * be picked up.
+ * 
+ * @see Hatch
+ */
 public class ControlHatch extends Command {
-    private Hatch hatch;
     private static boolean down = true;
     private static boolean limitControlEngaged = false;
+    private Hatch hatch;
 
     public ControlHatch() {
         this.hatch = Robot.HATCH;
@@ -26,16 +44,12 @@ public class ControlHatch extends Command {
     @Override
     protected void execute() {
         if (Constants.Hatch.LIMIT_CONTROL_ON) {
-            if (!limitControlEngaged) {
-                if (hatch.limitControl()) {
-                    System.out.println("Running limit control");
-                    hatch.grab();
-                    limitControlEngaged = true;
-                }
-            } else {
-                if (!hatch.limitControl()) {
-                    limitControlEngaged = false;
-                }
+            // Use limitControlEngaged as a toggle so grab is only issued once
+            if (!limitControlEngaged && hatch.limitControl()) {
+                hatch.grab();
+                limitControlEngaged = true;
+            } else if (!hatch.limitControl()) {
+                limitControlEngaged = false;
             }
         }
 
@@ -45,6 +59,7 @@ public class ControlHatch extends Command {
             hatch.drop();
         }
 
+        // Use back button for manually contract or lower the intake
         if (OI.xb.getBackButtonPressed()) {
             if (down) {
                 hatch.out();

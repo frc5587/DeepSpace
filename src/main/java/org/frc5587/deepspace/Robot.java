@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
         controlCommands.add(new ControlCargo());
         controlCommands.add(new ControlPistonLift());
 
-        Limelight.disableLEDs();
+        Limelight.enableLEDs(false);
     }
 
     private void startControlCommands() {

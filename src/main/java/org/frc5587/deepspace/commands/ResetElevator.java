@@ -4,8 +4,11 @@ import org.frc5587.deepspace.Robot;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-    public class ResetElevator extends InstantCommand {
-        public ResetElevator() {
+/**
+ * Basic Command to reset the elevator's encoder.
+ */
+public class ResetElevator extends InstantCommand {
+    public ResetElevator() {
 
     }
 
@@ -13,10 +16,4 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
     protected void initialize() {
         Robot.ELEVATOR.resetEncoder();
     }
-
-    @Override
-    protected boolean isFinished() {
-        return false;
-    }
-
 }
