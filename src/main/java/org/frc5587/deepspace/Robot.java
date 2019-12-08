@@ -29,13 +29,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-    public static final Compressor COMPRESSOR = new Compressor(RobotMap.PCM_ID);
+    public static final Compressor COMPRESSOR = new Compressor();
     public static final Elevator ELEVATOR = new Elevator();
     public static final Drive DRIVETRAIN = new Drive();
     public static final Hatch HATCH = new Hatch();
     public static final Cargo CARGO = new Cargo();
     public static final PistonLift PISTON_LIFT = new PistonLift();
 
+    // ArrayLists for tracking command objects
     private static ArrayList<Command> controlCommands;
     private static ArrayList<Command> continuousCommands;
     public static CameraServer cameraServer;
@@ -55,11 +56,13 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData(new ResetElevator());
 
+        // Create all continuous commands and start them
         continuousCommands = new ArrayList<>();
         continuousCommands.add(new LimitResetElevator());
         continuousCommands.add(new LogDebugData());
         continuousCommands.forEach(c -> c.start());
 
+        // Create all control commands so that they can be started later
         controlCommands = new ArrayList<>();
         controlCommands.add(new Manager());
         controlCommands.add(new ControlElevator());
@@ -67,11 +70,16 @@ public class Robot extends TimedRobot {
         controlCommands.add(new ControlCargo());
         controlCommands.add(new ControlPistonLift());
 
+        // Turn off the blinding Limelight LEDs for everyone's health and safety
         Limelight.enableLEDs(false);
     }
 
+    /**
+     * Start all of the control commands that have not already been started
+     */
     private void startControlCommands() {
         for (var command : controlCommands) {
+            // Check that the command is both completed and not running, just to be safe
             if (command.isCompleted() || !command.isRunning()) {
                 command.start();
             }

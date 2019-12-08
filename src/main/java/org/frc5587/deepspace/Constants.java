@@ -13,65 +13,50 @@ import org.frc5587.lib.pid.PIDVA;
 public class Constants {
 
     public static final boolean COMPRESSOR_ENABLED = true;
-    public static final int TCP_PORT = 3456;
 
     // set to zero to skip waiting for confirmation, set to nonzero to wait and
     // report to DS if action fails
-    public static final int K_TIMEOUT_MS = 10;
-    public static final double K_V_COMP_SATURATION = 12.0;
+    public static final int TIMEOUT_MS = 10;
+
+    public static final double V_COMP_SATURATION = 12.0;
 
     public static final class Elevator {
-        public static final double STU_PER_INCH = 18349 / 27;
+        public static final double TICKS_PER_INCH = 18349 / 27;
 
-        public static final int MIN_UNCHECKED_VELOCITY = 100;
-        public static final double UNSAFE_IDLE_CURRENT_DRAW = 10.0;
-        public static final double UNSAFE_TIME_BEFORE_STOP = 1.5;
+        // Hatch setpoints
+        public static final double BOTTOM_HATCH = 0;
+        public static final double MIDDLE_HATCH = 23.5 * TICKS_PER_INCH;
+        public static final double TOP_HATCH = 45 * TICKS_PER_INCH;
 
-        public static final double BOTTOM_TICKS = 0;
-        public static final double MIDDLE_TICKS = 23.5 * STU_PER_INCH;
-        public static final double TOP_TICKS = 45 * STU_PER_INCH;
+        // Cargo setpoints
+        public static final double CARGO_SHIP = 20.5 * TICKS_PER_INCH;
+        public static final double BOTTOM_CARGO = 20.5 * TICKS_PER_INCH;
+        public static final double MIDDLE_CARGO = 40.5 * TICKS_PER_INCH;
+        public static final double TOP_CARGO = 58.5 * TICKS_PER_INCH;
 
-        public static final double CARGO_SHIP = 20.5 * STU_PER_INCH;
-        public static final double BOTTOM_CARGO = 20.5 * STU_PER_INCH;
-        public static final double MIDDLE_CARGO = 40.5 * STU_PER_INCH;
-        public static final double TOP_CARGO = 58.5 * STU_PER_INCH;
-
-        public static final int K_SLOT_IDX = 0;
-        public static final int K_PID_LOOP_IDX = 0;
-
-        public static final int K_TIMEOUT_MS = 10;
-
-        public static final double V_COMP_SATURATION = 12.0;
-
-        public static final int MAX_VELOCITY = 2269, MAX_ACCELERATION = 2 * MAX_VELOCITY;
+        // Safety limits
+        public static final float MIN_PERCENT_OUT = 0;
+        public static final float MAX_PERCENT_BW = 1;
+        public static final float MAX_PERCENT_FW = 1;
+        public static final int MAX_VELOCITY = 2269;
+        public static final int MAX_ACCELERATION = 2 * MAX_VELOCITY;
         public static final int MIN_VELOCITY = 0;
 
-        public static final double[] PIDs = {
-            2.9568, //kP
-            0.001, //kI
-            10.9136, //kD
-            (1 / MAX_VELOCITY) * 1023 // kF
+        public static final FPID ELEVATOR_PID = new FPID(
+                (1 / MAX_VELOCITY) * 1023,  // kF
+                2.9568,  // kP
+                10.9136,  // kI
+                10.9136  // kD
+        );
 
-        };
-
-        public static final float MIN_PERCENT_OUT = 0, MAX_PERCENT_BW = 1, MAX_PERCENT_FW = 1;
-        public static final double HOLD_VOLTAGE = 0.05;
+        public static final double HOLD_PERCENT = 0.05;
 
         public static final int SMART_MOTION_SLOT = 0;
-        
-        public static final int GEAR_RATIO = 30;
-
-        public static final double ALLOWED_ERR = 1;
+        public static final double ALLOWED_ERR = 0.1 * TICKS_PER_INCH;
     }
 
     public static final class Drive {
-        // set to zero to skip waiting for confirmation, set to nonzero to wait and
-        // report to DS if action fails
-        public static final int K_TIMEOUT_MS = 10;
-
-        public static final double K_MAX_VELOCITY = 2500; // measured in STU
-
-        public static final double K_V_COMP_SATURATION = 12.0;
+        public static final double MAX_VELOCITY = 2500; // measured in STU
 
         public static final int MIN_BUFFER_COUNT = 10;
 
@@ -105,15 +90,16 @@ public class Constants {
                 0.0001 * STU_PER_INCH / 10f);
 
         // Turn controller
-        public static final int GYRO_HISTORY_LENGTH = 50;
-        public static final double LPF_PERCENT = 1;
+        public static final double LPF_PERCENT = 1;  // Janky low pass filter
         public static final double TOLERANCE_DEGREES = 2.0;
+        public static final double CONSTANT_FORWARD_PERCENT = 0.3;
         public static final FPID TURN_FPID = new FPID(
                 0,  // kF
                 0.03, // kP
                 0, // kI
                 0  // kD
         );
+        
     }
 
     public static final class Hatch {

@@ -4,7 +4,7 @@ import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Elevator;
 import org.frc5587.deepspace.subsystems.Elevator.CargoHeights;
-import org.frc5587.deepspace.subsystems.Elevator.ElevatorHeights;
+import org.frc5587.deepspace.subsystems.Elevator.HatchHeights;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
@@ -55,11 +55,11 @@ public class ControlElevator extends Command {
             if (!OI.xb.getTrigger(Hand.kRight)) {
                 // Default to hatch setpoints
                 if (OI.xb.getAButtonPressed()) {
-                    elevator.setElevator(ElevatorHeights.BOTTOM_LEVEL);
+                    elevator.setElevator(HatchHeights.BOTTOM_LEVEL);
                 } else if (OI.xb.getBButtonPressed()) {
-                    elevator.setElevator(ElevatorHeights.MIDDLE_LEVEL);
+                    elevator.setElevator(HatchHeights.MIDDLE_LEVEL);
                 } else if (OI.xb.getYButtonPressed()) {
-                    elevator.setElevator(ElevatorHeights.TOP_LEVEL);
+                    elevator.setElevator(HatchHeights.TOP_LEVEL);
                 }
             } else {
                 // Use cargo setpoints if the trigger is pressed

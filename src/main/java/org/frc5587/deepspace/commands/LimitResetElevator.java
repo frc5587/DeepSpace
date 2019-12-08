@@ -22,7 +22,7 @@ public class LimitResetElevator extends Command {
     @Override
     protected void execute() {
         // Reset the elevator when the limit switch is triggered
-        if (elevator.limitSwitchValue()) {
+        if (elevator.bottomSwitchValue()) {
             elevator.resetEncoder();
             // elevator.elevatorHold();
         }

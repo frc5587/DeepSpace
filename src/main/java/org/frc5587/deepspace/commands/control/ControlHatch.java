@@ -38,17 +38,17 @@ public class ControlHatch extends Command {
     @Override
     protected void initialize() {
         Robot.HATCH.grab();
-        Robot.HATCH.out();
+        Robot.HATCH.lower();
     }
 
     @Override
     protected void execute() {
         if (Constants.Hatch.LIMIT_CONTROL_ON) {
             // Use limitControlEngaged as a toggle so grab is only issued once
-            if (!limitControlEngaged && hatch.limitControl()) {
+            if (!limitControlEngaged && hatch.hatchPresent()) {
                 hatch.grab();
                 limitControlEngaged = true;
-            } else if (!hatch.limitControl()) {
+            } else if (!hatch.hatchPresent()) {
                 limitControlEngaged = false;
             }
         }
@@ -62,7 +62,7 @@ public class ControlHatch extends Command {
         // Use back button for manually contract or lower the intake
         if (OI.xb.getBackButtonPressed()) {
             if (down) {
-                hatch.out();
+                hatch.lower();
                 down = false;
             } else {
                 hatch.stow();

@@ -106,6 +106,6 @@ public class Limelight extends Command {
         var newError = tx.getDouble(0);
         var currentHeading = Robot.DRIVETRAIN.getHeading(180.0);
         double desiredAngle = currentHeading + newError;
-        Robot.DRIVETRAIN.setTurnPID(desiredAngle);
+        Robot.DRIVETRAIN.setAngleTarget(desiredAngle);
     }
 }

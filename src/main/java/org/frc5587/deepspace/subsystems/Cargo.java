@@ -7,6 +7,12 @@ import org.frc5587.deepspace.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * Subsystem for the cargo intake.
+ * 
+ * <p>The cargo intake subsytem consists of one motor for picking up or spitting
+ * out balls.
+ */
 public class Cargo extends Subsystem {
   private TalonSRX cargoTalon;
 
@@ -14,20 +20,14 @@ public class Cargo extends Subsystem {
     cargoTalon = new TalonSRX(RobotMap.Cargo.CARGO_MOTOR);
   }
 
-  public void cargoIn() {
-    cargoTalon.set(ControlMode.PercentOutput, 1);
-  }
-
-  public void cargoOut() {
-    cargoTalon.set(ControlMode.PercentOutput, -1);
-  }
-
-  public void cargoStop(){
-    cargoTalon.neutralOutput();
-  }
-
-  public void cargoSet(double val) {
-    cargoTalon.set(ControlMode.PercentOutput, val);
+  /**
+   * Set the cargo intake's motors to output percentage indicated by the percent
+   * parameter.
+   * 
+   * @param percent percent to set the motors to
+   */
+  public void cargoSet(double percent) {
+    cargoTalon.set(ControlMode.PercentOutput, percent);
   }
 
   @Override
