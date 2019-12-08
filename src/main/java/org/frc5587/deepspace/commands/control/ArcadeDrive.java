@@ -7,55 +7,50 @@
 
 package org.frc5587.deepspace.commands.control;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import org.frc5587.deepspace.OI;
 import org.frc5587.deepspace.Robot;
 import org.frc5587.deepspace.subsystems.Drive;
 
+import edu.wpi.first.wpilibj.command.InstantCommand;
+
 /**
- * An example command.  You can replace me with your own command.
+ * ArcadeDrive controls the motors of the Drive subsystem with the joystick.
+ * 
+ * @see Drive
  */
 public class ArcadeDrive extends InstantCommand {
-	private Drive kDrive;
+	private Drive drivetrain;
 
 	// private static double maxVelocity = Double.MIN_VALUE;
 
 	public ArcadeDrive() {
-		// Use requires() here to declare subsystem dependencies
-		requires(Robot.DRIVETRAIN);
-		this.kDrive = Robot.DRIVETRAIN;
+		this.drivetrain = Robot.DRIVETRAIN;
+		requires(drivetrain);
 	}
 
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		kDrive.enableBrakeMode(true);
+		drivetrain.enableBrakeMode(true);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		// Xbox configuration
-		// double throttle = -OI.xb.getY(Hand.kLeft);
-		// double curve = OI.xb.getX(Hand.kLeft);
+		// Code for finding max velocity of a given motor
+		// var currentVel = kDrive.getLeftVelocity();
+		// if (currentVel > maxVelocity) {
+		// maxVelocity = currentVel;
+		// System.out.println(maxVelocity);
+		// }
 
 		// Joystick configuration
 		var throttle = -OI.joy.getY();
 		var curve = OI.joy.getX() * 0.85;
 
-		// Code for finding max velocity of a given motor
-		// var currentVel = kDrive.getLeftVelocity();
-		// if (currentVel > maxVelocity) {
-		// 	maxVelocity = currentVel;
-		// 	System.out.println(maxVelocity);
-		// }
+		drivetrain.vbusArcade(throttle, curve);
 
-		kDrive.vbusArcade(throttle, curve);
-
-		kDrive.sendDebugInfo();
+		drivetrain.sendDebugInfo();
 	}
 
 	// Called once after isFinished returns true
