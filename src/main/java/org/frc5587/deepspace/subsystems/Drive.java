@@ -28,6 +28,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * The drivetrain consists of six wheels, driven as a right and left side by
  * CIMs. Each side is controlled by a TalonSRX and VictorSPX motor controller
  * pair.
+ * 
+ * <p>
+ * Drive implements PIDOutput purely for providing auto-centring functionality
+ * with the Limelight. The Limelight finds the angle between the centre of the
+ * pieces of tape and the centre of the robot, then tells Drive to turn to an
+ * angle with PID based on that data (although Drive does not calculate that
+ * angle itself).
+ * 
+ * @see org.frc5587.deepspace.commands.control.Limelight
+ * @see org.frc5587.deepspace.commands.Manager
  */
 public class Drive extends AbstractDrive implements PIDOutput {
 	// Controller used to set drivetrain angle based on gyro
